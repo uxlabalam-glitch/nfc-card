@@ -8,7 +8,6 @@ import {
   SiYoutube,
   SiTiktok,
   SiFacebook,
-  SiLinkedin,
 } from "react-icons/si";
 
 import {
@@ -17,6 +16,7 @@ import {
   FaGlobe,
   FaLocationDot,
   FaLink,
+  FaLinkedin,
 } from "react-icons/fa6";
 
 const supabase = createClient(
@@ -55,9 +55,7 @@ export default async function CardPage({ params }) {
         overflowX: "hidden",
       }}
     >
-      {/* ==================================================
-          TASHQI XIRA FON
-      ================================================== */}
+      {/* TASHQI BLUR FON */}
 
       {profile.background_url && (
         <div
@@ -67,8 +65,6 @@ export default async function CardPage({ params }) {
             backgroundImage: `url("${profile.background_url}")`,
             backgroundSize: "cover",
             backgroundPosition: "center",
-
-            /* FAQAT ATROFDAGI RASM BLUR */
             filter: "blur(14px)",
             transform: "scale(1.10)",
             opacity: 0.78,
@@ -76,7 +72,7 @@ export default async function CardPage({ params }) {
         />
       )}
 
-      {/* TASHQI FON USTIDAGI YENGIL QATLAM */}
+      {/* TASHQI YENGIL QATLAM */}
 
       <div
         style={{
@@ -86,9 +82,7 @@ export default async function CardPage({ params }) {
         }}
       />
 
-      {/* ==================================================
-          TELEFON / VIZITKA QISMI
-      ================================================== */}
+      {/* ASOSIY MARKAZIY QISM */}
 
       <section
         style={{
@@ -98,135 +92,89 @@ export default async function CardPage({ params }) {
           maxWidth: "430px",
           minHeight: "100vh",
           overflow: "hidden",
-
-          boxShadow:
-            "0 0 45px rgba(0,0,0,0.22)",
-
+          boxShadow: "0 0 45px rgba(0,0,0,0.22)",
           background: "#eef3f7",
         }}
       >
-        {/* ==================================================
-            KARTA ICHIDAGI ASOSIY TINIQ FON
-        ================================================== */}
+        {/* MARKAZDAGI TINIQ FON */}
 
         {profile.background_url && (
           <div
             style={{
               position: "absolute",
               inset: 0,
-
-              backgroundImage:
-                `url("${profile.background_url}")`,
-
+              backgroundImage: `url("${profile.background_url}")`,
               backgroundSize: "cover",
               backgroundPosition: "center",
-
               zIndex: 0,
             }}
           />
         )}
 
-        {/* FON USTIDAGI YENGIL QATLAM */}
+        {/* FON USTIDAGI QATLAM */}
 
         <div
           style={{
             position: "absolute",
             inset: 0,
             zIndex: 1,
-
             background:
               "linear-gradient(to bottom, rgba(255,255,255,0.02), rgba(220,240,250,0.18))",
           }}
         />
 
-        {/* ==================================================
-            KONTENT
-        ================================================== */}
+        {/* KONTENT */}
 
         <div
           style={{
             position: "relative",
             zIndex: 2,
-
             minHeight: "100vh",
-
             padding: "280px 20px 50px",
-
             boxSizing: "border-box",
           }}
         >
-          {/* ==================================================
-              GLASS PANEL
-          ================================================== */}
+          {/* GLASS PANEL */}
 
           <div
             style={{
               position: "relative",
-
               padding: "78px 20px 30px",
-
               borderRadius: "32px",
-
-              background:
-                "rgba(255,255,255,0.68)",
-
+              background: "rgba(255,255,255,0.68)",
               backdropFilter: "blur(18px)",
               WebkitBackdropFilter: "blur(18px)",
-
-              border:
-                "1px solid rgba(255,255,255,0.65)",
-
-              boxShadow:
-                "0 12px 40px rgba(0,0,0,0.14)",
-
+              border: "1px solid rgba(255,255,255,0.65)",
+              boxShadow: "0 12px 40px rgba(0,0,0,0.14)",
               textAlign: "center",
             }}
           >
-            {/* ==================================================
-                AVATAR
-            ================================================== */}
+            {/* PROFIL RASMI */}
 
             <div
               style={{
                 position: "absolute",
-
                 top: "-72px",
                 left: "50%",
-
-                transform:
-                  "translateX(-50%)",
-
+                transform: "translateX(-50%)",
                 width: "142px",
                 height: "142px",
-
                 borderRadius: "50%",
-
                 padding: "6px",
-
-                background:
-                  "rgba(255,255,255,0.95)",
-
-                boxShadow:
-                  "0 8px 25px rgba(0,0,0,0.18)",
-
+                background: "rgba(255,255,255,0.95)",
+                boxShadow: "0 8px 25px rgba(0,0,0,0.18)",
                 boxSizing: "border-box",
               }}
             >
               {profile.photo_url ? (
                 <img
                   src={profile.photo_url}
-                  alt={
-                    profile.full_name ||
-                    "Profile"
-                  }
+                  alt={profile.full_name || "Profile"}
                   style={{
                     width: "100%",
                     height: "100%",
-
                     borderRadius: "50%",
-
                     objectFit: "cover",
-
                     display: "block",
                   }}
                 />
@@ -235,19 +183,12 @@ export default async function CardPage({ params }) {
                   style={{
                     width: "100%",
                     height: "100%",
-
                     borderRadius: "50%",
-
-                    background:
-                      "rgba(230,230,230,0.95)",
-
+                    background: "rgba(230,230,230,0.95)",
                     display: "flex",
-
                     alignItems: "center",
                     justifyContent: "center",
-
                     color: "#98a2b3",
-
                     fontSize: "44px",
                   }}
                 >
@@ -256,39 +197,28 @@ export default async function CardPage({ params }) {
               )}
             </div>
 
-            {/* ==================================================
-                ISM
-            ================================================== */}
+            {/* ISM */}
 
             <h1
               style={{
                 margin: "0 0 6px",
-
                 fontSize: "32px",
-
                 lineHeight: 1.15,
-
                 color: "#111827",
-
                 fontWeight: "800",
               }}
             >
               {profile.full_name}
             </h1>
 
-            {/* ==================================================
-                BIO
-            ================================================== */}
+            {/* BIO */}
 
             {profile.bio && (
               <p
                 style={{
                   margin: "0",
-
                   color: "#667085",
-
                   fontSize: "16px",
-
                   lineHeight: 1.5,
                 }}
               >
@@ -296,19 +226,13 @@ export default async function CardPage({ params }) {
               </p>
             )}
 
-            {/* ==================================================
-                LINKLAR
-            ================================================== */}
+            {/* LINKLAR */}
 
             <div
               style={{
                 marginTop: "30px",
-
                 display: "grid",
-
-                gridTemplateColumns:
-                  "repeat(3, minmax(0, 1fr))",
-
+                gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
                 gap: "22px 12px",
               }}
             >
@@ -323,25 +247,17 @@ export default async function CardPage({ params }) {
                   <span
                     style={{
                       ...iconStyle,
-                      ...getIconColor(
-                        link.icon
-                      ),
+                      ...getIconColor(link.icon),
                     }}
                   >
-                    <SocialIcon
-                      icon={link.icon}
-                    />
+                    <SocialIcon icon={link.icon} />
                   </span>
 
                   <span
                     style={{
                       maxWidth: "100%",
-
                       overflow: "hidden",
-
-                      textOverflow:
-                        "ellipsis",
-
+                      textOverflow: "ellipsis",
                       whiteSpace: "nowrap",
                     }}
                   >
@@ -362,33 +278,29 @@ export default async function CardPage({ params }) {
 ========================================================= */
 
 function SocialIcon({ icon }) {
-  const name = String(
-    icon || ""
-  ).toLowerCase();
-
-  const size = 29;
+  const name = String(icon || "").toLowerCase();
 
   switch (name) {
     case "telegram":
-      return <SiTelegram size={size} />;
+      return <SiTelegram size={29} />;
 
     case "whatsapp":
-      return <SiWhatsapp size={size} />;
+      return <SiWhatsapp size={29} />;
 
     case "instagram":
-      return <SiInstagram size={size} />;
+      return <SiInstagram size={29} />;
 
     case "youtube":
-      return <SiYoutube size={size} />;
+      return <SiYoutube size={29} />;
 
     case "tiktok":
-      return <SiTiktok size={size} />;
+      return <SiTiktok size={29} />;
 
     case "facebook":
-      return <SiFacebook size={size} />;
+      return <SiFacebook size={29} />;
 
     case "linkedin":
-      return <SiLinkedin size={size} />;
+      return <FaLinkedin size={29} />;
 
     case "phone":
       return <FaPhone size={25} />;
@@ -412,9 +324,7 @@ function SocialIcon({ icon }) {
 ========================================================= */
 
 function getIconColor(icon) {
-  const name = String(
-    icon || ""
-  ).toLowerCase();
+  const name = String(icon || "").toLowerCase();
 
   switch (name) {
     case "telegram":
@@ -485,21 +395,13 @@ function getIconColor(icon) {
 
 const linkStyle = {
   minWidth: 0,
-
   textDecoration: "none",
-
   color: "#111827",
-
   fontSize: "13px",
-
   fontWeight: "600",
-
   display: "flex",
-
   flexDirection: "column",
-
   alignItems: "center",
-
   gap: "8px",
 };
 
@@ -509,23 +411,12 @@ const linkStyle = {
 
 const iconStyle = {
   width: "60px",
-
   height: "60px",
-
   borderRadius: "18px",
-
-  background:
-    "rgba(255,255,255,0.88)",
-
-  border:
-    "1px solid rgba(255,255,255,0.9)",
-
-  boxShadow:
-    "0 6px 18px rgba(0,0,0,0.10)",
-
+  background: "rgba(255,255,255,0.88)",
+  border: "1px solid rgba(255,255,255,0.9)",
+  boxShadow: "0 6px 18px rgba(0,0,0,0.10)",
   display: "flex",
-
   alignItems: "center",
-
   justifyContent: "center",
 };

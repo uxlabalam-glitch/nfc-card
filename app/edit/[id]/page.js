@@ -215,16 +215,6 @@ export default function EditCardPage() {
       setPhotoUrl(profileData.photo_url || "");
       setBackgroundUrl(profileData.background_url || "");
 
-      /*
-        TIL FAQAT BIRINCHI MARTA SO‘RALADI.
-
-        profiles.language bo‘sh bo‘lsa:
-        modal ochiladi.
-
-        Til oldin saqlangan bo‘lsa:
-        modal ochilmaydi.
-      */
-
       const savedLanguage = profileData.language?.trim() || "";
 
       if (savedLanguage) {
@@ -264,33 +254,33 @@ export default function EditCardPage() {
     setSavingLanguage(true);
 
     try {
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from("profiles")
         .update({
           language: code,
         })
-        .eq("id", profile.id)
-        .select("language")
-        .single();
+        .eq("id", profile.id);
 
       if (error) {
         throw error;
       }
 
-      const savedLanguage = data?.language || code;
-
-      setLanguage(savedLanguage);
+      setLanguage(code);
 
       setProfile((current) => ({
         ...current,
-        language: savedLanguage,
+        language: code,
       }));
 
       setLanguageSearch("");
       setShowLanguage(false);
     } catch (error) {
       console.error("LANGUAGE ERROR:", error);
-      alert("Tilni saqlashda xato: " + error.message);
+
+      alert(
+        "Tilni saqlashda xato: " +
+          error.message
+      );
     } finally {
       setSavingLanguage(false);
     }
@@ -594,10 +584,6 @@ export default function EditCardPage() {
         throw profileError;
       }
 
-      /*
-        DATABASE'DAGI MAVJUD LINKLAR
-      */
-
       const existingIds = links
         .filter((link) => link.id)
         .map((link) => link.id);
@@ -633,10 +619,6 @@ export default function EditCardPage() {
           throw deleteError;
         }
       }
-
-      /*
-        LINKLARNI SAQLASH
-      */
 
       for (let i = 0; i < links.length; i++) {
         const link = links[i];
@@ -678,17 +660,6 @@ export default function EditCardPage() {
         }
       }
 
-      /*
-        MUHIM:
-
-        window.open YO‘Q.
-        target="_blank" YO‘Q.
-
-        SAQLASH BOSILGANDA
-        SHU OYNANING O‘ZIDA
-        ASOSIY PROFILGA O‘TADI.
-      */
-
       window.location.replace(`/c/${cardId}`);
     } catch (error) {
       console.error("SAVE ERROR:", error);
@@ -705,11 +676,6 @@ export default function EditCardPage() {
   /* =========================================================
      PROFILE CHECK
   ========================================================= */
-
-  /*
-    Kutish yozuvi ko‘rsatilmaydi.
-    Ma’lumot kelguncha bo‘sh fon turadi.
-  */
 
   if (!profileChecked) {
     return (

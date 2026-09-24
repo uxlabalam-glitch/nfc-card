@@ -4,6 +4,30 @@ import { useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { useParams } from "next/navigation";
 
+import {
+  SiTelegram,
+  SiWhatsapp,
+  SiInstagram,
+  SiYoutube,
+  SiTiktok,
+  SiFacebook,
+} from "react-icons/si";
+
+import {
+  FaPhone,
+  FaEnvelope,
+  FaGlobe,
+  FaLocationDot,
+  FaLink,
+  FaLinkedin,
+  FaChevronDown,
+  FaTrash,
+  FaCamera,
+  FaImage,
+  FaPlus,
+  FaCheck,
+} from "react-icons/fa6";
+
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
   process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
@@ -29,41 +53,33 @@ const LANGUAGES = [
 ];
 
 /* =========================================================
-   TRANSLATIONS
+   TEXTS
 ========================================================= */
 
 const TEXTS = {
   uz: {
     smallTitle: "RAQAMLI VIZITKA",
     title: "Profilni tahrirlash",
-
     name: "Ism va familiya",
     namePlaceholder: "Ism va familiyangiz",
-
     bio: "Ma’lumot",
     bioPlaceholder: "Masalan: Direktor, tadbirkor...",
-
     photo: "Profil rasmi",
     uploadPhoto: "Rasm yuklash",
     photoHint: "JPG, PNG, WEBP — maksimal 5 MB",
-
     background: "Orqa fon rasmi",
     uploadBackground: "Fon yuklash",
     backgroundHint: "JPG, PNG, WEBP — maksimal 10 MB",
-
     links: "Havolalar",
     addLink: "Yangi havola qo‘shish",
     linkName: "Nomi, masalan Telegram",
-
+    chooseService: "Xizmat turini tanlang",
     save: "Saqlash",
-
     selectLanguage: "Tilni tanlang",
     languageDescription: "Vizitkani tahrirlash uchun tilni tanlang",
     searchLanguage: "Tilni qidirish...",
     notFound: "Til topilmadi",
-
     profileNotFound: "Vizitka topilmadi.",
-
     enterName: "Ism va familiyani kiriting.",
     onlyImage: "Faqat rasm yuklash mumkin.",
     photoTooBig: "Profil rasmi 5 MB dan katta bo‘lmasin.",
@@ -73,34 +89,26 @@ const TEXTS = {
   ru: {
     smallTitle: "ЦИФРОВАЯ ВИЗИТКА",
     title: "Редактировать профиль",
-
     name: "Имя и фамилия",
     namePlaceholder: "Ваше имя и фамилия",
-
     bio: "Информация",
     bioPlaceholder: "Например: Директор, предприниматель...",
-
     photo: "Фото профиля",
     uploadPhoto: "Загрузить фото",
     photoHint: "JPG, PNG, WEBP — максимум 5 МБ",
-
     background: "Фоновое изображение",
     uploadBackground: "Загрузить фон",
     backgroundHint: "JPG, PNG, WEBP — максимум 10 МБ",
-
     links: "Ссылки",
     addLink: "Добавить ссылку",
     linkName: "Название, например Telegram",
-
+    chooseService: "Выберите сервис",
     save: "Сохранить",
-
     selectLanguage: "Выберите язык",
     languageDescription: "Выберите язык для редактирования визитки",
     searchLanguage: "Поиск языка...",
     notFound: "Язык не найден",
-
     profileNotFound: "Визитка не найдена.",
-
     enterName: "Введите имя и фамилию.",
     onlyImage: "Можно загружать только изображения.",
     photoTooBig: "Фото профиля не должно превышать 5 МБ.",
@@ -110,34 +118,26 @@ const TEXTS = {
   en: {
     smallTitle: "DIGITAL BUSINESS CARD",
     title: "Edit profile",
-
     name: "Full name",
     namePlaceholder: "Your full name",
-
     bio: "Information",
     bioPlaceholder: "For example: Director, entrepreneur...",
-
     photo: "Profile photo",
     uploadPhoto: "Upload photo",
     photoHint: "JPG, PNG, WEBP — maximum 5 MB",
-
     background: "Background image",
     uploadBackground: "Upload background",
     backgroundHint: "JPG, PNG, WEBP — maximum 10 MB",
-
     links: "Links",
     addLink: "Add link",
     linkName: "Name, for example Telegram",
-
+    chooseService: "Choose service",
     save: "Save",
-
     selectLanguage: "Choose language",
     languageDescription: "Choose a language to edit your card",
     searchLanguage: "Search language...",
     notFound: "Language not found",
-
     profileNotFound: "Business card not found.",
-
     enterName: "Enter your full name.",
     onlyImage: "Only images can be uploaded.",
     photoTooBig: "Profile photo must not exceed 5 MB.",
@@ -148,6 +148,24 @@ const TEXTS = {
 function getText(language) {
   return TEXTS[language] || TEXTS.en;
 }
+
+/* =========================================================
+   SERVICES
+========================================================= */
+
+const SERVICES = [
+  { value: "telegram", label: "Telegram" },
+  { value: "whatsapp", label: "WhatsApp" },
+  { value: "instagram", label: "Instagram" },
+  { value: "youtube", label: "YouTube" },
+  { value: "tiktok", label: "TikTok" },
+  { value: "facebook", label: "Facebook" },
+  { value: "linkedin", label: "LinkedIn" },
+  { value: "phone", label: "Telefon" },
+  { value: "email", label: "Email" },
+  { value: "website", label: "Website" },
+  { value: "location", label: "Manzil" },
+];
 
 /* =========================================================
    PAGE
@@ -171,6 +189,8 @@ export default function EditCardPage() {
   const [showLanguage, setShowLanguage] = useState(false);
   const [languageSearch, setLanguageSearch] = useState("");
 
+  const [openServiceIndex, setOpenServiceIndex] = useState(null);
+
   const [saving, setSaving] = useState(false);
   const [savingLanguage, setSavingLanguage] = useState(false);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
@@ -187,10 +207,6 @@ export default function EditCardPage() {
     }
   }, [cardId]);
 
-  /* =========================================================
-     LOAD DATA
-  ========================================================= */
-
   async function loadData() {
     try {
       const { data: profileData, error } = await supabase
@@ -199,9 +215,7 @@ export default function EditCardPage() {
         .eq("card_id", cardId)
         .single();
 
-      if (error) {
-        throw error;
-      }
+      if (error) throw error;
 
       if (!profileData) {
         setProfile(null);
@@ -209,7 +223,6 @@ export default function EditCardPage() {
       }
 
       setProfile(profileData);
-
       setFullName(profileData.full_name || "");
       setBio(profileData.bio || "");
       setPhotoUrl(profileData.photo_url || "");
@@ -231,9 +244,7 @@ export default function EditCardPage() {
         .eq("profile_id", profileData.id)
         .order("sort_order", { ascending: true });
 
-      if (linkError) {
-        throw linkError;
-      }
+      if (linkError) throw linkError;
 
       setLinks(linkData || []);
     } catch (error) {
@@ -256,14 +267,10 @@ export default function EditCardPage() {
     try {
       const { error } = await supabase
         .from("profiles")
-        .update({
-          language: code,
-        })
+        .update({ language: code })
         .eq("id", profile.id);
 
-      if (error) {
-        throw error;
-      }
+      if (error) throw error;
 
       setLanguage(code);
 
@@ -276,11 +283,7 @@ export default function EditCardPage() {
       setShowLanguage(false);
     } catch (error) {
       console.error("LANGUAGE ERROR:", error);
-
-      alert(
-        "Tilni saqlashda xato: " +
-          error.message
-      );
+      alert("Tilni saqlashda xato: " + error.message);
     } finally {
       setSavingLanguage(false);
     }
@@ -295,9 +298,7 @@ export default function EditCardPage() {
 
     const marker = `/storage/v1/object/public/${bucket}/`;
 
-    if (!publicUrl.includes(marker)) {
-      return null;
-    }
+    if (!publicUrl.includes(marker)) return null;
 
     return decodeURIComponent(publicUrl.split(marker)[1]);
   }
@@ -307,9 +308,7 @@ export default function EditCardPage() {
 
     if (!path) return;
 
-    const { error } = await supabase.storage
-      .from(bucket)
-      .remove([path]);
+    const { error } = await supabase.storage.from(bucket).remove([path]);
 
     if (error) {
       console.error("DELETE OLD FILE ERROR:", error);
@@ -354,9 +353,7 @@ export default function EditCardPage() {
           upsert: false,
         });
 
-      if (uploadError) {
-        throw uploadError;
-      }
+      if (uploadError) throw uploadError;
 
       const { data } = supabase.storage
         .from("avatars")
@@ -366,16 +363,11 @@ export default function EditCardPage() {
 
       const { error: updateError } = await supabase
         .from("profiles")
-        .update({
-          photo_url: newUrl,
-        })
+        .update({ photo_url: newUrl })
         .eq("id", profile.id);
 
       if (updateError) {
-        await supabase.storage
-          .from("avatars")
-          .remove([fileName]);
-
+        await supabase.storage.from("avatars").remove([fileName]);
         throw updateError;
       }
 
@@ -391,11 +383,7 @@ export default function EditCardPage() {
       }
     } catch (error) {
       console.error("PHOTO ERROR:", error);
-
-      alert(
-        "Profil rasmini yuklashda xato: " +
-          error.message
-      );
+      alert("Profil rasmini yuklashda xato: " + error.message);
     } finally {
       setUploadingPhoto(false);
       event.target.value = "";
@@ -440,9 +428,7 @@ export default function EditCardPage() {
           upsert: false,
         });
 
-      if (uploadError) {
-        throw uploadError;
-      }
+      if (uploadError) throw uploadError;
 
       const { data } = supabase.storage
         .from("backgrounds")
@@ -452,16 +438,11 @@ export default function EditCardPage() {
 
       const { error: updateError } = await supabase
         .from("profiles")
-        .update({
-          background_url: newUrl,
-        })
+        .update({ background_url: newUrl })
         .eq("id", profile.id);
 
       if (updateError) {
-        await supabase.storage
-          .from("backgrounds")
-          .remove([fileName]);
-
+        await supabase.storage.from("backgrounds").remove([fileName]);
         throw updateError;
       }
 
@@ -477,11 +458,7 @@ export default function EditCardPage() {
       }
     } catch (error) {
       console.error("BACKGROUND ERROR:", error);
-
-      alert(
-        "Orqa fonni yuklashda xato: " +
-          error.message
-      );
+      alert("Orqa fonni yuklashda xato: " + error.message);
     } finally {
       setUploadingBackground(false);
       event.target.value = "";
@@ -499,13 +476,14 @@ export default function EditCardPage() {
         temp_id:
           Date.now().toString() +
           Math.random().toString(36).slice(2),
-
         label: "",
         url: "",
-        icon: "website",
+        icon: "telegram",
         sort_order: current.length,
       },
     ]);
+
+    setOpenServiceIndex(links.length);
   }
 
   function updateLink(index, field, value) {
@@ -521,6 +499,22 @@ export default function EditCardPage() {
     );
   }
 
+  function chooseService(index, value) {
+    updateLink(index, "icon", value);
+
+    const service = SERVICES.find(
+      (item) => item.value === value
+    );
+
+    const currentLink = links[index];
+
+    if (!currentLink?.label?.trim() && service) {
+      updateLink(index, "label", service.label);
+    }
+
+    setOpenServiceIndex(null);
+  }
+
   async function removeLink(index) {
     const link = links[index];
 
@@ -531,9 +525,7 @@ export default function EditCardPage() {
           .delete()
           .eq("id", link.id);
 
-        if (error) {
-          throw error;
-        }
+        if (error) throw error;
       }
 
       setLinks((current) =>
@@ -544,13 +536,11 @@ export default function EditCardPage() {
             sort_order: i,
           }))
       );
+
+      setOpenServiceIndex(null);
     } catch (error) {
       console.error("DELETE LINK ERROR:", error);
-
-      alert(
-        "Havolani o‘chirishda xato: " +
-          error.message
-      );
+      alert("Havolani o‘chirishda xato: " + error.message);
     }
   }
 
@@ -580,63 +570,46 @@ export default function EditCardPage() {
         })
         .eq("id", profile.id);
 
-      if (profileError) {
-        throw profileError;
-      }
+      if (profileError) throw profileError;
 
       const existingIds = links
         .filter((link) => link.id)
         .map((link) => link.id);
 
-      const {
-        data: existingDbLinks,
-        error: existingError,
-      } = await supabase
-        .from("links")
-        .select("id")
-        .eq("profile_id", profile.id);
+      const { data: existingDbLinks, error: existingError } =
+        await supabase
+          .from("links")
+          .select("id")
+          .eq("profile_id", profile.id);
 
-      if (existingError) {
-        throw existingError;
-      }
+      if (existingError) throw existingError;
 
       const idsToDelete =
         existingDbLinks
-          ?.filter(
-            (item) =>
-              !existingIds.includes(item.id)
-          )
+          ?.filter((item) => !existingIds.includes(item.id))
           .map((item) => item.id) || [];
 
       if (idsToDelete.length > 0) {
-        const { error: deleteError } =
-          await supabase
-            .from("links")
-            .delete()
-            .in("id", idsToDelete);
+        const { error: deleteError } = await supabase
+          .from("links")
+          .delete()
+          .in("id", idsToDelete);
 
-        if (deleteError) {
-          throw deleteError;
-        }
+        if (deleteError) throw deleteError;
       }
 
       for (let i = 0; i < links.length; i++) {
         const link = links[i];
 
-        if (
-          !link.label?.trim() &&
-          !link.url?.trim()
-        ) {
+        if (!link.label?.trim() && !link.url?.trim()) {
           continue;
         }
 
         const payload = {
           profile_id: profile.id,
-          label:
-            link.label?.trim() || "Link",
+          label: link.label?.trim() || "Link",
           url: link.url?.trim() || "",
-          icon:
-            link.icon || "website",
+          icon: link.icon || "website",
           sort_order: i,
         };
 
@@ -646,41 +619,26 @@ export default function EditCardPage() {
             .update(payload)
             .eq("id", link.id);
 
-          if (error) {
-            throw error;
-          }
+          if (error) throw error;
         } else {
           const { error } = await supabase
             .from("links")
             .insert(payload);
 
-          if (error) {
-            throw error;
-          }
+          if (error) throw error;
         }
       }
 
       window.location.replace(`/c/${cardId}`);
     } catch (error) {
       console.error("SAVE ERROR:", error);
-
-      alert(
-        "Saqlashda xato: " +
-          error.message
-      );
-
+      alert("Saqlashda xato: " + error.message);
       setSaving(false);
     }
   }
 
-  /* =========================================================
-     PROFILE CHECK
-  ========================================================= */
-
   if (!profileChecked) {
-    return (
-      <main style={emptyPageStyle} />
-    );
+    return <main style={emptyPageStyle} />;
   }
 
   if (!profile) {
@@ -691,64 +649,42 @@ export default function EditCardPage() {
     );
   }
 
-  /* =========================================================
-     LANGUAGE SEARCH
-  ========================================================= */
+  const filteredLanguages = LANGUAGES.filter((item) => {
+    const search = languageSearch.toLowerCase().trim();
 
-  const filteredLanguages =
-    LANGUAGES.filter((item) => {
-      const search =
-        languageSearch
-          .toLowerCase()
-          .trim();
-
-      return (
-        item.name
-          .toLowerCase()
-          .includes(search) ||
-        item.code
-          .toLowerCase()
-          .includes(search) ||
-        item.short
-          .toLowerCase()
-          .includes(search)
-      );
-    });
-
-  /* =========================================================
-     UI
-  ========================================================= */
+    return (
+      item.name.toLowerCase().includes(search) ||
+      item.code.toLowerCase().includes(search) ||
+      item.short.toLowerCase().includes(search)
+    );
+  });
 
   return (
     <main
       dir={currentLanguage.dir}
       style={pageStyle}
+      onClick={() => {
+        if (openServiceIndex !== null) {
+          setOpenServiceIndex(null);
+        }
+      }}
     >
-      {/* BACKGROUND */}
-
       {backgroundUrl && (
         <div
           style={{
             position: "fixed",
             inset: "-30px",
-
-            backgroundImage:
-              `url("${backgroundUrl}")`,
-
+            backgroundImage: `url("${backgroundUrl}")`,
             backgroundSize: "cover",
             backgroundPosition: "center",
-
-            filter: "blur(14px)",
-            transform: "scale(1.08)",
-
-            opacity: 0.5,
+            filter: "blur(16px)",
+            transform: "scale(1.1)",
+            opacity: 0.45,
           }}
         />
       )}
 
       <div style={overlayStyle} />
-
-      {/* EDITOR */}
 
       <section style={editorStyle}>
         {/* HEADER */}
@@ -766,7 +702,8 @@ export default function EditCardPage() {
 
           <button
             type="button"
-            onClick={() => {
+            onClick={(event) => {
+              event.stopPropagation();
               setLanguageSearch("");
               setShowLanguage(true);
             }}
@@ -785,9 +722,7 @@ export default function EditCardPage() {
         <input
           value={fullName}
           onChange={(event) =>
-            setFullName(
-              event.target.value
-            )
+            setFullName(event.target.value)
           }
           placeholder={t.namePlaceholder}
           style={inputStyle}
@@ -802,14 +737,12 @@ export default function EditCardPage() {
         <textarea
           value={bio}
           onChange={(event) =>
-            setBio(
-              event.target.value
-            )
+            setBio(event.target.value)
           }
           placeholder={t.bioPlaceholder}
           style={{
             ...inputStyle,
-            minHeight: 95,
+            minHeight: 96,
             resize: "vertical",
           }}
         />
@@ -830,7 +763,7 @@ export default function EditCardPage() {
               />
             ) : (
               <div style={emptyAvatarStyle}>
-                👤
+                <FaCamera size={24} />
               </div>
             )}
 
@@ -838,22 +771,18 @@ export default function EditCardPage() {
               <label
                 style={{
                   ...uploadButtonStyle,
-                  opacity:
-                    uploadingPhoto
-                      ? 0.6
-                      : 1,
+                  opacity: uploadingPhoto ? 0.6 : 1,
                 }}
               >
-                📷 {t.uploadPhoto}
+                <FaCamera size={14} />
+                <span>{t.uploadPhoto}</span>
 
                 <input
                   type="file"
                   accept="image/*"
                   onChange={uploadPhoto}
                   disabled={uploadingPhoto}
-                  style={{
-                    display: "none",
-                  }}
+                  style={{ display: "none" }}
                 />
               </label>
 
@@ -864,7 +793,7 @@ export default function EditCardPage() {
           </div>
         </div>
 
-        {/* BACKGROUND PHOTO */}
+        {/* BACKGROUND */}
 
         <div style={sectionStyle}>
           <h2 style={sectionTitleStyle}>
@@ -876,17 +805,11 @@ export default function EditCardPage() {
               <img
                 src={backgroundUrl}
                 alt="Background"
-                style={
-                  backgroundPreviewStyle
-                }
+                style={backgroundPreviewStyle}
               />
             ) : (
-              <div
-                style={
-                  emptyBackgroundStyle
-                }
-              >
-                🖼️
+              <div style={emptyBackgroundStyle}>
+                <FaImage size={24} />
               </div>
             )}
 
@@ -894,26 +817,18 @@ export default function EditCardPage() {
               <label
                 style={{
                   ...uploadButtonStyle,
-                  opacity:
-                    uploadingBackground
-                      ? 0.6
-                      : 1,
+                  opacity: uploadingBackground ? 0.6 : 1,
                 }}
               >
-                🖼️ {t.uploadBackground}
+                <FaImage size={14} />
+                <span>{t.uploadBackground}</span>
 
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={
-                    uploadBackground
-                  }
-                  disabled={
-                    uploadingBackground
-                  }
-                  style={{
-                    display: "none",
-                  }}
+                  onChange={uploadBackground}
+                  disabled={uploadingBackground}
+                  style={{ display: "none" }}
                 />
               </label>
 
@@ -927,170 +842,196 @@ export default function EditCardPage() {
         {/* LINKS */}
 
         <div style={sectionStyle}>
-          <div
-            style={
-              sectionHeaderStyle
-            }
-          >
-            <h2
-              style={
-                sectionTitleStyle
-              }
-            >
+          <div style={sectionHeaderStyle}>
+            <h2 style={sectionTitleStyle}>
               {t.links}
             </h2>
 
-            <span
-              style={counterStyle}
-            >
+            <span style={counterStyle}>
               {links.length}
             </span>
           </div>
 
-          {links.map(
-            (link, index) => (
+          {links.map((link, index) => {
+            const service =
+              SERVICES.find(
+                (item) =>
+                  item.value ===
+                  (link.icon || "website")
+              ) || SERVICES[9];
+
+            return (
               <div
-                key={
-                  link.id ||
-                  link.temp_id
-                }
+                key={link.id || link.temp_id}
                 style={linkBoxStyle}
               >
-                <div
-                  style={linkTopStyle}
-                >
-                  <select
-                    value={
-                      link.icon ||
-                      "website"
-                    }
-                    onChange={(
-                      event
-                    ) =>
-                      updateLink(
-                        index,
-                        "icon",
-                        event.target
-                          .value
-                      )
-                    }
-                    style={
-                      selectStyle
+                <div style={linkTopStyle}>
+                  <div
+                    style={{
+                      position: "relative",
+                      flex: 1,
+                      minWidth: 0,
+                    }}
+                    onClick={(event) =>
+                      event.stopPropagation()
                     }
                   >
-                    <option value="telegram">
-                      Telegram
-                    </option>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setOpenServiceIndex(
+                          openServiceIndex === index
+                            ? null
+                            : index
+                        )
+                      }
+                      style={serviceButtonStyle}
+                    >
+                      <span style={serviceIconBoxStyle}>
+                        <SocialIcon
+                          icon={link.icon || "website"}
+                          size={20}
+                        />
+                      </span>
 
-                    <option value="whatsapp">
-                      WhatsApp
-                    </option>
+                      <span style={serviceNameStyle}>
+                        {service.label}
+                      </span>
 
-                    <option value="instagram">
-                      Instagram
-                    </option>
+                      <FaChevronDown
+                        size={12}
+                        style={{
+                          opacity: 0.5,
+                          transform:
+                            openServiceIndex === index
+                              ? "rotate(180deg)"
+                              : "rotate(0deg)",
+                          transition:
+                            "transform .2s ease",
+                        }}
+                      />
+                    </button>
 
-                    <option value="phone">
-                      Telefon
-                    </option>
+                    {openServiceIndex === index && (
+                      <div style={serviceMenuStyle}>
+                        <div style={serviceMenuTitleStyle}>
+                          {t.chooseService}
+                        </div>
 
-                    <option value="youtube">
-                      YouTube
-                    </option>
+                        <div style={serviceGridStyle}>
+                          {SERVICES.map((item) => {
+                            const selected =
+                              item.value ===
+                              (link.icon || "website");
 
-                    <option value="tiktok">
-                      TikTok
-                    </option>
+                            return (
+                              <button
+                                key={item.value}
+                                type="button"
+                                onClick={() =>
+                                  chooseService(
+                                    index,
+                                    item.value
+                                  )
+                                }
+                                style={{
+                                  ...serviceItemStyle,
+                                  ...(selected
+                                    ? serviceItemSelectedStyle
+                                    : {}),
+                                }}
+                              >
+                                <span
+                                  style={{
+                                    ...servicePickerIconStyle,
+                                    ...(selected
+                                      ? {
+                                          background:
+                                            "rgba(57,119,239,.1)",
+                                        }
+                                      : {}),
+                                  }}
+                                >
+                                  <SocialIcon
+                                    icon={item.value}
+                                    size={19}
+                                  />
+                                </span>
 
-                    <option value="facebook">
-                      Facebook
-                    </option>
+                                <span
+                                  style={{
+                                    flex: 1,
+                                    textAlign: "left",
+                                  }}
+                                >
+                                  {item.label}
+                                </span>
 
-                    <option value="linkedin">
-                      LinkedIn
-                    </option>
-
-                    <option value="email">
-                      Email
-                    </option>
-
-                    <option value="website">
-                      Website
-                    </option>
-
-                    <option value="location">
-                      Manzil
-                    </option>
-                  </select>
+                                {selected && (
+                                  <FaCheck
+                                    size={12}
+                                    color="#3977ef"
+                                  />
+                                )}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+                  </div>
 
                   <button
                     type="button"
                     onClick={() =>
-                      removeLink(
-                        index
-                      )
+                      removeLink(index)
                     }
-                    style={
-                      deleteButtonStyle
-                    }
+                    style={deleteButtonStyle}
+                    aria-label="Delete"
                   >
-                    ×
+                    <FaTrash size={15} />
                   </button>
                 </div>
 
                 <input
-                  value={
-                    link.label ||
-                    ""
-                  }
-                  onChange={(
-                    event
-                  ) =>
+                  value={link.label || ""}
+                  onChange={(event) =>
                     updateLink(
                       index,
                       "label",
-                      event.target
-                        .value
+                      event.target.value
                     )
                   }
-                  placeholder={
-                    t.linkName
-                  }
-                  style={
-                    inputStyle
-                  }
+                  placeholder={t.linkName}
+                  style={linkInputStyle}
                 />
 
                 <input
-                  value={
-                    link.url || ""
-                  }
-                  onChange={(
-                    event
-                  ) =>
+                  value={link.url || ""}
+                  onChange={(event) =>
                     updateLink(
                       index,
                       "url",
-                      event.target
-                        .value
+                      event.target.value
                     )
                   }
                   placeholder="https://..."
                   style={{
-                    ...inputStyle,
+                    ...linkInputStyle,
                     marginBottom: 0,
                   }}
                 />
               </div>
-            )
-          )}
+            );
+          })}
 
           <button
             type="button"
             onClick={addLink}
             style={addButtonStyle}
           >
-            ＋ {t.addLink}
+            <FaPlus size={14} />
+            <span>{t.addLink}</span>
           </button>
         </div>
 
@@ -1102,56 +1043,32 @@ export default function EditCardPage() {
           disabled={saving}
           style={{
             ...saveButtonStyle,
-
-            opacity:
-              saving
-                ? 0.65
-                : 1,
+            opacity: saving ? 0.65 : 1,
           }}
         >
           {t.save}
         </button>
       </section>
 
-      {/* =====================================================
-          LANGUAGE MODAL
-      ===================================================== */}
+      {/* LANGUAGE MODAL */}
 
       {showLanguage && (
-        <div
-          style={
-            modalOverlayStyle
-          }
-        >
+        <div style={modalOverlayStyle}>
           <div
             dir="ltr"
-            style={
-              languageModalStyle
-            }
+            style={languageModalStyle}
           >
-            <div
-              style={
-                languageGlobeStyle
-              }
-            >
+            <div style={languageGlobeStyle}>
               🌐
             </div>
 
-            <h2
-              style={
-                modalTitleStyle
-              }
-            >
+            <h2 style={modalTitleStyle}>
               {language
                 ? t.selectLanguage
                 : "Tilni tanlang · Выберите язык · Choose language"}
             </h2>
 
-            <p
-              style={
-                modalDescriptionStyle
-              }
-            >
+            <p style={modalDescriptionStyle}>
               {language
                 ? t.languageDescription
                 : "Davom etish uchun tilni tanlang"}
@@ -1159,12 +1076,8 @@ export default function EditCardPage() {
 
             <input
               autoFocus
-              value={
-                languageSearch
-              }
-              onChange={(
-                event
-              ) =>
+              value={languageSearch}
+              onChange={(event) =>
                 setLanguageSearch(
                   event.target.value
                 )
@@ -1174,73 +1087,41 @@ export default function EditCardPage() {
                   ? t.searchLanguage
                   : "Tilni qidirish..."
               }
-              style={
-                languageSearchStyle
-              }
+              style={languageSearchStyle}
             />
 
-            <div
-              style={
-                languageListStyle
-              }
-            >
-              {filteredLanguages.map(
-                (item) => (
-                  <button
-                    key={
-                      item.code
-                    }
-                    type="button"
-                    disabled={
-                      savingLanguage
-                    }
-                    onClick={() =>
-                      selectLanguage(
-                        item.code
-                      )
-                    }
-                    style={{
-                      ...languageItemStyle,
-
-                      ...(language ===
-                      item.code
-                        ? languageSelectedStyle
-                        : {}),
-                    }}
-                  >
-                    <span
-                      style={
-                        flagStyle
-                      }
-                    >
-                      {item.flag}
-                    </span>
-
-                    <span
-                      style={{
-                        flex: 1,
-                      }}
-                    >
-                      {item.name}
-                    </span>
-
-                    {language ===
-                      item.code && (
-                      <span>
-                        ✓
-                      </span>
-                    )}
-                  </button>
-                )
-              )}
-
-              {filteredLanguages.length ===
-                0 && (
-                <div
-                  style={
-                    notFoundStyle
+            <div style={languageListStyle}>
+              {filteredLanguages.map((item) => (
+                <button
+                  key={item.code}
+                  type="button"
+                  disabled={savingLanguage}
+                  onClick={() =>
+                    selectLanguage(item.code)
                   }
+                  style={{
+                    ...languageItemStyle,
+                    ...(language === item.code
+                      ? languageSelectedStyle
+                      : {}),
+                  }}
                 >
+                  <span style={flagStyle}>
+                    {item.flag}
+                  </span>
+
+                  <span style={{ flex: 1 }}>
+                    {item.name}
+                  </span>
+
+                  {language === item.code && (
+                    <FaCheck size={13} />
+                  )}
+                </button>
+              ))}
+
+              {filteredLanguages.length === 0 && (
+                <div style={notFoundStyle}>
                   {t.notFound}
                 </div>
               )}
@@ -1253,21 +1134,123 @@ export default function EditCardPage() {
 }
 
 /* =========================================================
-   PAGE DESIGN
+   ORIGINAL SOCIAL ICONS
+========================================================= */
+
+function SocialIcon({ icon, size = 20 }) {
+  const common = { size };
+
+  switch (icon) {
+    case "telegram":
+      return (
+        <SiTelegram
+          {...common}
+          color="#229ED9"
+        />
+      );
+
+    case "whatsapp":
+      return (
+        <SiWhatsapp
+          {...common}
+          color="#25D366"
+        />
+      );
+
+    case "instagram":
+      return (
+        <SiInstagram
+          {...common}
+          color="#E4405F"
+        />
+      );
+
+    case "youtube":
+      return (
+        <SiYoutube
+          {...common}
+          color="#FF0000"
+        />
+      );
+
+    case "tiktok":
+      return (
+        <SiTiktok
+          {...common}
+          color="#111111"
+        />
+      );
+
+    case "facebook":
+      return (
+        <SiFacebook
+          {...common}
+          color="#1877F2"
+        />
+      );
+
+    case "linkedin":
+      return (
+        <FaLinkedin
+          {...common}
+          color="#0A66C2"
+        />
+      );
+
+    case "phone":
+      return (
+        <FaPhone
+          {...common}
+          color="#16A34A"
+        />
+      );
+
+    case "email":
+      return (
+        <FaEnvelope
+          {...common}
+          color="#EA4335"
+        />
+      );
+
+    case "location":
+      return (
+        <FaLocationDot
+          {...common}
+          color="#EF4444"
+        />
+      );
+
+    case "website":
+      return (
+        <FaGlobe
+          {...common}
+          color="#2563EB"
+        />
+      );
+
+    default:
+      return (
+        <FaLink
+          {...common}
+          color="#64748B"
+        />
+      );
+  }
+}
+
+/* =========================================================
+   DESIGN
 ========================================================= */
 
 const pageStyle = {
   minHeight: "100vh",
   position: "relative",
   overflowX: "hidden",
-
-  padding: "28px 16px 60px",
-
+  padding: "24px 14px 60px",
   boxSizing: "border-box",
-
   fontFamily:
     "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-
   background: "#eef2f6",
 };
 
@@ -1279,590 +1262,450 @@ const emptyPageStyle = {
 const overlayStyle = {
   position: "fixed",
   inset: 0,
-
   background:
-    "linear-gradient(135deg, rgba(240,245,250,.86), rgba(255,255,255,.68))",
+    "linear-gradient(135deg, rgba(240,245,250,.87), rgba(255,255,255,.72))",
 };
 
 const editorStyle = {
   position: "relative",
   zIndex: 2,
-
   width: "100%",
   maxWidth: 620,
-
   margin: "0 auto",
-
-  padding: 26,
-
+  padding: "24px",
   boxSizing: "border-box",
-
-  border:
-    "1px solid rgba(255,255,255,.72)",
-
+  border: "1px solid rgba(255,255,255,.8)",
   borderRadius: 28,
-
-  background:
-    "rgba(255,255,255,.88)",
-
-  backdropFilter:
-    "blur(22px)",
-
-  WebkitBackdropFilter:
-    "blur(22px)",
-
-  boxShadow:
-    "0 20px 65px rgba(15,23,42,.12)",
+  background: "rgba(255,255,255,.91)",
+  backdropFilter: "blur(24px)",
+  WebkitBackdropFilter: "blur(24px)",
+  boxShadow: "0 22px 70px rgba(15,23,42,.11)",
 };
 
 const topStyle = {
   display: "flex",
-
   alignItems: "flex-start",
-
-  justifyContent:
-    "space-between",
-
-  gap: 15,
-
+  justifyContent: "space-between",
+  gap: 14,
   marginBottom: 28,
 };
 
 const smallTitleStyle = {
   marginBottom: 7,
-
   fontSize: 11,
-
   fontWeight: 800,
-
   letterSpacing: 1.5,
-
   color: "#3977ef",
 };
 
 const titleStyle = {
   margin: 0,
-
   fontSize: 27,
-
   lineHeight: 1.15,
-
   color: "#172033",
 };
 
 const languageButtonStyle = {
   flexShrink: 0,
-
-  border:
-    "1px solid rgba(15,23,42,.08)",
-
+  border: "1px solid rgba(15,23,42,.07)",
   borderRadius: 14,
-
-  background:
-    "rgba(255,255,255,.78)",
-
-  padding:
-    "10px 13px",
-
+  background: "#f5f7fb",
+  padding: "10px 13px",
   fontSize: 13,
-
   fontWeight: 800,
-
   color: "#172033",
-
   cursor: "pointer",
 };
 
 const labelStyle = {
   display: "block",
-
   marginBottom: 8,
-
   fontSize: 13,
-
   fontWeight: 700,
-
   color: "#39445a",
 };
 
 const inputStyle = {
   width: "100%",
-
   boxSizing: "border-box",
-
   marginBottom: 20,
-
-  padding:
-    "14px 15px",
-
-  border:
-    "1px solid rgba(15,23,42,.09)",
-
+  padding: "14px 15px",
+  border: 0,
   outline: "none",
-
   borderRadius: 15,
-
-  background:
-    "rgba(247,249,252,.92)",
-
+  background: "#f3f5f8",
   color: "#172033",
-
   fontSize: 15,
-
   lineHeight: 1.4,
 };
 
 const sectionStyle = {
   marginTop: 8,
-
   marginBottom: 22,
-
   padding: 18,
-
-  border:
-    "1px solid rgba(15,23,42,.07)",
-
-  borderRadius: 20,
-
-  background:
-    "rgba(248,250,252,.72)",
+  borderRadius: 21,
+  background: "#f7f8fa",
 };
 
 const sectionTitleStyle = {
   margin: 0,
-
   fontSize: 15,
-
   fontWeight: 800,
-
   color: "#202a3b",
 };
 
 const sectionHeaderStyle = {
   display: "flex",
-
   alignItems: "center",
-
-  justifyContent:
-    "space-between",
-
+  justifyContent: "space-between",
   marginBottom: 15,
 };
 
 const counterStyle = {
   minWidth: 28,
-
   height: 28,
-
   display: "flex",
-
   alignItems: "center",
-
   justifyContent: "center",
-
   borderRadius: 999,
-
   background: "#e8eef9",
-
   color: "#3977ef",
-
   fontSize: 12,
-
   fontWeight: 800,
 };
 
 const uploadRowStyle = {
   display: "flex",
-
   alignItems: "center",
-
   gap: 16,
-
   marginTop: 15,
 };
 
 const avatarStyle = {
   width: 78,
-
   height: 78,
-
   flexShrink: 0,
-
   objectFit: "cover",
-
   borderRadius: "50%",
-
-  border:
-    "4px solid rgba(255,255,255,.9)",
-
-  boxShadow:
-    "0 8px 24px rgba(15,23,42,.15)",
+  border: "4px solid #fff",
+  boxShadow: "0 8px 24px rgba(15,23,42,.13)",
 };
 
 const emptyAvatarStyle = {
   width: 78,
-
   height: 78,
-
   flexShrink: 0,
-
   display: "flex",
-
   alignItems: "center",
-
   justifyContent: "center",
-
   borderRadius: "50%",
-
   background: "#e8edf3",
-
-  fontSize: 30,
+  color: "#718096",
 };
 
 const backgroundPreviewStyle = {
   width: 100,
-
   height: 75,
-
   flexShrink: 0,
-
   objectFit: "cover",
-
-  borderRadius: 14,
-
-  boxShadow:
-    "0 7px 20px rgba(15,23,42,.12)",
+  borderRadius: 15,
+  boxShadow: "0 7px 20px rgba(15,23,42,.11)",
 };
 
 const emptyBackgroundStyle = {
   width: 100,
-
   height: 75,
-
   flexShrink: 0,
-
   display: "flex",
-
   alignItems: "center",
-
   justifyContent: "center",
-
-  borderRadius: 14,
-
+  borderRadius: 15,
   background: "#e8edf3",
-
-  fontSize: 27,
+  color: "#718096",
 };
 
 const uploadButtonStyle = {
-  display: "inline-block",
-
-  padding:
-    "11px 14px",
-
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 8,
+  padding: "11px 14px",
   borderRadius: 13,
-
   background: "#172033",
-
   color: "white",
-
   fontSize: 13,
-
   fontWeight: 700,
-
   cursor: "pointer",
 };
 
 const hintStyle = {
   marginTop: 8,
-
   color: "#8791a2",
-
   fontSize: 11,
-
   lineHeight: 1.4,
 };
 
 const linkBoxStyle = {
+  position: "relative",
   marginBottom: 12,
-
-  padding: 14,
-
-  border:
-    "1px solid rgba(15,23,42,.07)",
-
-  borderRadius: 17,
-
-  background:
-    "rgba(255,255,255,.78)",
+  padding: 13,
+  borderRadius: 18,
+  background: "#fff",
+  boxShadow: "0 4px 16px rgba(15,23,42,.045)",
 };
 
 const linkTopStyle = {
   display: "flex",
-
-  gap: 10,
-
+  gap: 9,
   alignItems: "center",
-
-  marginBottom: 12,
+  marginBottom: 10,
 };
 
-const selectStyle = {
-  flex: 1,
-
-  minWidth: 0,
-
-  padding:
-    "12px 13px",
-
-  border:
-    "1px solid rgba(15,23,42,.09)",
-
-  borderRadius: 13,
-
-  outline: "none",
-
-  background: "#f7f9fc",
-
+const serviceButtonStyle = {
+  width: "100%",
+  minHeight: 48,
+  display: "flex",
+  alignItems: "center",
+  gap: 10,
+  padding: "7px 12px 7px 8px",
+  border: 0,
+  borderRadius: 14,
+  background: "#f3f5f8",
   color: "#172033",
+  cursor: "pointer",
+};
 
+const serviceIconBoxStyle = {
+  width: 34,
+  height: 34,
+  flexShrink: 0,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  borderRadius: 11,
+  background: "#fff",
+  boxShadow: "0 2px 8px rgba(15,23,42,.06)",
+};
+
+const serviceNameStyle = {
+  flex: 1,
+  minWidth: 0,
+  textAlign: "left",
   fontSize: 14,
+  fontWeight: 750,
+};
+
+const serviceMenuStyle = {
+  position: "absolute",
+  zIndex: 50,
+  top: "calc(100% + 7px)",
+  left: 0,
+  right: 0,
+  padding: 10,
+  border: "1px solid rgba(15,23,42,.07)",
+  borderRadius: 18,
+  background: "rgba(255,255,255,.98)",
+  boxShadow: "0 18px 50px rgba(15,23,42,.16)",
+  backdropFilter: "blur(18px)",
+  WebkitBackdropFilter: "blur(18px)",
+};
+
+const serviceMenuTitleStyle = {
+  padding: "4px 5px 10px",
+  color: "#7b8494",
+  fontSize: 11,
+  fontWeight: 800,
+};
+
+const serviceGridStyle = {
+  display: "grid",
+  gridTemplateColumns: "1fr",
+  gap: 5,
+  maxHeight: 320,
+  overflowY: "auto",
+};
+
+const serviceItemStyle = {
+  width: "100%",
+  display: "flex",
+  alignItems: "center",
+  gap: 10,
+  padding: "8px",
+  border: 0,
+  borderRadius: 13,
+  background: "transparent",
+  color: "#172033",
+  fontSize: 13,
+  fontWeight: 700,
+  cursor: "pointer",
+};
+
+const serviceItemSelectedStyle = {
+  background: "#edf3ff",
+  color: "#3977ef",
+};
+
+const servicePickerIconStyle = {
+  width: 33,
+  height: 33,
+  flexShrink: 0,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  borderRadius: 10,
+  background: "#f4f6f9",
 };
 
 const deleteButtonStyle = {
-  width: 42,
-
-  height: 42,
-
+  width: 46,
+  height: 46,
   flexShrink: 0,
-
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
   border: 0,
-
-  borderRadius: 13,
-
+  borderRadius: 14,
   background: "#fff0f0",
-
   color: "#e5484d",
-
-  fontSize: 24,
-
-  lineHeight: 1,
-
   cursor: "pointer",
+};
+
+const linkInputStyle = {
+  width: "100%",
+  boxSizing: "border-box",
+  marginBottom: 9,
+  padding: "13px 14px",
+  border: 0,
+  outline: "none",
+  borderRadius: 13,
+  background: "#f5f6f8",
+  color: "#172033",
+  fontSize: 14,
 };
 
 const addButtonStyle = {
   width: "100%",
-
-  padding:
-    "13px 15px",
-
-  border:
-    "1px dashed rgba(57,119,239,.35)",
-
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: 8,
+  padding: "13px 15px",
+  border: "1px dashed rgba(57,119,239,.35)",
   borderRadius: 15,
-
-  background:
-    "rgba(57,119,239,.06)",
-
+  background: "rgba(57,119,239,.055)",
   color: "#3977ef",
-
   fontSize: 14,
-
   fontWeight: 800,
-
   cursor: "pointer",
 };
 
 const saveButtonStyle = {
   width: "100%",
-
   marginTop: 6,
-
-  padding:
-    "16px 18px",
-
+  padding: "16px 18px",
   border: 0,
-
   borderRadius: 17,
-
   background: "#3977ef",
-
   color: "white",
-
-  boxShadow:
-    "0 10px 28px rgba(57,119,239,.25)",
-
+  boxShadow: "0 10px 28px rgba(57,119,239,.24)",
   fontSize: 15,
-
   fontWeight: 800,
-
   cursor: "pointer",
 };
 
 /* =========================================================
-   LANGUAGE MODAL DESIGN
+   LANGUAGE MODAL
 ========================================================= */
 
 const modalOverlayStyle = {
   position: "fixed",
-
   inset: 0,
-
   zIndex: 1000,
-
   display: "flex",
-
   alignItems: "center",
-
   justifyContent: "center",
-
   padding: 18,
-
-  background:
-    "rgba(15,23,42,.40)",
-
-  backdropFilter:
-    "blur(12px)",
-
-  WebkitBackdropFilter:
-    "blur(12px)",
+  background: "rgba(15,23,42,.40)",
+  backdropFilter: "blur(12px)",
+  WebkitBackdropFilter: "blur(12px)",
 };
 
 const languageModalStyle = {
   width: "100%",
-
   maxWidth: 430,
-
   maxHeight: "86vh",
-
   overflow: "hidden",
-
   padding: 22,
-
   boxSizing: "border-box",
-
-  border:
-    "1px solid rgba(255,255,255,.7)",
-
+  border: "1px solid rgba(255,255,255,.7)",
   borderRadius: 26,
-
-  background:
-    "rgba(255,255,255,.96)",
-
-  boxShadow:
-    "0 30px 90px rgba(15,23,42,.28)",
+  background: "rgba(255,255,255,.97)",
+  boxShadow: "0 30px 90px rgba(15,23,42,.28)",
 };
 
 const languageGlobeStyle = {
   width: 48,
-
   height: 48,
-
   display: "flex",
-
   alignItems: "center",
-
   justifyContent: "center",
-
   marginBottom: 14,
-
   borderRadius: 15,
-
   background: "#edf3ff",
-
   fontSize: 23,
 };
 
 const modalTitleStyle = {
   margin: 0,
-
   color: "#172033",
-
   fontSize: 22,
-
   lineHeight: 1.2,
 };
 
 const modalDescriptionStyle = {
-  margin:
-    "8px 0 18px",
-
+  margin: "8px 0 18px",
   color: "#7a8495",
-
   fontSize: 13,
 };
 
 const languageSearchStyle = {
   width: "100%",
-
   boxSizing: "border-box",
-
   marginBottom: 12,
-
-  padding:
-    "13px 14px",
-
-  border:
-    "1px solid rgba(15,23,42,.1)",
-
+  padding: "13px 14px",
+  border: 0,
   borderRadius: 14,
-
   outline: "none",
-
-  background: "#f5f7fa",
-
+  background: "#f3f5f8",
   color: "#172033",
-
   fontSize: 14,
 };
 
 const languageListStyle = {
   maxHeight: "52vh",
-
   overflowY: "auto",
-
   paddingRight: 2,
 };
 
 const languageItemStyle = {
   width: "100%",
-
   display: "flex",
-
   alignItems: "center",
-
   gap: 12,
-
   marginBottom: 7,
-
-  padding:
-    "12px 13px",
-
-  border:
-    "1px solid rgba(15,23,42,.07)",
-
+  padding: "12px 13px",
+  border: "1px solid rgba(15,23,42,.06)",
   borderRadius: 14,
-
   background: "#fff",
-
   color: "#172033",
-
   textAlign: "left",
-
   fontSize: 14,
-
   fontWeight: 700,
-
   cursor: "pointer",
 };
 
 const languageSelectedStyle = {
-  border:
-    "1px solid rgba(57,119,239,.35)",
-
+  border: "1px solid rgba(57,119,239,.3)",
   background: "#edf3ff",
-
   color: "#3977ef",
 };
 
@@ -1872,31 +1715,20 @@ const flagStyle = {
 
 const notFoundStyle = {
   padding: 20,
-
   textAlign: "center",
-
   color: "#8791a2",
-
   fontSize: 13,
 };
 
 const centerStyle = {
   minHeight: "100vh",
-
   display: "flex",
-
   alignItems: "center",
-
   justifyContent: "center",
-
   padding: 20,
-
   boxSizing: "border-box",
-
   background: "#f4f6f9",
-
   color: "#657083",
-
   fontFamily:
     "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
 };

@@ -9,136 +9,157 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
 );
 
-/* =========================
-   TILLAR
-========================= */
+/* =========================================================
+   LANGUAGES
+========================================================= */
 
 const LANGUAGES = [
-  { code: "uz", name: "O‘zbekcha", native: "O‘zbekcha", flag: "🇺🇿" },
-  { code: "ru", name: "Русский", native: "Русский", flag: "🇷🇺" },
-  { code: "en", name: "English", native: "English", flag: "🇬🇧" },
-  { code: "tr", name: "Türkçe", native: "Türkçe", flag: "🇹🇷" },
-  { code: "kk", name: "Қазақша", native: "Қазақша", flag: "🇰🇿" },
-  { code: "ar", name: "العربية", native: "العربية", flag: "🇸🇦", rtl: true },
-  { code: "zh", name: "中文", native: "中文", flag: "🇨🇳" },
-  { code: "ja", name: "日本語", native: "日本語", flag: "🇯🇵" },
-  { code: "ko", name: "한국어", native: "한국어", flag: "🇰🇷" },
-  { code: "de", name: "Deutsch", native: "Deutsch", flag: "🇩🇪" },
-  { code: "fr", name: "Français", native: "Français", flag: "🇫🇷" },
-  { code: "es", name: "Español", native: "Español", flag: "🇪🇸" },
+  { code: "uz", name: "O‘zbekcha", short: "UZ", flag: "🇺🇿", dir: "ltr" },
+  { code: "ru", name: "Русский", short: "RU", flag: "🇷🇺", dir: "ltr" },
+  { code: "en", name: "English", short: "EN", flag: "🇬🇧", dir: "ltr" },
+  { code: "tr", name: "Türkçe", short: "TR", flag: "🇹🇷", dir: "ltr" },
+  { code: "kk", name: "Қазақша", short: "KK", flag: "🇰🇿", dir: "ltr" },
+  { code: "ar", name: "العربية", short: "AR", flag: "🇸🇦", dir: "rtl" },
+  { code: "zh", name: "中文", short: "ZH", flag: "🇨🇳", dir: "ltr" },
+  { code: "ja", name: "日本語", short: "JA", flag: "🇯🇵", dir: "ltr" },
+  { code: "ko", name: "한국어", short: "KO", flag: "🇰🇷", dir: "ltr" },
+  { code: "de", name: "Deutsch", short: "DE", flag: "🇩🇪", dir: "ltr" },
+  { code: "fr", name: "Français", short: "FR", flag: "🇫🇷", dir: "ltr" },
+  { code: "es", name: "Español", short: "ES", flag: "🇪🇸", dir: "ltr" },
 ];
+
+/* =========================================================
+   TRANSLATIONS
+========================================================= */
 
 const TEXTS = {
   uz: {
-    digitalCard: "RAQAMLI TASHRIF QOG‘OZI",
-    editProfile: "Profilni tahrirlash",
-    name: "Ism",
-    namePlaceholder: "Ismingiz",
-    bio: "Biografiya / lavozim",
+    smallTitle: "RAQAMLI VIZITKA",
+    title: "Profilni tahrirlash",
+
+    name: "Ism va familiya",
+    namePlaceholder: "Ism va familiyangiz",
+
+    bio: "Ma’lumot",
     bioPlaceholder: "Masalan: Direktor, tadbirkor...",
-    profilePhoto: "Profil rasmi",
+
+    photo: "Profil rasmi",
     uploadPhoto: "Rasm yuklash",
-    uploading: "Yuklanmoqda...",
     photoHint: "JPG, PNG, WEBP — maksimal 5 MB",
-    photoDelete: "Yangi rasm yuklanganda avvalgisi avtomatik o‘chiriladi.",
+
     background: "Orqa fon rasmi",
     uploadBackground: "Fon yuklash",
     backgroundHint: "JPG, PNG, WEBP — maksimal 10 MB",
-    backgroundDelete: "Yangi fon yuklanganda eski fon Storage’dan o‘chiriladi.",
+
     links: "Havolalar",
-    linkName: "Nomi, masalan Telegram",
     addLink: "Yangi havola qo‘shish",
+    linkName: "Nomi, masalan Telegram",
+
     save: "Saqlash",
-    saving: "Saqlanmoqda...",
-    preview: "Vizitkani ko‘rish",
-    chooseLanguage: "Tilni tanlang",
-    chooseLanguageInfo: "Davom etish uchun interfeys tilini tanlang",
-    changeLanguage: "Tilni almashtirish",
-    saved: "Saqlandi ✅",
-    enterName: "Ismni kiriting.",
-    cardNotFound: "Vizitka topilmadi.",
-    loading: "Yuklanmoqda...",
-    phone: "Telefon",
-    location: "Manzil",
+
+    selectLanguage: "Tilni tanlang",
+    languageDescription: "Vizitkani tahrirlash uchun tilni tanlang",
+    searchLanguage: "Tilni qidirish...",
+    notFound: "Til topilmadi",
+
+    profileNotFound: "Vizitka topilmadi.",
+
+    enterName: "Ism va familiyani kiriting.",
+    onlyImage: "Faqat rasm yuklash mumkin.",
+    photoTooBig: "Profil rasmi 5 MB dan katta bo‘lmasin.",
+    backgroundTooBig: "Orqa fon rasmi 10 MB dan katta bo‘lmasin.",
   },
 
   ru: {
-    digitalCard: "ЦИФРОВАЯ ВИЗИТКА",
-    editProfile: "Редактировать профиль",
-    name: "Имя",
-    namePlaceholder: "Ваше имя",
-    bio: "Биография / должность",
+    smallTitle: "ЦИФРОВАЯ ВИЗИТКА",
+    title: "Редактировать профиль",
+
+    name: "Имя и фамилия",
+    namePlaceholder: "Ваше имя и фамилия",
+
+    bio: "Информация",
     bioPlaceholder: "Например: Директор, предприниматель...",
-    profilePhoto: "Фото профиля",
+
+    photo: "Фото профиля",
     uploadPhoto: "Загрузить фото",
-    uploading: "Загрузка...",
     photoHint: "JPG, PNG, WEBP — максимум 5 МБ",
-    photoDelete: "При загрузке нового фото предыдущее будет удалено.",
+
     background: "Фоновое изображение",
     uploadBackground: "Загрузить фон",
     backgroundHint: "JPG, PNG, WEBP — максимум 10 МБ",
-    backgroundDelete: "При загрузке нового фона старый будет удалён.",
+
     links: "Ссылки",
-    linkName: "Название, например Telegram",
     addLink: "Добавить ссылку",
+    linkName: "Название, например Telegram",
+
     save: "Сохранить",
-    saving: "Сохранение...",
-    preview: "Посмотреть визитку",
-    chooseLanguage: "Выберите язык",
-    chooseLanguageInfo: "Выберите язык интерфейса, чтобы продолжить",
-    changeLanguage: "Сменить язык",
-    saved: "Сохранено ✅",
-    enterName: "Введите имя.",
-    cardNotFound: "Визитка не найдена.",
-    loading: "Загрузка...",
-    phone: "Телефон",
-    location: "Адрес",
+
+    selectLanguage: "Выберите язык",
+    languageDescription: "Выберите язык для редактирования визитки",
+    searchLanguage: "Поиск языка...",
+    notFound: "Язык не найден",
+
+    profileNotFound: "Визитка не найдена.",
+
+    enterName: "Введите имя и фамилию.",
+    onlyImage: "Можно загружать только изображения.",
+    photoTooBig: "Фото профиля не должно превышать 5 МБ.",
+    backgroundTooBig: "Фоновое изображение не должно превышать 10 МБ.",
   },
 
   en: {
-    digitalCard: "DIGITAL BUSINESS CARD",
-    editProfile: "Edit profile",
-    name: "Name",
-    namePlaceholder: "Your name",
-    bio: "Biography / position",
+    smallTitle: "DIGITAL BUSINESS CARD",
+    title: "Edit profile",
+
+    name: "Full name",
+    namePlaceholder: "Your full name",
+
+    bio: "Information",
     bioPlaceholder: "For example: Director, entrepreneur...",
-    profilePhoto: "Profile photo",
+
+    photo: "Profile photo",
     uploadPhoto: "Upload photo",
-    uploading: "Uploading...",
     photoHint: "JPG, PNG, WEBP — maximum 5 MB",
-    photoDelete: "The previous photo will be deleted when a new one is uploaded.",
+
     background: "Background image",
     uploadBackground: "Upload background",
     backgroundHint: "JPG, PNG, WEBP — maximum 10 MB",
-    backgroundDelete: "The old background will be deleted when a new one is uploaded.",
+
     links: "Links",
+    addLink: "Add link",
     linkName: "Name, for example Telegram",
-    addLink: "Add new link",
+
     save: "Save",
-    saving: "Saving...",
-    preview: "View business card",
-    chooseLanguage: "Choose your language",
-    chooseLanguageInfo: "Select the interface language to continue",
-    changeLanguage: "Change language",
-    saved: "Saved ✅",
-    enterName: "Enter your name.",
-    cardNotFound: "Business card not found.",
-    loading: "Loading...",
-    phone: "Phone",
-    location: "Location",
+
+    selectLanguage: "Choose language",
+    languageDescription: "Choose a language to edit your card",
+    searchLanguage: "Search language...",
+    notFound: "Language not found",
+
+    profileNotFound: "Business card not found.",
+
+    enterName: "Enter your full name.",
+    onlyImage: "Only images can be uploaded.",
+    photoTooBig: "Profile photo must not exceed 5 MB.",
+    backgroundTooBig: "Background image must not exceed 10 MB.",
   },
 };
 
-/* Boshqa tillarda hozircha English interfeys fallback bo‘ladi */
 function getText(language) {
   return TEXTS[language] || TEXTS.en;
 }
 
+/* =========================================================
+   PAGE
+========================================================= */
+
 export default function EditCardPage() {
   const params = useParams();
-  const cardId = params.id;
+  const cardId = params?.id;
 
   const [profile, setProfile] = useState(null);
+  const [profileChecked, setProfileChecked] = useState(false);
+
   const [links, setLinks] = useState([]);
 
   const [fullName, setFullName] = useState("");
@@ -149,105 +170,151 @@ export default function EditCardPage() {
   const [language, setLanguage] = useState("");
   const [showLanguage, setShowLanguage] = useState(false);
   const [languageSearch, setLanguageSearch] = useState("");
-  const [savingLanguage, setSavingLanguage] = useState(false);
 
-  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [savingLanguage, setSavingLanguage] = useState(false);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [uploadingBackground, setUploadingBackground] = useState(false);
 
-  const t = getText(language || "en");
+  const t = getText(language || "uz");
 
   const currentLanguage =
-    LANGUAGES.find((item) => item.code === language) || LANGUAGES[2];
-
-  const rtl = Boolean(currentLanguage?.rtl);
+    LANGUAGES.find((item) => item.code === language) || LANGUAGES[0];
 
   useEffect(() => {
-    if (cardId) loadData();
+    if (cardId) {
+      loadData();
+    }
   }, [cardId]);
 
+  /* =========================================================
+     LOAD DATA
+  ========================================================= */
+
   async function loadData() {
-    setLoading(true);
+    try {
+      const { data: profileData, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("card_id", cardId)
+        .single();
 
-    const { data: profileData, error } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("card_id", cardId)
-      .single();
+      if (error) {
+        throw error;
+      }
 
-    if (error || !profileData) {
-      console.error(error);
-      setLoading(false);
-      return;
+      if (!profileData) {
+        setProfile(null);
+        return;
+      }
+
+      setProfile(profileData);
+
+      setFullName(profileData.full_name || "");
+      setBio(profileData.bio || "");
+      setPhotoUrl(profileData.photo_url || "");
+      setBackgroundUrl(profileData.background_url || "");
+
+      /*
+        TIL FAQAT BIRINCHI MARTA SO‘RALADI.
+
+        profiles.language bo‘sh bo‘lsa:
+        modal ochiladi.
+
+        Til oldin saqlangan bo‘lsa:
+        modal ochilmaydi.
+      */
+
+      const savedLanguage = profileData.language?.trim() || "";
+
+      if (savedLanguage) {
+        setLanguage(savedLanguage);
+        setShowLanguage(false);
+      } else {
+        setLanguage("");
+        setShowLanguage(true);
+      }
+
+      const { data: linkData, error: linkError } = await supabase
+        .from("links")
+        .select("*")
+        .eq("profile_id", profileData.id)
+        .order("sort_order", { ascending: true });
+
+      if (linkError) {
+        throw linkError;
+      }
+
+      setLinks(linkData || []);
+    } catch (error) {
+      console.error("LOAD ERROR:", error);
+      setProfile(null);
+    } finally {
+      setProfileChecked(true);
     }
-
-    setProfile(profileData);
-    setFullName(profileData.full_name || "");
-    setBio(profileData.bio || "");
-    setPhotoUrl(profileData.photo_url || "");
-    setBackgroundUrl(profileData.background_url || "");
-
-    const savedLanguage = profileData.language || "";
-
-    setLanguage(savedLanguage);
-
-    if (!savedLanguage) {
-      setShowLanguage(true);
-    }
-
-    const { data: linkData, error: linkError } = await supabase
-      .from("links")
-      .select("*")
-      .eq("profile_id", profileData.id)
-      .order("sort_order", { ascending: true });
-
-    if (linkError) console.error(linkError);
-
-    setLinks(linkData || []);
-    setLoading(false);
   }
+
+  /* =========================================================
+     LANGUAGE
+  ========================================================= */
 
   async function selectLanguage(code) {
     if (!profile || savingLanguage) return;
 
     setSavingLanguage(true);
 
-    const { error } = await supabase
-      .from("profiles")
-      .update({ language: code })
-      .eq("id", profile.id);
+    try {
+      const { data, error } = await supabase
+        .from("profiles")
+        .update({
+          language: code,
+        })
+        .eq("id", profile.id)
+        .select("language")
+        .single();
 
-    if (error) {
-      console.error(error);
-      alert("Language save error: " + error.message);
+      if (error) {
+        throw error;
+      }
+
+      const savedLanguage = data?.language || code;
+
+      setLanguage(savedLanguage);
+
+      setProfile((current) => ({
+        ...current,
+        language: savedLanguage,
+      }));
+
+      setLanguageSearch("");
+      setShowLanguage(false);
+    } catch (error) {
+      console.error("LANGUAGE ERROR:", error);
+      alert("Tilni saqlashda xato: " + error.message);
+    } finally {
       setSavingLanguage(false);
-      return;
     }
-
-    setLanguage(code);
-    setProfile((current) => ({
-      ...current,
-      language: code,
-    }));
-
-    setShowLanguage(false);
-    setLanguageSearch("");
-    setSavingLanguage(false);
   }
+
+  /* =========================================================
+     STORAGE
+  ========================================================= */
 
   function getStoragePath(publicUrl, bucket) {
     if (!publicUrl) return null;
 
     const marker = `/storage/v1/object/public/${bucket}/`;
 
-    if (!publicUrl.includes(marker)) return null;
+    if (!publicUrl.includes(marker)) {
+      return null;
+    }
 
     return decodeURIComponent(publicUrl.split(marker)[1]);
   }
 
   async function deleteOldFile(publicUrl, bucket) {
     const path = getStoragePath(publicUrl, bucket);
+
     if (!path) return;
 
     const { error } = await supabase.storage
@@ -255,21 +322,28 @@ export default function EditCardPage() {
       .remove([path]);
 
     if (error) {
-      console.error("Eski faylni o‘chirish xatosi:", error);
+      console.error("DELETE OLD FILE ERROR:", error);
     }
   }
 
+  /* =========================================================
+     PHOTO
+  ========================================================= */
+
   async function uploadPhoto(event) {
     const file = event.target.files?.[0];
-    if (!file || !profile) return;
+
+    if (!file || !profile || uploadingPhoto) return;
 
     if (!file.type.startsWith("image/")) {
-      alert("Only images are allowed.");
+      alert(t.onlyImage);
+      event.target.value = "";
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
-      alert("Maximum image size is 5 MB.");
+      alert(t.photoTooBig);
+      event.target.value = "";
       return;
     }
 
@@ -277,7 +351,10 @@ export default function EditCardPage() {
 
     try {
       const oldUrl = photoUrl;
-      const extension = file.name.split(".").pop()?.toLowerCase() || "jpg";
+
+      const extension =
+        file.name.split(".").pop()?.toLowerCase() || "jpg";
+
       const fileName = `${profile.id}-${Date.now()}.${extension}`;
 
       const { error: uploadError } = await supabase.storage
@@ -287,7 +364,9 @@ export default function EditCardPage() {
           upsert: false,
         });
 
-      if (uploadError) throw uploadError;
+      if (uploadError) {
+        throw uploadError;
+      }
 
       const { data } = supabase.storage
         .from("avatars")
@@ -297,39 +376,60 @@ export default function EditCardPage() {
 
       const { error: updateError } = await supabase
         .from("profiles")
-        .update({ photo_url: newUrl })
+        .update({
+          photo_url: newUrl,
+        })
         .eq("id", profile.id);
 
       if (updateError) {
-        await supabase.storage.from("avatars").remove([fileName]);
+        await supabase.storage
+          .from("avatars")
+          .remove([fileName]);
+
         throw updateError;
       }
 
       setPhotoUrl(newUrl);
 
+      setProfile((current) => ({
+        ...current,
+        photo_url: newUrl,
+      }));
+
       if (oldUrl && oldUrl !== newUrl) {
         await deleteOldFile(oldUrl, "avatars");
       }
     } catch (error) {
-      console.error(error);
-      alert("Upload error: " + error.message);
+      console.error("PHOTO ERROR:", error);
+
+      alert(
+        "Profil rasmini yuklashda xato: " +
+          error.message
+      );
     } finally {
       setUploadingPhoto(false);
       event.target.value = "";
     }
   }
 
+  /* =========================================================
+     BACKGROUND
+  ========================================================= */
+
   async function uploadBackground(event) {
     const file = event.target.files?.[0];
-    if (!file || !profile) return;
+
+    if (!file || !profile || uploadingBackground) return;
 
     if (!file.type.startsWith("image/")) {
-      alert("Only images are allowed.");
+      alert(t.onlyImage);
+      event.target.value = "";
       return;
     }
 
     if (file.size > 10 * 1024 * 1024) {
-      alert("Maximum background size is 10 MB.");
+      alert(t.backgroundTooBig);
+      event.target.value = "";
       return;
     }
 
@@ -337,7 +437,10 @@ export default function EditCardPage() {
 
     try {
       const oldUrl = backgroundUrl;
-      const extension = file.name.split(".").pop()?.toLowerCase() || "jpg";
+
+      const extension =
+        file.name.split(".").pop()?.toLowerCase() || "jpg";
+
       const fileName = `${profile.id}-${Date.now()}.${extension}`;
 
       const { error: uploadError } = await supabase.storage
@@ -347,7 +450,9 @@ export default function EditCardPage() {
           upsert: false,
         });
 
-      if (uploadError) throw uploadError;
+      if (uploadError) {
+        throw uploadError;
+      }
 
       const { data } = supabase.storage
         .from("backgrounds")
@@ -357,34 +462,54 @@ export default function EditCardPage() {
 
       const { error: updateError } = await supabase
         .from("profiles")
-        .update({ background_url: newUrl })
+        .update({
+          background_url: newUrl,
+        })
         .eq("id", profile.id);
 
       if (updateError) {
-        await supabase.storage.from("backgrounds").remove([fileName]);
+        await supabase.storage
+          .from("backgrounds")
+          .remove([fileName]);
+
         throw updateError;
       }
 
       setBackgroundUrl(newUrl);
 
+      setProfile((current) => ({
+        ...current,
+        background_url: newUrl,
+      }));
+
       if (oldUrl && oldUrl !== newUrl) {
         await deleteOldFile(oldUrl, "backgrounds");
       }
     } catch (error) {
-      console.error(error);
-      alert("Upload error: " + error.message);
+      console.error("BACKGROUND ERROR:", error);
+
+      alert(
+        "Orqa fonni yuklashda xato: " +
+          error.message
+      );
     } finally {
       setUploadingBackground(false);
       event.target.value = "";
     }
   }
 
+  /* =========================================================
+     LINKS
+  ========================================================= */
+
   function addLink() {
     setLinks((current) => [
       ...current,
       {
         temp_id:
-          Date.now().toString() + Math.random().toString(36).slice(2),
+          Date.now().toString() +
+          Math.random().toString(36).slice(2),
+
         label: "",
         url: "",
         icon: "website",
@@ -396,7 +521,12 @@ export default function EditCardPage() {
   function updateLink(index, field, value) {
     setLinks((current) =>
       current.map((link, i) =>
-        i === index ? { ...link, [field]: value } : link
+        i === index
+          ? {
+              ...link,
+              [field]: value,
+            }
+          : link
       )
     );
   }
@@ -404,30 +534,42 @@ export default function EditCardPage() {
   async function removeLink(index) {
     const link = links[index];
 
-    if (link?.id) {
-      const { error } = await supabase
-        .from("links")
-        .delete()
-        .eq("id", link.id);
+    try {
+      if (link?.id) {
+        const { error } = await supabase
+          .from("links")
+          .delete()
+          .eq("id", link.id);
 
-      if (error) {
-        alert("Delete error: " + error.message);
-        return;
+        if (error) {
+          throw error;
+        }
       }
-    }
 
-    setLinks((current) =>
-      current
-        .filter((_, i) => i !== index)
-        .map((item, i) => ({
-          ...item,
-          sort_order: i,
-        }))
-    );
+      setLinks((current) =>
+        current
+          .filter((_, i) => i !== index)
+          .map((item, i) => ({
+            ...item,
+            sort_order: i,
+          }))
+      );
+    } catch (error) {
+      console.error("DELETE LINK ERROR:", error);
+
+      alert(
+        "Havolani o‘chirishda xato: " +
+          error.message
+      );
+    }
   }
 
+  /* =========================================================
+     SAVE
+  ========================================================= */
+
   async function saveEverything() {
-    if (!profile) return;
+    if (!profile || saving) return;
 
     if (!fullName.trim()) {
       alert(t.enterName);
@@ -444,45 +586,75 @@ export default function EditCardPage() {
           bio: bio.trim(),
           photo_url: photoUrl || null,
           background_url: backgroundUrl || null,
-          language: language || null,
+          language: language || profile.language || "uz",
         })
         .eq("id", profile.id);
 
-      if (profileError) throw profileError;
+      if (profileError) {
+        throw profileError;
+      }
+
+      /*
+        DATABASE'DAGI MAVJUD LINKLAR
+      */
 
       const existingIds = links
         .filter((link) => link.id)
         .map((link) => link.id);
 
-      const { data: existingDbLinks } = await supabase
+      const {
+        data: existingDbLinks,
+        error: existingError,
+      } = await supabase
         .from("links")
         .select("id")
         .eq("profile_id", profile.id);
 
+      if (existingError) {
+        throw existingError;
+      }
+
       const idsToDelete =
         existingDbLinks
-          ?.filter((item) => !existingIds.includes(item.id))
+          ?.filter(
+            (item) =>
+              !existingIds.includes(item.id)
+          )
           .map((item) => item.id) || [];
 
       if (idsToDelete.length > 0) {
-        const { error: deleteError } = await supabase
-          .from("links")
-          .delete()
-          .in("id", idsToDelete);
+        const { error: deleteError } =
+          await supabase
+            .from("links")
+            .delete()
+            .in("id", idsToDelete);
 
-        if (deleteError) throw deleteError;
+        if (deleteError) {
+          throw deleteError;
+        }
       }
+
+      /*
+        LINKLARNI SAQLASH
+      */
 
       for (let i = 0; i < links.length; i++) {
         const link = links[i];
 
-        if (!link.label?.trim() && !link.url?.trim()) continue;
+        if (
+          !link.label?.trim() &&
+          !link.url?.trim()
+        ) {
+          continue;
+        }
 
         const payload = {
           profile_id: profile.id,
-          label: link.label?.trim() || "Link",
+          label:
+            link.label?.trim() || "Link",
           url: link.url?.trim() || "",
-          icon: link.icon || "website",
+          icon:
+            link.icon || "website",
           sort_order: i,
         };
 
@@ -492,232 +664,460 @@ export default function EditCardPage() {
             .update(payload)
             .eq("id", link.id);
 
-          if (error) throw error;
+          if (error) {
+            throw error;
+          }
         } else {
           const { error } = await supabase
             .from("links")
             .insert(payload);
 
-          if (error) throw error;
+          if (error) {
+            throw error;
+          }
         }
       }
 
-      alert(t.saved);
-      await loadData();
+      /*
+        MUHIM:
+
+        window.open YO‘Q.
+        target="_blank" YO‘Q.
+
+        SAQLASH BOSILGANDA
+        SHU OYNANING O‘ZIDA
+        ASOSIY PROFILGA O‘TADI.
+      */
+
+      window.location.replace(`/c/${cardId}`);
     } catch (error) {
-      console.error(error);
-      alert("Save error: " + error.message);
-    } finally {
+      console.error("SAVE ERROR:", error);
+
+      alert(
+        "Saqlashda xato: " +
+          error.message
+      );
+
       setSaving(false);
     }
   }
 
-  const filteredLanguages = LANGUAGES.filter((item) => {
-    const q = languageSearch.toLowerCase().trim();
+  /* =========================================================
+     PROFILE CHECK
+  ========================================================= */
 
+  /*
+    Kutish yozuvi ko‘rsatilmaydi.
+    Ma’lumot kelguncha bo‘sh fon turadi.
+  */
+
+  if (!profileChecked) {
     return (
-      !q ||
-      item.name.toLowerCase().includes(q) ||
-      item.native.toLowerCase().includes(q) ||
-      item.code.toLowerCase().includes(q)
+      <main style={emptyPageStyle} />
     );
-  });
-
-  if (loading) {
-    return <main style={loadingStyle}>Loading...</main>;
   }
 
   if (!profile) {
-    return <main style={loadingStyle}>{t.cardNotFound}</main>;
+    return (
+      <main style={centerStyle}>
+        {t.profileNotFound}
+      </main>
+    );
   }
 
+  /* =========================================================
+     LANGUAGE SEARCH
+  ========================================================= */
+
+  const filteredLanguages =
+    LANGUAGES.filter((item) => {
+      const search =
+        languageSearch
+          .toLowerCase()
+          .trim();
+
+      return (
+        item.name
+          .toLowerCase()
+          .includes(search) ||
+        item.code
+          .toLowerCase()
+          .includes(search) ||
+        item.short
+          .toLowerCase()
+          .includes(search)
+      );
+    });
+
+  /* =========================================================
+     UI
+  ========================================================= */
+
   return (
-    <main style={pageStyle} dir={rtl ? "rtl" : "ltr"}>
+    <main
+      dir={currentLanguage.dir}
+      style={pageStyle}
+    >
+      {/* BACKGROUND */}
+
       {backgroundUrl && (
         <div
           style={{
             position: "fixed",
-            inset: "-25px",
-            backgroundImage: `url("${backgroundUrl}")`,
+            inset: "-30px",
+
+            backgroundImage:
+              `url("${backgroundUrl}")`,
+
             backgroundSize: "cover",
             backgroundPosition: "center",
-            filter: "blur(10px)",
-            transform: "scale(1.05)",
-            opacity: 0.55,
+
+            filter: "blur(14px)",
+            transform: "scale(1.08)",
+
+            opacity: 0.5,
           }}
         />
       )}
 
       <div style={overlayStyle} />
 
+      {/* EDITOR */}
+
       <section style={editorStyle}>
+        {/* HEADER */}
+
         <div style={topStyle}>
           <div>
-            <div style={smallTitle}>{t.digitalCard}</div>
-            <h1 style={titleStyle}>{t.editProfile}</h1>
+            <div style={smallTitleStyle}>
+              {t.smallTitle}
+            </div>
+
+            <h1 style={titleStyle}>
+              {t.title}
+            </h1>
           </div>
 
           <button
             type="button"
-            onClick={() => setShowLanguage(true)}
-            style={languageStyle}
-            title={t.changeLanguage}
+            onClick={() => {
+              setLanguageSearch("");
+              setShowLanguage(true);
+            }}
+            style={languageButtonStyle}
           >
-            🌐 {currentLanguage.code.toUpperCase()}
+            🌐 {currentLanguage.short}
           </button>
         </div>
 
-        <label style={labelStyle}>{t.name}</label>
+        {/* NAME */}
+
+        <label style={labelStyle}>
+          {t.name}
+        </label>
 
         <input
           value={fullName}
-          onChange={(e) => setFullName(e.target.value)}
+          onChange={(event) =>
+            setFullName(
+              event.target.value
+            )
+          }
           placeholder={t.namePlaceholder}
           style={inputStyle}
         />
 
-        <label style={labelStyle}>{t.bio}</label>
+        {/* BIO */}
+
+        <label style={labelStyle}>
+          {t.bio}
+        </label>
 
         <textarea
           value={bio}
-          onChange={(e) => setBio(e.target.value)}
+          onChange={(event) =>
+            setBio(
+              event.target.value
+            )
+          }
           placeholder={t.bioPlaceholder}
           style={{
             ...inputStyle,
-            minHeight: "90px",
+            minHeight: 95,
             resize: "vertical",
           }}
         />
 
+        {/* PROFILE PHOTO */}
+
         <div style={sectionStyle}>
-          <h2 style={sectionTitleStyle}>{t.profilePhoto}</h2>
+          <h2 style={sectionTitleStyle}>
+            {t.photo}
+          </h2>
 
           <div style={uploadRowStyle}>
-            <div>
-              {photoUrl ? (
-                <img src={photoUrl} alt="Avatar" style={avatarStyle} />
-              ) : (
-                <div style={emptyAvatarStyle}>👤</div>
-              )}
-            </div>
+            {photoUrl ? (
+              <img
+                src={photoUrl}
+                alt="Avatar"
+                style={avatarStyle}
+              />
+            ) : (
+              <div style={emptyAvatarStyle}>
+                👤
+              </div>
+            )}
 
             <div style={{ flex: 1 }}>
-              <label style={uploadButtonStyle}>
-                {uploadingPhoto ? t.uploading : `📷 ${t.uploadPhoto}`}
+              <label
+                style={{
+                  ...uploadButtonStyle,
+                  opacity:
+                    uploadingPhoto
+                      ? 0.6
+                      : 1,
+                }}
+              >
+                📷 {t.uploadPhoto}
 
                 <input
                   type="file"
                   accept="image/*"
                   onChange={uploadPhoto}
                   disabled={uploadingPhoto}
-                  style={{ display: "none" }}
+                  style={{
+                    display: "none",
+                  }}
                 />
               </label>
 
-              <div style={hintStyle}>{t.photoHint}</div>
-              <div style={hintStyle}>{t.photoDelete}</div>
+              <div style={hintStyle}>
+                {t.photoHint}
+              </div>
             </div>
           </div>
         </div>
 
+        {/* BACKGROUND PHOTO */}
+
         <div style={sectionStyle}>
-          <h2 style={sectionTitleStyle}>{t.background}</h2>
+          <h2 style={sectionTitleStyle}>
+            {t.background}
+          </h2>
 
           <div style={uploadRowStyle}>
             {backgroundUrl ? (
               <img
                 src={backgroundUrl}
                 alt="Background"
-                style={backgroundPreviewStyle}
+                style={
+                  backgroundPreviewStyle
+                }
               />
             ) : (
-              <div style={emptyBackgroundStyle}>🖼️</div>
+              <div
+                style={
+                  emptyBackgroundStyle
+                }
+              >
+                🖼️
+              </div>
             )}
 
             <div style={{ flex: 1 }}>
-              <label style={uploadButtonStyle}>
-                {uploadingBackground
-                  ? t.uploading
-                  : `🖼️ ${t.uploadBackground}`}
+              <label
+                style={{
+                  ...uploadButtonStyle,
+                  opacity:
+                    uploadingBackground
+                      ? 0.6
+                      : 1,
+                }}
+              >
+                🖼️ {t.uploadBackground}
 
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={uploadBackground}
-                  disabled={uploadingBackground}
-                  style={{ display: "none" }}
+                  onChange={
+                    uploadBackground
+                  }
+                  disabled={
+                    uploadingBackground
+                  }
+                  style={{
+                    display: "none",
+                  }}
                 />
               </label>
 
-              <div style={hintStyle}>{t.backgroundHint}</div>
-              <div style={hintStyle}>{t.backgroundDelete}</div>
+              <div style={hintStyle}>
+                {t.backgroundHint}
+              </div>
             </div>
           </div>
         </div>
 
+        {/* LINKS */}
+
         <div style={sectionStyle}>
-          <div style={sectionHeaderStyle}>
-            <h2 style={sectionTitleStyle}>{t.links}</h2>
-            <span style={counterStyle}>{links.length}</span>
+          <div
+            style={
+              sectionHeaderStyle
+            }
+          >
+            <h2
+              style={
+                sectionTitleStyle
+              }
+            >
+              {t.links}
+            </h2>
+
+            <span
+              style={counterStyle}
+            >
+              {links.length}
+            </span>
           </div>
 
-          {links.map((link, index) => (
-            <div
-              key={link.id || link.temp_id}
-              style={linkBoxStyle}
-            >
-              <div style={linkTopStyle}>
-                <select
-                  value={link.icon || "website"}
-                  onChange={(e) =>
-                    updateLink(index, "icon", e.target.value)
+          {links.map(
+            (link, index) => (
+              <div
+                key={
+                  link.id ||
+                  link.temp_id
+                }
+                style={linkBoxStyle}
+              >
+                <div
+                  style={linkTopStyle}
+                >
+                  <select
+                    value={
+                      link.icon ||
+                      "website"
+                    }
+                    onChange={(
+                      event
+                    ) =>
+                      updateLink(
+                        index,
+                        "icon",
+                        event.target
+                          .value
+                      )
+                    }
+                    style={
+                      selectStyle
+                    }
+                  >
+                    <option value="telegram">
+                      Telegram
+                    </option>
+
+                    <option value="whatsapp">
+                      WhatsApp
+                    </option>
+
+                    <option value="instagram">
+                      Instagram
+                    </option>
+
+                    <option value="phone">
+                      Telefon
+                    </option>
+
+                    <option value="youtube">
+                      YouTube
+                    </option>
+
+                    <option value="tiktok">
+                      TikTok
+                    </option>
+
+                    <option value="facebook">
+                      Facebook
+                    </option>
+
+                    <option value="linkedin">
+                      LinkedIn
+                    </option>
+
+                    <option value="email">
+                      Email
+                    </option>
+
+                    <option value="website">
+                      Website
+                    </option>
+
+                    <option value="location">
+                      Manzil
+                    </option>
+                  </select>
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      removeLink(
+                        index
+                      )
+                    }
+                    style={
+                      deleteButtonStyle
+                    }
+                  >
+                    ×
+                  </button>
+                </div>
+
+                <input
+                  value={
+                    link.label ||
+                    ""
                   }
-                  style={selectStyle}
-                >
-                  <option value="telegram">Telegram</option>
-                  <option value="whatsapp">WhatsApp</option>
-                  <option value="instagram">Instagram</option>
-                  <option value="phone">{t.phone}</option>
-                  <option value="youtube">YouTube</option>
-                  <option value="tiktok">TikTok</option>
-                  <option value="facebook">Facebook</option>
-                  <option value="linkedin">LinkedIn</option>
-                  <option value="email">Email</option>
-                  <option value="website">Website</option>
-                  <option value="location">{t.location}</option>
-                </select>
+                  onChange={(
+                    event
+                  ) =>
+                    updateLink(
+                      index,
+                      "label",
+                      event.target
+                        .value
+                    )
+                  }
+                  placeholder={
+                    t.linkName
+                  }
+                  style={
+                    inputStyle
+                  }
+                />
 
-                <button
-                  type="button"
-                  onClick={() => removeLink(index)}
-                  style={deleteButtonStyle}
-                >
-                  🗑
-                </button>
+                <input
+                  value={
+                    link.url || ""
+                  }
+                  onChange={(
+                    event
+                  ) =>
+                    updateLink(
+                      index,
+                      "url",
+                      event.target
+                        .value
+                    )
+                  }
+                  placeholder="https://..."
+                  style={{
+                    ...inputStyle,
+                    marginBottom: 0,
+                  }}
+                />
               </div>
-
-              <input
-                value={link.label || ""}
-                onChange={(e) =>
-                  updateLink(index, "label", e.target.value)
-                }
-                placeholder={t.linkName}
-                style={inputStyle}
-              />
-
-              <input
-                value={link.url || ""}
-                onChange={(e) =>
-                  updateLink(index, "url", e.target.value)
-                }
-                placeholder="https://..."
-                style={{
-                  ...inputStyle,
-                  marginBottom: 0,
-                }}
-              />
-            </div>
-          ))}
+            )
+          )}
 
           <button
             type="button"
@@ -728,93 +1128,157 @@ export default function EditCardPage() {
           </button>
         </div>
 
+        {/* SAVE */}
+
         <button
           type="button"
           onClick={saveEverything}
           disabled={saving}
           style={{
             ...saveButtonStyle,
-            opacity: saving ? 0.65 : 1,
+
+            opacity:
+              saving
+                ? 0.65
+                : 1,
           }}
         >
-          {saving ? t.saving : t.save}
+          {t.save}
         </button>
-
-        <a
-          href={`/c/${cardId}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={previewButtonStyle}
-        >
-          👁 {t.preview}
-        </a>
       </section>
 
-      {showLanguage && (
-        <div style={languageOverlayStyle}>
-          <div
-            style={languageModalStyle}
-            dir="ltr"
-          >
-            <div style={languageIconStyle}>🌐</div>
+      {/* =====================================================
+          LANGUAGE MODAL
+      ===================================================== */}
 
-            <h2 style={languageTitleStyle}>
-              {language ? t.chooseLanguage : "Choose your language"}
+      {showLanguage && (
+        <div
+          style={
+            modalOverlayStyle
+          }
+        >
+          <div
+            dir="ltr"
+            style={
+              languageModalStyle
+            }
+          >
+            <div
+              style={
+                languageGlobeStyle
+              }
+            >
+              🌐
+            </div>
+
+            <h2
+              style={
+                modalTitleStyle
+              }
+            >
+              {language
+                ? t.selectLanguage
+                : "Tilni tanlang · Выберите язык · Choose language"}
             </h2>
 
-            <p style={languageDescriptionStyle}>
+            <p
+              style={
+                modalDescriptionStyle
+              }
+            >
               {language
-                ? t.chooseLanguageInfo
-                : "Tilni tanlang · Выберите язык · Choose your language"}
+                ? t.languageDescription
+                : "Davom etish uchun tilni tanlang"}
             </p>
 
             <input
-              type="text"
-              value={languageSearch}
-              onChange={(e) => setLanguageSearch(e.target.value)}
-              placeholder="Search language..."
-              style={languageSearchStyle}
+              autoFocus
+              value={
+                languageSearch
+              }
+              onChange={(
+                event
+              ) =>
+                setLanguageSearch(
+                  event.target.value
+                )
+              }
+              placeholder={
+                language
+                  ? t.searchLanguage
+                  : "Tilni qidirish..."
+              }
+              style={
+                languageSearchStyle
+              }
             />
 
-            <div style={languageListStyle}>
-              {filteredLanguages.map((item) => (
-                <button
-                  key={item.code}
-                  type="button"
-                  disabled={savingLanguage}
-                  onClick={() => selectLanguage(item.code)}
-                  style={{
-                    ...languageOptionStyle,
-                    ...(language === item.code
-                      ? languageOptionActiveStyle
-                      : {}),
-                  }}
+            <div
+              style={
+                languageListStyle
+              }
+            >
+              {filteredLanguages.map(
+                (item) => (
+                  <button
+                    key={
+                      item.code
+                    }
+                    type="button"
+                    disabled={
+                      savingLanguage
+                    }
+                    onClick={() =>
+                      selectLanguage(
+                        item.code
+                      )
+                    }
+                    style={{
+                      ...languageItemStyle,
+
+                      ...(language ===
+                      item.code
+                        ? languageSelectedStyle
+                        : {}),
+                    }}
+                  >
+                    <span
+                      style={
+                        flagStyle
+                      }
+                    >
+                      {item.flag}
+                    </span>
+
+                    <span
+                      style={{
+                        flex: 1,
+                      }}
+                    >
+                      {item.name}
+                    </span>
+
+                    {language ===
+                      item.code && (
+                      <span>
+                        ✓
+                      </span>
+                    )}
+                  </button>
+                )
+              )}
+
+              {filteredLanguages.length ===
+                0 && (
+                <div
+                  style={
+                    notFoundStyle
+                  }
                 >
-                  <span style={flagStyle}>{item.flag}</span>
-
-                  <span style={{ flex: 1 }}>
-                    {item.native}
-                  </span>
-
-                  {language === item.code && (
-                    <span style={checkStyle}>✓</span>
-                  )}
-                </button>
-              ))}
+                  {t.notFound}
+                </div>
+              )}
             </div>
-
-            {language && (
-              <button
-                type="button"
-                onClick={() => {
-                  setShowLanguage(false);
-                  setLanguageSearch("");
-                }}
-                style={languageCloseStyle}
-              >
-                ✕
-              </button>
-            )}
           </div>
         </div>
       )}
@@ -822,391 +1286,651 @@ export default function EditCardPage() {
   );
 }
 
-/* =========================
-   DIZAYN
-========================= */
+/* =========================================================
+   PAGE DESIGN
+========================================================= */
 
 const pageStyle = {
   minHeight: "100vh",
   position: "relative",
-  overflow: "hidden",
-  fontFamily:
-    "Arial, Helvetica, sans-serif",
-  padding: "30px 16px",
+  overflowX: "hidden",
+
+  padding: "28px 16px 60px",
+
   boxSizing: "border-box",
+
+  fontFamily:
+    "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+
+  background: "#eef2f6",
+};
+
+const emptyPageStyle = {
+  minHeight: "100vh",
+  background: "#eef2f6",
 };
 
 const overlayStyle = {
   position: "fixed",
   inset: 0,
+
   background:
-    "linear-gradient(135deg, rgba(240,246,255,.80), rgba(255,255,255,.60))",
+    "linear-gradient(135deg, rgba(240,245,250,.86), rgba(255,255,255,.68))",
 };
 
 const editorStyle = {
   position: "relative",
   zIndex: 2,
+
   width: "100%",
-  maxWidth: "620px",
+  maxWidth: 620,
+
   margin: "0 auto",
-  padding: "28px",
-  borderRadius: "28px",
-  background: "rgba(255,255,255,0.88)",
-  backdropFilter: "blur(22px)",
-  WebkitBackdropFilter: "blur(22px)",
-  boxShadow:
-    "0 20px 70px rgba(20,60,120,0.16)",
+
+  padding: 26,
+
   boxSizing: "border-box",
+
+  border:
+    "1px solid rgba(255,255,255,.72)",
+
+  borderRadius: 28,
+
+  background:
+    "rgba(255,255,255,.88)",
+
+  backdropFilter:
+    "blur(22px)",
+
+  WebkitBackdropFilter:
+    "blur(22px)",
+
+  boxShadow:
+    "0 20px 65px rgba(15,23,42,.12)",
 };
 
 const topStyle = {
   display: "flex",
-  justifyContent: "space-between",
+
   alignItems: "flex-start",
-  gap: "20px",
-  marginBottom: "30px",
+
+  justifyContent:
+    "space-between",
+
+  gap: 15,
+
+  marginBottom: 28,
 };
 
-const smallTitle = {
-  color: "#2879ff",
-  fontSize: "11px",
-  fontWeight: "800",
-  letterSpacing: "1.2px",
-  marginBottom: "8px",
+const smallTitleStyle = {
+  marginBottom: 7,
+
+  fontSize: 11,
+
+  fontWeight: 800,
+
+  letterSpacing: 1.5,
+
+  color: "#3977ef",
 };
 
 const titleStyle = {
   margin: 0,
-  color: "#101828",
-  fontSize: "28px",
+
+  fontSize: 27,
+
+  lineHeight: 1.15,
+
+  color: "#172033",
 };
 
-const languageStyle = {
-  padding: "10px 14px",
-  background: "#fff",
-  border: "1px solid #e3e8ef",
-  borderRadius: "14px",
-  fontSize: "14px",
-  boxShadow:
-    "0 5px 20px rgba(0,0,0,.05)",
-  cursor: "pointer",
+const languageButtonStyle = {
+  flexShrink: 0,
+
+  border:
+    "1px solid rgba(15,23,42,.08)",
+
+  borderRadius: 14,
+
+  background:
+    "rgba(255,255,255,.78)",
+
+  padding:
+    "10px 13px",
+
+  fontSize: 13,
+
+  fontWeight: 800,
+
   color: "#172033",
-  whiteSpace: "nowrap",
+
+  cursor: "pointer",
 };
 
 const labelStyle = {
   display: "block",
-  fontWeight: "700",
-  color: "#182230",
-  marginBottom: "8px",
+
+  marginBottom: 8,
+
+  fontSize: 13,
+
+  fontWeight: 700,
+
+  color: "#39445a",
 };
 
 const inputStyle = {
   width: "100%",
-  padding: "13px 14px",
-  marginBottom: "16px",
+
   boxSizing: "border-box",
-  border: "1px solid #d9e0ea",
-  borderRadius: "12px",
-  background: "rgba(255,255,255,.94)",
-  color: "#101828",
-  fontSize: "15px",
+
+  marginBottom: 20,
+
+  padding:
+    "14px 15px",
+
+  border:
+    "1px solid rgba(15,23,42,.09)",
+
   outline: "none",
+
+  borderRadius: 15,
+
+  background:
+    "rgba(247,249,252,.92)",
+
+  color: "#172033",
+
+  fontSize: 15,
+
+  lineHeight: 1.4,
 };
 
 const sectionStyle = {
-  marginTop: "12px",
-  marginBottom: "26px",
-  paddingTop: "22px",
-  borderTop: "1px solid #e7ebf0",
+  marginTop: 8,
+
+  marginBottom: 22,
+
+  padding: 18,
+
+  border:
+    "1px solid rgba(15,23,42,.07)",
+
+  borderRadius: 20,
+
+  background:
+    "rgba(248,250,252,.72)",
 };
 
 const sectionTitleStyle = {
-  margin: "0 0 16px",
-  color: "#101828",
-  fontSize: "18px",
+  margin: 0,
+
+  fontSize: 15,
+
+  fontWeight: 800,
+
+  color: "#202a3b",
 };
 
 const sectionHeaderStyle = {
   display: "flex",
+
   alignItems: "center",
-  gap: "10px",
+
+  justifyContent:
+    "space-between",
+
+  marginBottom: 15,
 };
 
 const counterStyle = {
-  marginBottom: "16px",
-  padding: "4px 8px",
-  borderRadius: "20px",
-  background: "#eaf2ff",
-  color: "#1672ff",
-  fontSize: "12px",
-  fontWeight: "700",
+  minWidth: 28,
+
+  height: 28,
+
+  display: "flex",
+
+  alignItems: "center",
+
+  justifyContent: "center",
+
+  borderRadius: 999,
+
+  background: "#e8eef9",
+
+  color: "#3977ef",
+
+  fontSize: 12,
+
+  fontWeight: 800,
 };
 
 const uploadRowStyle = {
   display: "flex",
+
   alignItems: "center",
-  gap: "18px",
+
+  gap: 16,
+
+  marginTop: 15,
 };
 
 const avatarStyle = {
-  width: "95px",
-  height: "95px",
-  borderRadius: "50%",
+  width: 78,
+
+  height: 78,
+
+  flexShrink: 0,
+
   objectFit: "cover",
-  border: "4px solid white",
+
+  borderRadius: "50%",
+
+  border:
+    "4px solid rgba(255,255,255,.9)",
+
   boxShadow:
-    "0 8px 25px rgba(0,0,0,.15)",
+    "0 8px 24px rgba(15,23,42,.15)",
 };
 
 const emptyAvatarStyle = {
-  ...avatarStyle,
+  width: 78,
+
+  height: 78,
+
+  flexShrink: 0,
+
   display: "flex",
+
   alignItems: "center",
+
   justifyContent: "center",
-  background: "#eef1f5",
-  fontSize: "32px",
+
+  borderRadius: "50%",
+
+  background: "#e8edf3",
+
+  fontSize: 30,
 };
 
 const backgroundPreviewStyle = {
-  width: "105px",
-  height: "90px",
+  width: 100,
+
+  height: 75,
+
+  flexShrink: 0,
+
   objectFit: "cover",
-  borderRadius: "14px",
+
+  borderRadius: 14,
+
   boxShadow:
-    "0 8px 25px rgba(0,0,0,.12)",
+    "0 7px 20px rgba(15,23,42,.12)",
 };
 
 const emptyBackgroundStyle = {
-  ...backgroundPreviewStyle,
+  width: 100,
+
+  height: 75,
+
+  flexShrink: 0,
+
   display: "flex",
+
   alignItems: "center",
+
   justifyContent: "center",
-  background: "#eef1f5",
-  fontSize: "30px",
+
+  borderRadius: 14,
+
+  background: "#e8edf3",
+
+  fontSize: 27,
 };
 
 const uploadButtonStyle = {
   display: "inline-block",
-  padding: "11px 16px",
-  borderRadius: "11px",
-  background:
-    "linear-gradient(135deg,#2385ff,#0865ef)",
+
+  padding:
+    "11px 14px",
+
+  borderRadius: 13,
+
+  background: "#172033",
+
   color: "white",
-  fontWeight: "700",
+
+  fontSize: 13,
+
+  fontWeight: 700,
+
   cursor: "pointer",
-  fontSize: "14px",
 };
 
 const hintStyle = {
-  color: "#7b8494",
-  fontSize: "12px",
-  marginTop: "8px",
-  lineHeight: "1.4",
+  marginTop: 8,
+
+  color: "#8791a2",
+
+  fontSize: 11,
+
+  lineHeight: 1.4,
 };
 
 const linkBoxStyle = {
-  padding: "15px",
-  marginBottom: "12px",
-  background: "rgba(255,255,255,.78)",
-  border: "1px solid #e5eaf0",
-  borderRadius: "16px",
+  marginBottom: 12,
+
+  padding: 14,
+
+  border:
+    "1px solid rgba(15,23,42,.07)",
+
+  borderRadius: 17,
+
+  background:
+    "rgba(255,255,255,.78)",
 };
 
 const linkTopStyle = {
   display: "flex",
-  gap: "10px",
-  marginBottom: "12px",
+
+  gap: 10,
+
+  alignItems: "center",
+
+  marginBottom: 12,
 };
 
 const selectStyle = {
   flex: 1,
-  padding: "11px",
-  borderRadius: "10px",
-  border: "1px solid #d9e0ea",
-  background: "white",
-  fontSize: "14px",
+
+  minWidth: 0,
+
+  padding:
+    "12px 13px",
+
+  border:
+    "1px solid rgba(15,23,42,.09)",
+
+  borderRadius: 13,
+
+  outline: "none",
+
+  background: "#f7f9fc",
+
+  color: "#172033",
+
+  fontSize: 14,
 };
 
 const deleteButtonStyle = {
-  width: "44px",
-  border: "none",
-  borderRadius: "10px",
+  width: 42,
+
+  height: 42,
+
+  flexShrink: 0,
+
+  border: 0,
+
+  borderRadius: 13,
+
   background: "#fff0f0",
-  color: "#ff3333",
+
+  color: "#e5484d",
+
+  fontSize: 24,
+
+  lineHeight: 1,
+
   cursor: "pointer",
-  fontSize: "18px",
 };
 
 const addButtonStyle = {
   width: "100%",
-  padding: "13px",
-  border: "1px dashed #8ab8ff",
-  borderRadius: "12px",
-  background: "#eef5ff",
-  color: "#0874ff",
-  fontSize: "14px",
-  fontWeight: "700",
+
+  padding:
+    "13px 15px",
+
+  border:
+    "1px dashed rgba(57,119,239,.35)",
+
+  borderRadius: 15,
+
+  background:
+    "rgba(57,119,239,.06)",
+
+  color: "#3977ef",
+
+  fontSize: 14,
+
+  fontWeight: 800,
+
   cursor: "pointer",
 };
 
 const saveButtonStyle = {
   width: "100%",
-  padding: "15px",
-  border: "none",
-  borderRadius: "13px",
-  background:
-    "linear-gradient(135deg,#2489ff,#0567f1)",
+
+  marginTop: 6,
+
+  padding:
+    "16px 18px",
+
+  border: 0,
+
+  borderRadius: 17,
+
+  background: "#3977ef",
+
   color: "white",
-  fontSize: "16px",
-  fontWeight: "800",
-  cursor: "pointer",
+
   boxShadow:
-    "0 10px 25px rgba(20,110,255,.25)",
+    "0 10px 28px rgba(57,119,239,.25)",
+
+  fontSize: 15,
+
+  fontWeight: 800,
+
+  cursor: "pointer",
 };
 
-const previewButtonStyle = {
-  display: "block",
-  width: "100%",
-  marginTop: "12px",
-  padding: "14px",
-  boxSizing: "border-box",
-  textAlign: "center",
-  textDecoration: "none",
-  borderRadius: "13px",
-  background: "#eef3f9",
-  color: "#172033",
-  fontSize: "14px",
-  fontWeight: "700",
-};
+/* =========================================================
+   LANGUAGE MODAL DESIGN
+========================================================= */
 
-const loadingStyle = {
-  minHeight: "100vh",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  fontFamily: "Arial, sans-serif",
-  fontSize: "18px",
-};
-
-/* =========================
-   TIL TANLASH MODALI
-========================= */
-
-const languageOverlayStyle = {
+const modalOverlayStyle = {
   position: "fixed",
+
   inset: 0,
-  zIndex: 9999,
-  background: "rgba(8,18,35,.58)",
-  backdropFilter: "blur(14px)",
-  WebkitBackdropFilter: "blur(14px)",
+
+  zIndex: 1000,
+
   display: "flex",
+
   alignItems: "center",
+
   justifyContent: "center",
-  padding: "20px",
-  boxSizing: "border-box",
+
+  padding: 18,
+
+  background:
+    "rgba(15,23,42,.40)",
+
+  backdropFilter:
+    "blur(12px)",
+
+  WebkitBackdropFilter:
+    "blur(12px)",
 };
 
 const languageModalStyle = {
-  position: "relative",
   width: "100%",
-  maxWidth: "440px",
-  maxHeight: "85vh",
+
+  maxWidth: 430,
+
+  maxHeight: "86vh",
+
   overflow: "hidden",
-  padding: "28px",
+
+  padding: 22,
+
   boxSizing: "border-box",
-  background: "rgba(255,255,255,.97)",
-  borderRadius: "28px",
-  boxShadow: "0 30px 100px rgba(0,0,0,.25)",
+
+  border:
+    "1px solid rgba(255,255,255,.7)",
+
+  borderRadius: 26,
+
+  background:
+    "rgba(255,255,255,.96)",
+
+  boxShadow:
+    "0 30px 90px rgba(15,23,42,.28)",
 };
 
-const languageIconStyle = {
-  width: "56px",
-  height: "56px",
-  margin: "0 auto 14px",
-  borderRadius: "18px",
-  background: "#eaf3ff",
+const languageGlobeStyle = {
+  width: 48,
+
+  height: 48,
+
   display: "flex",
+
   alignItems: "center",
+
   justifyContent: "center",
-  fontSize: "27px",
+
+  marginBottom: 14,
+
+  borderRadius: 15,
+
+  background: "#edf3ff",
+
+  fontSize: 23,
 };
 
-const languageTitleStyle = {
-  margin: "0 0 8px",
-  textAlign: "center",
-  color: "#101828",
-  fontSize: "25px",
+const modalTitleStyle = {
+  margin: 0,
+
+  color: "#172033",
+
+  fontSize: 22,
+
+  lineHeight: 1.2,
 };
 
-const languageDescriptionStyle = {
-  margin: "0 0 20px",
-  textAlign: "center",
-  color: "#667085",
-  fontSize: "14px",
-  lineHeight: "1.5",
+const modalDescriptionStyle = {
+  margin:
+    "8px 0 18px",
+
+  color: "#7a8495",
+
+  fontSize: 13,
 };
 
 const languageSearchStyle = {
   width: "100%",
-  padding: "13px 14px",
-  marginBottom: "14px",
+
   boxSizing: "border-box",
-  border: "1px solid #d9e0ea",
-  borderRadius: "13px",
+
+  marginBottom: 12,
+
+  padding:
+    "13px 14px",
+
+  border:
+    "1px solid rgba(15,23,42,.1)",
+
+  borderRadius: 14,
+
   outline: "none",
-  fontSize: "15px",
+
+  background: "#f5f7fa",
+
+  color: "#172033",
+
+  fontSize: 14,
 };
 
 const languageListStyle = {
-  display: "flex",
-  flexDirection: "column",
-  gap: "7px",
-  maxHeight: "48vh",
+  maxHeight: "52vh",
+
   overflowY: "auto",
+
+  paddingRight: 2,
 };
 
-const languageOptionStyle = {
+const languageItemStyle = {
   width: "100%",
+
   display: "flex",
+
   alignItems: "center",
-  gap: "12px",
-  padding: "12px 14px",
-  border: "1px solid #e4e9f0",
-  borderRadius: "13px",
+
+  gap: 12,
+
+  marginBottom: 7,
+
+  padding:
+    "12px 13px",
+
+  border:
+    "1px solid rgba(15,23,42,.07)",
+
+  borderRadius: 14,
+
   background: "#fff",
+
   color: "#172033",
-  fontSize: "15px",
-  fontWeight: "600",
+
   textAlign: "left",
+
+  fontSize: 14,
+
+  fontWeight: 700,
+
   cursor: "pointer",
 };
 
-const languageOptionActiveStyle = {
-  border: "1px solid #2385ff",
-  background: "#edf5ff",
+const languageSelectedStyle = {
+  border:
+    "1px solid rgba(57,119,239,.35)",
+
+  background: "#edf3ff",
+
+  color: "#3977ef",
 };
 
 const flagStyle = {
-  fontSize: "23px",
+  fontSize: 21,
 };
 
-const checkStyle = {
-  color: "#0874ff",
-  fontWeight: "900",
-  fontSize: "18px",
+const notFoundStyle = {
+  padding: 20,
+
+  textAlign: "center",
+
+  color: "#8791a2",
+
+  fontSize: 13,
 };
 
-const languageCloseStyle = {
-  position: "absolute",
-  top: "15px",
-  right: "15px",
-  width: "36px",
-  height: "36px",
-  border: "none",
-  borderRadius: "50%",
-  background: "#eef1f5",
-  color: "#344054",
-  cursor: "pointer",
-  fontSize: "16px",
+const centerStyle = {
+  minHeight: "100vh",
+
+  display: "flex",
+
+  alignItems: "center",
+
+  justifyContent: "center",
+
+  padding: 20,
+
+  boxSizing: "border-box",
+
+  background: "#f4f6f9",
+
+  color: "#657083",
+
+  fontFamily:
+    "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
 };

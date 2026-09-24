@@ -46,9 +46,9 @@ export default async function CardPage({ params }) {
             backgroundImage: `url("${profile.background_url}")`,
             backgroundSize: "cover",
             backgroundPosition: "center",
-            filter: "blur(22px)",
-            transform: "scale(1.08)",
-            opacity: 0.55,
+            filter: "blur(7px)",
+            transform: "scale(1.03)",
+            opacity: 0.82,
           }}
         />
       )}
@@ -58,7 +58,7 @@ export default async function CardPage({ params }) {
         style={{
           position: "fixed",
           inset: 0,
-          background: "rgba(255,255,255,0.22)",
+          background: "rgba(255,255,255,0.08)",
         }}
       />
 

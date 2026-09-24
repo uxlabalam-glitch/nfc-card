@@ -1,4 +1,30 @@
-export default function CardPage() {
+import { createClient } from "@supabase/supabase-js";
+import { notFound } from "next/navigation";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+);
+
+export default async function CardPage({ params }) {
+  const { id } = await params;
+
+  const { data: profile, error } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("card_id", id)
+    .single();
+
+  if (error || !profile) {
+    notFound();
+  }
+
+  const { data: links } = await supabase
+    .from("links")
+    .select("*")
+    .eq("profile_id", profile.id)
+    .order("sort_order", { ascending: true });
+
   return (
     <main
       style={{
@@ -20,22 +46,36 @@ export default function CardPage() {
           boxSizing: "border-box",
         }}
       >
-        <div
-          style={{
-            width: "110px",
-            height: "110px",
-            borderRadius: "50%",
-            background: "#e5e5e5",
-            margin: "0 auto 20px",
-          }}
-        />
+        {profile.photo_url ? (
+          <img
+            src={profile.photo_url}
+            alt={profile.full_name || "Profile"}
+            style={{
+              width: "110px",
+              height: "110px",
+              borderRadius: "50%",
+              objectFit: "cover",
+              marginBottom: "20px",
+            }}
+          />
+        ) : (
+          <div
+            style={{
+              width: "110px",
+              height: "110px",
+              borderRadius: "50%",
+              background: "#e5e5e5",
+              margin: "0 auto 20px",
+            }}
+          />
+        )}
 
         <h1 style={{ marginBottom: "6px" }}>
-          Ism Familiya
+          {profile.full_name}
         </h1>
 
-        <p style={{ marginTop: "0", color: "#777" }}>
-          Lavozim yoki qisqa ma'lumot
+        <p style={{ marginTop: 0, color: "#777" }}>
+          {profile.bio}
         </p>
 
         <div
@@ -46,39 +86,38 @@ export default function CardPage() {
             gap: "25px",
           }}
         >
-          <a href="https://t.me/" style={linkStyle}>
-            <span style={iconStyle}>✈️</span>
-            Telegram
-          </a>
+          {links?.map((link) => (
+            <a
+              key={link.id}
+              href={link.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={linkStyle}
+            >
+              <span style={iconStyle}>
+                {getIcon(link.icon)}
+              </span>
 
-          <a href="https://instagram.com/" style={linkStyle}>
-            <span style={iconStyle}>◎</span>
-            Instagram
-          </a>
-
-          <a href="https://wa.me/" style={linkStyle}>
-            <span style={iconStyle}>☎</span>
-            WhatsApp
-          </a>
-
-          <a href="https://youtube.com/" style={linkStyle}>
-            <span style={iconStyle}>▶</span>
-            YouTube
-          </a>
-
-          <a href="https://example.com/" style={linkStyle}>
-            <span style={iconStyle}>🌐</span>
-            Website
-          </a>
-
-          <a href="https://maps.google.com/" style={linkStyle}>
-            <span style={iconStyle}>📍</span>
-            Toshkent
-          </a>
+              {link.label}
+            </a>
+          ))}
         </div>
       </div>
     </main>
   );
+}
+
+function getIcon(icon) {
+  const icons = {
+    telegram: "✈️",
+    instagram: "◎",
+    whatsapp: "☎",
+    youtube: "▶",
+    website: "🌐",
+    location: "📍",
+  };
+
+  return icons[icon] || "🔗";
 }
 
 const linkStyle = {

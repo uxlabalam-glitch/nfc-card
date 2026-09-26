@@ -1,12 +1,15 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { createClient } from "@supabase/supabase-js";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
-const supabase = createClient(
-  "https://yzkeabplmbxkvyschlop.supabase.co",
-  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
-);
+/* =========================================================
+   LANGUAGES
+========================================================= */
 
 const LANGUAGES = [
   {
@@ -19,7 +22,8 @@ const LANGUAGES = [
     code: "az",
     name: "Azərbaycanca",
     english: "Azerbaijani",
-    search: "azerbaijani azeri azərbaycan azerbaijan",
+    search:
+      "azerbaijani azeri azərbaycan azerbaijan",
   },
   {
     code: "bn",
@@ -109,7 +113,8 @@ const LANGUAGES = [
     code: "id",
     name: "Bahasa Indonesia",
     english: "Indonesian",
-    search: "indonesian indonesia bahasa",
+    search:
+      "indonesian indonesia bahasa",
   },
   {
     code: "it",
@@ -127,7 +132,8 @@ const LANGUAGES = [
     code: "kk",
     name: "Қазақша",
     english: "Kazakh",
-    search: "kazakh қазақша qazaq kazakhstan",
+    search:
+      "kazakh қазақша qazaq kazakhstan",
   },
   {
     code: "ko",
@@ -139,13 +145,15 @@ const LANGUAGES = [
     code: "ky",
     name: "Кыргызча",
     english: "Kyrgyz",
-    search: "kyrgyz кыргызча kirgiz kyrgyzstan",
+    search:
+      "kyrgyz кыргызча kirgiz kyrgyzstan",
   },
   {
     code: "ms",
     name: "Bahasa Melayu",
     english: "Malay",
-    search: "malay malaysia melayu",
+    search:
+      "malay malaysia melayu",
   },
   {
     code: "no",
@@ -157,7 +165,8 @@ const LANGUAGES = [
     code: "fa",
     name: "فارسی",
     english: "Persian",
-    search: "persian farsi فارسی iran",
+    search:
+      "persian farsi فارسی iran",
   },
   {
     code: "pl",
@@ -169,19 +178,22 @@ const LANGUAGES = [
     code: "pt",
     name: "Português",
     english: "Portuguese",
-    search: "portuguese português portugues",
+    search:
+      "portuguese português portugues",
   },
   {
     code: "ro",
     name: "Română",
     english: "Romanian",
-    search: "romanian română romana",
+    search:
+      "romanian română romana",
   },
   {
     code: "ru",
     name: "Русский",
     english: "Russian",
-    search: "russian rus русский russkiy",
+    search:
+      "russian rus русский russkiy",
   },
   {
     code: "sr",
@@ -193,13 +205,15 @@ const LANGUAGES = [
     code: "sk",
     name: "Slovenčina",
     english: "Slovak",
-    search: "slovak slovenčina",
+    search:
+      "slovak slovenčina",
   },
   {
     code: "es",
     name: "Español",
     english: "Spanish",
-    search: "spanish español espanol",
+    search:
+      "spanish español espanol",
   },
   {
     code: "sv",
@@ -211,69 +225,172 @@ const LANGUAGES = [
     code: "tg",
     name: "Тоҷикӣ",
     english: "Tajik",
-    search: "tajik тоҷикӣ tojik",
+    search:
+      "tajik тоҷикӣ tojik",
   },
   {
     code: "th",
     name: "ไทย",
     english: "Thai",
-    search: "thai thailand ไทย",
+    search:
+      "thai thailand ไทย",
   },
   {
     code: "tr",
     name: "Türkçe",
     english: "Turkish",
-    search: "turkish türkçe turk",
+    search:
+      "turkish türkçe turk",
   },
   {
     code: "tk",
     name: "Türkmençe",
     english: "Turkmen",
-    search: "turkmen türkmençe turkmenistan",
+    search:
+      "turkmen türkmençe turkmenistan",
   },
   {
     code: "uk",
     name: "Українська",
     english: "Ukrainian",
-    search: "ukrainian українська ukraine",
+    search:
+      "ukrainian українська ukraine",
   },
   {
     code: "ur",
     name: "اردو",
     english: "Urdu",
-    search: "urdu اردو pakistan",
+    search:
+      "urdu اردو pakistan",
   },
   {
     code: "uz",
     name: "O‘zbekcha",
     english: "Uzbek",
-    search: "uzbek o‘zbekcha ozbek uz o'zbek uzbekistan",
+    search:
+      "uzbek o‘zbekcha ozbek uz o'zbek uzbekistan",
   },
   {
     code: "vi",
     name: "Tiếng Việt",
     english: "Vietnamese",
-    search: "vietnamese vietnam tiếng việt",
+    search:
+      "vietnamese vietnam tiếng việt",
   },
-].sort((a, b) => a.english.localeCompare(b.english));
+].sort((a, b) =>
+  a.english.localeCompare(
+    b.english
+  )
+);
+
+/* =========================================================
+   PROFILE API
+========================================================= */
+
+async function callProfileApi(
+  body
+) {
+  const response =
+    await fetch(
+      "/api/telegram/profile",
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type":
+            "application/json",
+        },
+
+        cache: "no-store",
+
+        body:
+          JSON.stringify(body),
+      }
+    );
+
+  let data = null;
+
+  try {
+    data =
+      await response.json();
+  } catch {
+    data = null;
+  }
+
+  if (
+    !response.ok ||
+    !data?.ok
+  ) {
+    throw new Error(
+      data?.error ||
+        "Request failed."
+    );
+  }
+
+  return data;
+}
+
+/* =========================================================
+   HOME
+========================================================= */
 
 export default function Home() {
-  const [telegramId, setTelegramId] = useState(null);
-  const [profile, setProfile] = useState(null);
+  const [initData, setInitData] =
+    useState("");
 
-  const [showLanguages, setShowLanguages] = useState(false);
-  const [search, setSearch] = useState("");
+  const [
+    showLanguages,
+    setShowLanguages,
+  ] = useState(false);
 
-  const [savingLanguage, setSavingLanguage] = useState(false);
-  const [error, setError] = useState("");
+  const [
+    search,
+    setSearch,
+  ] = useState("");
+
+  const [
+    savingLanguage,
+    setSavingLanguage,
+  ] = useState(false);
+
+  const [
+    error,
+    setError,
+  ] = useState("");
+
+  /*
+    React Strict Mode yoki boshqa
+    qayta render sabab startApp ikki
+    marta ishlamasligi uchun.
+  */
+  const startedRef =
+    useRef(false);
+
+  /* =======================================================
+     START APP
+  ======================================================= */
 
   useEffect(() => {
+    if (
+      startedRef.current
+    ) {
+      return;
+    }
+
+    startedRef.current =
+      true;
+
     async function startApp() {
       try {
-        const tg = window.Telegram?.WebApp;
+        const tg =
+          window.Telegram
+            ?.WebApp;
 
         if (!tg) {
-          setError("This Mini App must be opened through Telegram.");
+          setError(
+            "This Mini App must be opened through Telegram."
+          );
+
           return;
         }
 
@@ -281,100 +398,119 @@ export default function Home() {
         tg.expand();
 
         /*
-         * =====================================================
-         * TELEGRAM SECURITY
-         * =====================================================
-         *
-         * initDataUnsafe.user ga ishonmaymiz.
-         * Telegram bergan initData serverga yuboriladi.
-         * /api/telegram/auth BOT TOKEN orqali uni tekshiradi.
-         */
+          Telegram bergan signed
+          initData serverda tekshiriladi.
+        */
+        const telegramInitData =
+          tg.initData;
 
-        const initData = tg.initData;
-
-        if (!initData) {
+        if (
+          !telegramInitData
+        ) {
           setError(
             "Telegram security data could not be identified."
           );
+
           return;
         }
 
-        const authResponse = await fetch(
-          "/api/telegram/auth",
-          {
-            method: "POST",
-
-            headers: {
-              "Content-Type": "application/json",
-            },
-
-            body: JSON.stringify({
-              initData,
-            }),
-          }
+        setInitData(
+          telegramInitData
         );
 
-        const authData = await authResponse.json();
+        /*
+          ===================================================
+          BOOTSTRAP
+          ===================================================
 
-        if (!authResponse.ok || !authData?.ok) {
-          throw new Error(
-            authData?.error ||
-              "Telegram security verification failed."
-          );
-        }
+          Faqat profil mavjudligini
+          server orqali tekshiradi.
 
-        const userId = Number(authData.telegramId);
+          Yangi user uchun bu yerda
+          profil YARATILMAYDI.
+        */
+        const result =
+          await callProfileApi({
+            action:
+              "bootstrap",
 
-        if (!userId) {
-          throw new Error(
-            "Telegram user could not be identified."
-          );
-        }
-
-        setTelegramId(userId);
+            initData:
+              telegramInitData,
+          });
 
         /*
-         * =====================================================
-         * PROFILE
-         * =====================================================
-         */
+          ===================================================
+          YANGI FOYDALANUVCHI
+          ===================================================
 
-        const { data, error: profileError } =
-          await supabase
-            .from("profiles")
-            .select("*")
-            .eq("telegram_id", userId)
-            .maybeSingle();
+          Avval til tanlaydi.
+        */
+        if (
+          result.exists ===
+          false
+        ) {
+          setShowLanguages(
+            true
+          );
 
-        if (profileError) {
-          throw profileError;
-        }
-
-        // YANGI FOYDALANUVCHI:
-        // faqat birinchi marta til tanlaydi.
-        if (!data) {
-          setProfile(null);
-          setShowLanguages(true);
           return;
         }
 
-        setProfile(data);
+        const profile =
+          result.profile;
 
-        // Eski profil bo‘lsa-yu, hali til tanlanmagan bo‘lsa,
-        // til oynasi bir marta ko‘rsatiladi.
-        if (!data.language) {
-          setShowLanguages(true);
+        if (
+          !profile
+        ) {
+          throw new Error(
+            "Profile data is missing."
+          );
+        }
+
+        /*
+          Oldin yaratilgan, lekin
+          language bo'sh qolgan profil.
+
+          Bunday user ham avval
+          til tanlaydi.
+        */
+        if (
+          !profile.language
+        ) {
+          setShowLanguages(
+            true
+          );
+
           return;
         }
 
-        // Til avval tanlangan.
-        // Keyingi kirishlarda til oynasi umuman chiqmaydi.
-        window.location.replace(`/my/${data.card_id}`);
+        if (
+          !profile.card_id
+        ) {
+          throw new Error(
+            "Card ID is missing."
+          );
+        }
+
+        /*
+          ===================================================
+          MAVJUD FOYDALANUVCHI
+          ===================================================
+
+          Til qayta so'ralmaydi.
+          Darhol owner card.
+        */
+        window.location.replace(
+          `/my/${encodeURIComponent(
+            profile.card_id
+          )}`
+        );
       } catch (err) {
         console.error(err);
 
         setError(
-          err?.message || "Something went wrong."
+          err?.message ||
+            "Something went wrong."
         );
       }
     }
@@ -382,80 +518,101 @@ export default function Home() {
     startApp();
   }, []);
 
-  const filteredLanguages = useMemo(() => {
-    const value = search
-      .trim()
-      .toLocaleLowerCase();
+  /* =======================================================
+     FILTER LANGUAGES
+  ======================================================= */
 
-    if (!value) {
-      return LANGUAGES;
-    }
+  const filteredLanguages =
+    useMemo(() => {
+      const value =
+        search
+          .trim()
+          .toLocaleLowerCase();
 
-    return LANGUAGES.filter((language) => {
-      const searchableText = [
-        language.name,
-        language.english,
-        language.code,
-        language.search,
-      ]
-        .join(" ")
-        .toLocaleLowerCase();
+      if (!value) {
+        return LANGUAGES;
+      }
 
-      return searchableText.includes(value);
-    });
-  }, [search]);
+      return LANGUAGES.filter(
+        (language) => {
+          const searchableText =
+            [
+              language.name,
+              language.english,
+              language.code,
+              language.search,
+            ]
+              .join(" ")
+              .toLocaleLowerCase();
 
-  async function selectLanguage(languageCode) {
-    if (!telegramId || savingLanguage) {
+          return searchableText.includes(
+            value
+          );
+        }
+      );
+    }, [search]);
+
+  /* =======================================================
+     SELECT LANGUAGE
+  ======================================================= */
+
+  async function selectLanguage(
+    languageCode
+  ) {
+    if (
+      !initData ||
+      savingLanguage
+    ) {
       return;
     }
 
     try {
-      setSavingLanguage(true);
+      setSavingLanguage(
+        true
+      );
+
       setError("");
 
-      // Profil allaqachon mavjud,
-      // faqat language hali tanlanmagan.
-      if (profile) {
-        const { error: updateError } =
-          await supabase
-            .from("profiles")
-            .update({
-              language: languageCode,
-            })
-            .eq("id", profile.id);
+      /*
+        createProfile serverda:
 
-        if (updateError) {
-          throw updateError;
-        }
+        - Telegram userni tekshiradi
+        - profil yo'q bo'lsa yaratadi
+        - mavjud, lekin language bo'sh
+          bo'lsa tilni saqlaydi
+        - duplicate profil yaratmaydi
+      */
+      const result =
+        await callProfileApi({
+          action:
+            "createProfile",
 
-        window.location.replace(
-          `/my/${profile.card_id}`
+          initData,
+
+          language:
+            languageCode,
+        });
+
+      const profile =
+        result.profile;
+
+      if (
+        !profile?.card_id
+      ) {
+        throw new Error(
+          "Profile could not be created."
         );
-
-        return;
       }
 
-      // Yangi foydalanuvchi uchun profil yaratamiz.
-      const cardId = `card-${telegramId}`;
-
-      const { error: insertError } =
-        await supabase
-          .from("profiles")
-          .insert({
-            telegram_id: telegramId,
-            card_id: cardId,
-            full_name: "",
-            bio: "",
-            language: languageCode,
-            is_premium: false,
-          });
-
-      if (insertError) {
-        throw insertError;
-      }
-
-      window.location.replace(`/my/${cardId}`);
+      /*
+        Shu tabning o'zida owner
+        kartaga o'tamiz.
+      */
+      window.location.replace(
+        `/my/${encodeURIComponent(
+          profile.card_id
+        )}`
+      );
     } catch (err) {
       console.error(err);
 
@@ -464,15 +621,31 @@ export default function Home() {
           "The language could not be saved."
       );
 
-      setSavingLanguage(false);
+      setSavingLanguage(
+        false
+      );
     }
   }
 
+  /* =======================================================
+     ERROR
+  ======================================================= */
+
   if (error) {
     return (
-      <main style={styles.page}>
-        <div style={styles.container}>
-          <div style={styles.errorBox}>
+      <main
+        style={styles.page}
+      >
+        <div
+          style={
+            styles.container
+          }
+        >
+          <div
+            style={
+              styles.errorBox
+            }
+          >
             {error}
           </div>
         </div>
@@ -480,54 +653,111 @@ export default function Home() {
     );
   }
 
+  /* =======================================================
+     LANGUAGE SCREEN
+  ======================================================= */
+
   if (showLanguages) {
     return (
-      <main style={styles.page}>
+      <main
+        style={styles.page}
+      >
         <div
-          style={styles.backgroundGlowOne}
+          style={
+            styles.backgroundGlowOne
+          }
         />
 
         <div
-          style={styles.backgroundGlowTwo}
+          style={
+            styles.backgroundGlowTwo
+          }
         />
 
-        <div style={styles.container}>
-          <div style={styles.languageCard}>
-            <div style={styles.icon}>
+        <div
+          style={
+            styles.container
+          }
+        >
+          <div
+            style={
+              styles.languageCard
+            }
+          >
+            <div
+              style={
+                styles.icon
+              }
+            >
               🌐
             </div>
 
-            <h1 style={styles.title}>
-              Choose your language
+            <h1
+              style={
+                styles.title
+              }
+            >
+              Choose your
+              language
             </h1>
 
-            <p style={styles.subtitle}>
-              Select the language you want to use
+            <p
+              style={
+                styles.subtitle
+              }
+            >
+              Select the
+              language you want
+              to use
             </p>
 
-            <div style={styles.searchWrapper}>
-              <span style={styles.searchIcon}>
+            <div
+              style={
+                styles.searchWrapper
+              }
+            >
+              <span
+                style={
+                  styles.searchIcon
+                }
+              >
                 ⌕
               </span>
 
               <input
                 type="text"
                 value={search}
-                onChange={(event) =>
-                  setSearch(event.target.value)
+                onChange={(
+                  event
+                ) =>
+                  setSearch(
+                    event.target
+                      .value
+                  )
                 }
                 placeholder="Search language..."
-                style={styles.searchInput}
+                style={
+                  styles.searchInput
+                }
                 autoComplete="off"
               />
             </div>
 
-            <div style={styles.languageList}>
-              {filteredLanguages.length > 0 ? (
+            <div
+              style={
+                styles.languageList
+              }
+            >
+              {filteredLanguages.length >
+              0 ? (
                 filteredLanguages.map(
-                  (language) => (
+                  (
+                    language
+                  ) => (
                     <button
-                      key={language.code}
+                      key={
+                        language.code
+                      }
                       type="button"
                       style={{
                         ...styles.languageButton,
@@ -537,7 +767,9 @@ export default function Home() {
                             ? 0.55
                             : 1,
                       }}
-                      disabled={savingLanguage}
+                      disabled={
+                        savingLanguage
+                      }
                       onClick={() =>
                         selectLanguage(
                           language.code
@@ -554,7 +786,9 @@ export default function Home() {
                             styles.nativeName
                           }
                         >
-                          {language.name}
+                          {
+                            language.name
+                          }
                         </span>
 
                         {language.name !==
@@ -572,7 +806,9 @@ export default function Home() {
                       </div>
 
                       <span
-                        style={styles.arrow}
+                        style={
+                          styles.arrow
+                        }
                       >
                         ›
                       </span>
@@ -580,8 +816,13 @@ export default function Home() {
                   )
                 )
               ) : (
-                <div style={styles.noResult}>
-                  No languages found
+                <div
+                  style={
+                    styles.noResult
+                  }
+                >
+                  No languages
+                  found
                 </div>
               )}
             </div>
@@ -591,89 +832,157 @@ export default function Home() {
     );
   }
 
-  // Hech qanday Loading/Yuklanmoqda yozuvi chiqmaydi.
-  // Profil tekshirilayotgan vaqtda ekran bo‘sh turadi.
-  return <main style={styles.page} />;
+  /*
+    Profil tekshirilayotgan paytda
+    Loading / Yuklanmoqda matni yo'q.
+    Faqat fon.
+  */
+  return (
+    <main
+      style={styles.page}
+    />
+  );
 }
+
+/* =========================================================
+   STYLES
+========================================================= */
 
 const styles = {
   page: {
     position: "relative",
-    minHeight: "100vh",
+
     width: "100%",
+
+    minHeight:
+      "100dvh",
+
+    height:
+      "100dvh",
+
     margin: 0,
     padding: 0,
-    overflow: "hidden",
+
+    overflow:
+      "hidden",
 
     background:
       "linear-gradient(145deg, #06101d 0%, #101827 48%, #07111f 100%)",
 
-    color: "#ffffff",
+    color:
+      "#ffffff",
 
     fontFamily:
       '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
   },
 
   backgroundGlowOne: {
-    position: "fixed",
+    position:
+      "fixed",
 
-    width: "280px",
-    height: "280px",
+    width:
+      "280px",
 
-    top: "-100px",
-    right: "-100px",
+    height:
+      "280px",
 
-    borderRadius: "50%",
+    top:
+      "-100px",
+
+    right:
+      "-100px",
+
+    borderRadius:
+      "50%",
 
     background:
       "rgba(59,130,246,0.16)",
 
-    filter: "blur(70px)",
+    filter:
+      "blur(70px)",
 
-    pointerEvents: "none",
+    pointerEvents:
+      "none",
   },
 
   backgroundGlowTwo: {
-    position: "fixed",
+    position:
+      "fixed",
 
-    width: "260px",
-    height: "260px",
+    width:
+      "260px",
 
-    left: "-120px",
-    bottom: "-80px",
+    height:
+      "260px",
 
-    borderRadius: "50%",
+    left:
+      "-120px",
+
+    bottom:
+      "-80px",
+
+    borderRadius:
+      "50%",
 
     background:
       "rgba(14,165,233,0.10)",
 
-    filter: "blur(70px)",
+    filter:
+      "blur(70px)",
 
-    pointerEvents: "none",
+    pointerEvents:
+      "none",
   },
 
   container: {
-    position: "relative",
+    position:
+      "relative",
+
     zIndex: 2,
 
-    width: "100%",
-    maxWidth: "460px",
+    width:
+      "100%",
 
-    margin: "0 auto",
+    maxWidth:
+      "460px",
 
-    padding: "24px 16px 34px",
+    height:
+      "100%",
 
-    boxSizing: "border-box",
+    margin:
+      "0 auto",
+
+    padding:
+      "24px 16px 34px",
+
+    boxSizing:
+      "border-box",
+
+    display:
+      "flex",
+
+    alignItems:
+      "flex-start",
+
+    justifyContent:
+      "center",
   },
 
   languageCard: {
-    width: "100%",
+    width:
+      "100%",
 
-    padding: "26px 16px 16px",
+    maxHeight:
+      "calc(100dvh - 58px)",
 
-    boxSizing: "border-box",
+    padding:
+      "26px 16px 16px",
 
-    borderRadius: "30px",
+    boxSizing:
+      "border-box",
+
+    borderRadius:
+      "30px",
 
     background:
       "rgba(255,255,255,0.075)",
@@ -684,22 +993,45 @@ const styles = {
     boxShadow:
       "0 24px 70px rgba(0,0,0,0.28)",
 
-    backdropFilter: "blur(24px)",
-    WebkitBackdropFilter: "blur(24px)",
+    backdropFilter:
+      "blur(24px)",
+
+    WebkitBackdropFilter:
+      "blur(24px)",
+
+    display:
+      "flex",
+
+    flexDirection:
+      "column",
+
+    overflow:
+      "hidden",
   },
 
   icon: {
-    width: "62px",
-    height: "62px",
+    width:
+      "62px",
 
-    margin: "0 auto 16px",
+    height:
+      "62px",
 
-    display: "flex",
+    margin:
+      "0 auto 16px",
 
-    alignItems: "center",
-    justifyContent: "center",
+    flexShrink: 0,
 
-    borderRadius: "20px",
+    display:
+      "flex",
+
+    alignItems:
+      "center",
+
+    justifyContent:
+      "center",
+
+    borderRadius:
+      "20px",
 
     background:
       "rgba(255,255,255,0.10)",
@@ -707,54 +1039,79 @@ const styles = {
     border:
       "1px solid rgba(255,255,255,0.10)",
 
-    fontSize: "29px",
+    fontSize:
+      "29px",
   },
 
   title: {
     margin: 0,
 
-    textAlign: "center",
+    flexShrink: 0,
 
-    fontSize: "27px",
+    textAlign:
+      "center",
 
-    lineHeight: 1.15,
+    fontSize:
+      "27px",
 
-    fontWeight: "800",
+    lineHeight:
+      1.15,
 
-    letterSpacing: "-0.5px",
+    fontWeight:
+      "800",
+
+    letterSpacing:
+      "-0.5px",
   },
 
   subtitle: {
-    margin: "9px 0 22px",
+    margin:
+      "9px 0 22px",
 
-    textAlign: "center",
+    flexShrink: 0,
 
-    fontSize: "14px",
+    textAlign:
+      "center",
 
-    lineHeight: 1.5,
+    fontSize:
+      "14px",
+
+    lineHeight:
+      1.5,
 
     color:
       "rgba(255,255,255,0.56)",
   },
 
   searchWrapper: {
-    width: "100%",
+    width:
+      "100%",
 
-    height: "54px",
+    height:
+      "54px",
 
-    display: "flex",
+    flexShrink: 0,
 
-    alignItems: "center",
+    display:
+      "flex",
 
-    gap: "10px",
+    alignItems:
+      "center",
 
-    padding: "0 15px",
+    gap:
+      "10px",
 
-    marginBottom: "12px",
+    padding:
+      "0 15px",
 
-    boxSizing: "border-box",
+    marginBottom:
+      "12px",
 
-    borderRadius: "17px",
+    boxSizing:
+      "border-box",
+
+    borderRadius:
+      "17px",
 
     background:
       "rgba(255,255,255,0.085)",
@@ -766,78 +1123,104 @@ const styles = {
   searchIcon: {
     flexShrink: 0,
 
-    fontSize: "25px",
+    fontSize:
+      "25px",
 
     lineHeight: 1,
 
     color:
       "rgba(255,255,255,0.55)",
 
-    transform: "rotate(-20deg)",
+    transform:
+      "rotate(-20deg)",
   },
 
   searchInput: {
-    width: "100%",
+    width:
+      "100%",
 
-    height: "100%",
+    height:
+      "100%",
 
     padding: 0,
-
     margin: 0,
 
-    outline: "none",
+    outline:
+      "none",
 
-    border: "none",
+    border:
+      "none",
 
-    background: "transparent",
+    background:
+      "transparent",
 
-    color: "#ffffff",
+    color:
+      "#ffffff",
 
-    fontSize: "16px",
+    fontSize:
+      "16px",
 
-    fontFamily: "inherit",
+    fontFamily:
+      "inherit",
   },
 
   languageList: {
-    width: "100%",
+    width:
+      "100%",
 
-    maxHeight: "54vh",
+    minHeight: 0,
 
-    overflowY: "auto",
+    overflowY:
+      "auto",
 
     WebkitOverflowScrolling:
       "touch",
 
-    display: "flex",
+    display:
+      "flex",
 
-    flexDirection: "column",
+    flexDirection:
+      "column",
 
-    gap: "7px",
+    gap:
+      "7px",
 
-    paddingRight: "2px",
+    paddingRight:
+      "2px",
 
-    boxSizing: "border-box",
+    boxSizing:
+      "border-box",
   },
 
   languageButton: {
-    width: "100%",
+    width:
+      "100%",
 
-    minHeight: "58px",
+    minHeight:
+      "58px",
 
-    display: "flex",
+    flexShrink: 0,
 
-    alignItems: "center",
+    display:
+      "flex",
+
+    alignItems:
+      "center",
 
     justifyContent:
       "space-between",
 
-    gap: "12px",
+    gap:
+      "12px",
 
-    padding: "9px 15px",
+    padding:
+      "9px 15px",
 
-    boxSizing: "border-box",
+    boxSizing:
+      "border-box",
 
-    borderRadius: "17px",
+    borderRadius:
+      "17px",
 
     border:
       "1px solid rgba(255,255,255,0.09)",
@@ -845,39 +1228,52 @@ const styles = {
     background:
       "rgba(255,255,255,0.065)",
 
-    color: "#ffffff",
+    color:
+      "#ffffff",
 
-    cursor: "pointer",
+    cursor:
+      "pointer",
 
-    textAlign: "left",
+    textAlign:
+      "left",
 
-    fontFamily: "inherit",
+    fontFamily:
+      "inherit",
   },
 
   languageText: {
     minWidth: 0,
 
-    display: "flex",
+    display:
+      "flex",
 
-    flexDirection: "column",
+    flexDirection:
+      "column",
 
-    gap: "3px",
+    gap:
+      "3px",
   },
 
   nativeName: {
-    fontSize: "16px",
+    fontSize:
+      "16px",
 
-    lineHeight: 1.25,
+    lineHeight:
+      1.25,
 
-    fontWeight: "650",
+    fontWeight:
+      "650",
 
-    color: "#ffffff",
+    color:
+      "#ffffff",
   },
 
   englishName: {
-    fontSize: "12px",
+    fontSize:
+      "12px",
 
-    lineHeight: 1.2,
+    lineHeight:
+      1.2,
 
     color:
       "rgba(255,255,255,0.46)",
@@ -886,31 +1282,45 @@ const styles = {
   arrow: {
     flexShrink: 0,
 
-    fontSize: "25px",
+    fontSize:
+      "25px",
 
-    fontWeight: "300",
+    fontWeight:
+      "300",
 
     color:
       "rgba(255,255,255,0.40)",
   },
 
   noResult: {
-    padding: "30px 15px",
+    padding:
+      "30px 15px",
 
-    textAlign: "center",
+    textAlign:
+      "center",
 
-    fontSize: "14px",
+    fontSize:
+      "14px",
 
     color:
       "rgba(255,255,255,0.50)",
   },
 
   errorBox: {
-    marginTop: "30px",
+    width:
+      "100%",
 
-    padding: "18px",
+    marginTop:
+      "30px",
 
-    borderRadius: "18px",
+    padding:
+      "18px",
+
+    boxSizing:
+      "border-box",
+
+    borderRadius:
+      "18px",
 
     background:
       "rgba(220,38,38,0.16)",
@@ -918,8 +1328,10 @@ const styles = {
     border:
       "1px solid rgba(248,113,113,0.35)",
 
-    fontSize: "15px",
+    fontSize:
+      "15px",
 
-    lineHeight: "1.5",
+    lineHeight:
+      "1.5",
   },
 };

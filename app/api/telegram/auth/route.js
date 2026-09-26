@@ -62,7 +62,6 @@ function verifyTelegramInitData(initData, botToken) {
 
   const now = Math.floor(Date.now() / 1000);
 
-  // initData 24 soatdan eski bo‘lsa qabul qilmaymiz.
   if (now - authDate > 86400 || authDate > now + 60) {
     return {
       valid: false,
@@ -153,9 +152,7 @@ export async function POST(request) {
 
     return Response.json({
       ok: true,
-
       telegramUser: result.user,
-
       telegramId: String(result.user.id),
     });
   } catch (error) {
@@ -174,3 +171,4 @@ export async function POST(request) {
       }
     );
   }
+}

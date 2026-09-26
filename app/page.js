@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
@@ -8,26 +8,263 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
 );
 
-// Alifbo tartibida
 const LANGUAGES = [
-  { code: "ar", name: "العربية" },
-  { code: "de", name: "Deutsch" },
-  { code: "en", name: "English" },
-  { code: "es", name: "Español" },
-  { code: "fr", name: "Français" },
-  { code: "ja", name: "日本語" },
-  { code: "kk", name: "Қазақша" },
-  { code: "ko", name: "한국어" },
-  { code: "ru", name: "Русский" },
-  { code: "tr", name: "Türkçe" },
-  { code: "uz", name: "O‘zbekcha" },
-  { code: "zh", name: "中文" },
-];
+  {
+    code: "ar",
+    name: "العربية",
+    english: "Arabic",
+    search: "arabic arab العربية",
+  },
+  {
+    code: "az",
+    name: "Azərbaycanca",
+    english: "Azerbaijani",
+    search: "azerbaijani azeri azərbaycan azerbaijan",
+  },
+  {
+    code: "bn",
+    name: "বাংলা",
+    english: "Bengali",
+    search: "bengali bangla বাংলা",
+  },
+  {
+    code: "bg",
+    name: "Български",
+    english: "Bulgarian",
+    search: "bulgarian български",
+  },
+  {
+    code: "zh",
+    name: "中文",
+    english: "Chinese",
+    search: "chinese china 中文",
+  },
+  {
+    code: "cs",
+    name: "Čeština",
+    english: "Czech",
+    search: "czech čeština",
+  },
+  {
+    code: "da",
+    name: "Dansk",
+    english: "Danish",
+    search: "danish dansk",
+  },
+  {
+    code: "nl",
+    name: "Nederlands",
+    english: "Dutch",
+    search: "dutch nederlands",
+  },
+  {
+    code: "en",
+    name: "English",
+    english: "English",
+    search: "english",
+  },
+  {
+    code: "fi",
+    name: "Suomi",
+    english: "Finnish",
+    search: "finnish suomi",
+  },
+  {
+    code: "fr",
+    name: "Français",
+    english: "French",
+    search: "french français francais",
+  },
+  {
+    code: "de",
+    name: "Deutsch",
+    english: "German",
+    search: "german deutsch",
+  },
+  {
+    code: "el",
+    name: "Ελληνικά",
+    english: "Greek",
+    search: "greek ελληνικά",
+  },
+  {
+    code: "he",
+    name: "עברית",
+    english: "Hebrew",
+    search: "hebrew עברית",
+  },
+  {
+    code: "hi",
+    name: "हिन्दी",
+    english: "Hindi",
+    search: "hindi हिन्दी india",
+  },
+  {
+    code: "hu",
+    name: "Magyar",
+    english: "Hungarian",
+    search: "hungarian magyar",
+  },
+  {
+    code: "id",
+    name: "Bahasa Indonesia",
+    english: "Indonesian",
+    search: "indonesian indonesia bahasa",
+  },
+  {
+    code: "it",
+    name: "Italiano",
+    english: "Italian",
+    search: "italian italiano",
+  },
+  {
+    code: "ja",
+    name: "日本語",
+    english: "Japanese",
+    search: "japanese japan 日本語",
+  },
+  {
+    code: "kk",
+    name: "Қазақша",
+    english: "Kazakh",
+    search: "kazakh қазақша qazaq kazakhstan",
+  },
+  {
+    code: "ko",
+    name: "한국어",
+    english: "Korean",
+    search: "korean korea 한국어",
+  },
+  {
+    code: "ky",
+    name: "Кыргызча",
+    english: "Kyrgyz",
+    search: "kyrgyz кыргызча kirgiz kyrgyzstan",
+  },
+  {
+    code: "ms",
+    name: "Bahasa Melayu",
+    english: "Malay",
+    search: "malay malaysia melayu",
+  },
+  {
+    code: "no",
+    name: "Norsk",
+    english: "Norwegian",
+    search: "norwegian norsk",
+  },
+  {
+    code: "fa",
+    name: "فارسی",
+    english: "Persian",
+    search: "persian farsi فارسی iran",
+  },
+  {
+    code: "pl",
+    name: "Polski",
+    english: "Polish",
+    search: "polish polski",
+  },
+  {
+    code: "pt",
+    name: "Português",
+    english: "Portuguese",
+    search: "portuguese português portugues",
+  },
+  {
+    code: "ro",
+    name: "Română",
+    english: "Romanian",
+    search: "romanian română romana",
+  },
+  {
+    code: "ru",
+    name: "Русский",
+    english: "Russian",
+    search: "russian russian rus русский russkiy",
+  },
+  {
+    code: "sr",
+    name: "Српски",
+    english: "Serbian",
+    search: "serbian српски",
+  },
+  {
+    code: "sk",
+    name: "Slovenčina",
+    english: "Slovak",
+    search: "slovak slovenčina",
+  },
+  {
+    code: "es",
+    name: "Español",
+    english: "Spanish",
+    search: "spanish español espanol",
+  },
+  {
+    code: "sv",
+    name: "Svenska",
+    english: "Swedish",
+    search: "swedish svenska",
+  },
+  {
+    code: "tg",
+    name: "Тоҷикӣ",
+    english: "Tajik",
+    search: "tajik тоҷикӣ tojik",
+  },
+  {
+    code: "th",
+    name: "ไทย",
+    english: "Thai",
+    search: "thai thailand ไทย",
+  },
+  {
+    code: "tr",
+    name: "Türkçe",
+    english: "Turkish",
+    search: "turkish türkçe turk",
+  },
+  {
+    code: "tk",
+    name: "Türkmençe",
+    english: "Turkmen",
+    search: "turkmen türkmençe turkmenistan",
+  },
+  {
+    code: "uk",
+    name: "Українська",
+    english: "Ukrainian",
+    search: "ukrainian українська ukraine",
+  },
+  {
+    code: "ur",
+    name: "اردو",
+    english: "Urdu",
+    search: "urdu اردو pakistan",
+  },
+  {
+    code: "uz",
+    name: "O‘zbekcha",
+    english: "Uzbek",
+    search: "uzbek o‘zbekcha ozbek uz o'zbek uzbekistan",
+  },
+  {
+    code: "vi",
+    name: "Tiếng Việt",
+    english: "Vietnamese",
+    search: "vietnamese vietnam tiếng việt",
+  },
+].sort((a, b) => a.english.localeCompare(b.english));
 
 export default function Home() {
   const [telegramId, setTelegramId] = useState(null);
   const [profile, setProfile] = useState(null);
+
   const [showLanguages, setShowLanguages] = useState(false);
+  const [search, setSearch] = useState("");
+
+  const [savingLanguage, setSavingLanguage] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -36,7 +273,7 @@ export default function Home() {
         const tg = window.Telegram?.WebApp;
 
         if (!tg) {
-          setError("Mini App Telegram orqali ochilishi kerak.");
+          setError("This Mini App must be opened through Telegram.");
           return;
         }
 
@@ -46,7 +283,7 @@ export default function Home() {
         const telegramUser = tg.initDataUnsafe?.user;
 
         if (!telegramUser?.id) {
-          setError("Telegram foydalanuvchisi aniqlanmadi.");
+          setError("Telegram user could not be identified.");
           return;
         }
 
@@ -64,7 +301,6 @@ export default function Home() {
           throw profileError;
         }
 
-        // Profil hali mavjud emas
         if (!data) {
           setShowLanguages(true);
           return;
@@ -72,31 +308,56 @@ export default function Home() {
 
         setProfile(data);
 
-        // Profil bor, lekin til hali tanlanmagan
         if (!data.language) {
           setShowLanguages(true);
           return;
         }
 
-        // Til avval saqlangan.
-        // Qayta til so‘ramaydi.
-        window.location.replace(`/edit/${data.card_id}`);
+        window.location.replace(`/my/${data.card_id}`);
       } catch (err) {
         console.error(err);
-        setError(err?.message || "Xatolik yuz berdi.");
+
+        setError(
+          err?.message || "Something went wrong."
+        );
       }
     }
 
     startApp();
   }, []);
 
-  async function selectLanguage(languageCode) {
-    try {
-      if (!telegramId) {
-        return;
-      }
+  const filteredLanguages = useMemo(() => {
+    const value = search
+      .trim()
+      .toLocaleLowerCase();
 
-      // Eski profil mavjud
+    if (!value) {
+      return LANGUAGES;
+    }
+
+    return LANGUAGES.filter((language) => {
+      const searchableText = [
+        language.name,
+        language.english,
+        language.code,
+        language.search,
+      ]
+        .join(" ")
+        .toLocaleLowerCase();
+
+      return searchableText.includes(value);
+    });
+  }, [search]);
+
+  async function selectLanguage(languageCode) {
+    if (!telegramId || savingLanguage) {
+      return;
+    }
+
+    try {
+      setSavingLanguage(true);
+      setError("");
+
       if (profile) {
         const { error: updateError } = await supabase
           .from("profiles")
@@ -109,11 +370,13 @@ export default function Home() {
           throw updateError;
         }
 
-        window.location.replace(`/edit/${profile.card_id}`);
+        window.location.replace(
+          `/my/${profile.card_id}`
+        );
+
         return;
       }
 
-      // Yangi foydalanuvchi
       const cardId = `card-${telegramId}`;
 
       const { error: insertError } = await supabase
@@ -131,16 +394,19 @@ export default function Home() {
         throw insertError;
       }
 
-      window.location.replace(`/edit/${cardId}`);
+      window.location.replace(`/my/${cardId}`);
     } catch (err) {
       console.error(err);
+
       setError(
-        err?.message || "Tilni saqlashda xatolik yuz berdi."
+        err?.message ||
+          "The language could not be saved."
       );
+
+      setSavingLanguage(false);
     }
   }
 
-  // Xatolik bo‘lsa
   if (error) {
     return (
       <main style={styles.page}>
@@ -153,35 +419,103 @@ export default function Home() {
     );
   }
 
-  // Birinchi kirishda til tanlash
   if (showLanguages) {
     return (
       <main style={styles.page}>
+        <div style={styles.backgroundGlowOne} />
+        <div style={styles.backgroundGlowTwo} />
+
         <div style={styles.container}>
           <div style={styles.languageCard}>
-            <div style={styles.icon}>🌐</div>
-
-            <h1 style={styles.title}>
-              Tilni tanlang
-            </h1>
-
-            <div style={styles.subtitle}>
-              Choose your language
+            <div style={styles.icon}>
+              🌐
             </div>
 
-            <div style={styles.languageGrid}>
-              {LANGUAGES.map((language) => (
-                <button
-                  key={language.code}
-                  type="button"
-                  style={styles.languageButton}
-                  onClick={() =>
-                    selectLanguage(language.code)
-                  }
-                >
-                  {language.name}
-                </button>
-              ))}
+            <h1 style={styles.title}>
+              Choose your language
+            </h1>
+
+            <p style={styles.subtitle}>
+              Select the language you want to use
+            </p>
+
+            <div style={styles.searchWrapper}>
+              <span style={styles.searchIcon}>
+                ⌕
+              </span>
+
+              <input
+                type="text"
+                value={search}
+                onChange={(event) =>
+                  setSearch(event.target.value)
+                }
+                placeholder="Search language..."
+                style={styles.searchInput}
+                autoComplete="off"
+              />
+            </div>
+
+            <div style={styles.languageList}>
+              {filteredLanguages.length > 0 ? (
+                filteredLanguages.map(
+                  (language) => (
+                    <button
+                      key={language.code}
+                      type="button"
+                      style={{
+                        ...styles.languageButton,
+                        opacity: savingLanguage
+                          ? 0.55
+                          : 1,
+                      }}
+                      disabled={savingLanguage}
+                      onClick={() =>
+                        selectLanguage(
+                          language.code
+                        )
+                      }
+                    >
+                      <div
+                        style={
+                          styles.languageText
+                        }
+                      >
+                        <span
+                          style={
+                            styles.nativeName
+                          }
+                        >
+                          {language.name}
+                        </span>
+
+                        {language.name !==
+                          language.english && (
+                          <span
+                            style={
+                              styles.englishName
+                            }
+                          >
+                            {
+                              language.english
+                            }
+                          </span>
+                        )}
+                      </div>
+
+                      <span
+                        style={styles.arrow}
+                      >
+                        ›
+                      </span>
+                    </button>
+                  )
+                )
+              ) : (
+                <div style={styles.noResult}>
+                  No languages found
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -189,94 +523,218 @@ export default function Home() {
     );
   }
 
-  // Tekshirayotgan paytda hech qanday yozuv chiqmaydi
   return <main style={styles.page} />;
 }
 
 const styles = {
   page: {
+    position: "relative",
     minHeight: "100vh",
     width: "100%",
     margin: 0,
     padding: 0,
+    overflow: "hidden",
     background:
-      "linear-gradient(145deg, #07111f 0%, #111827 50%, #08101d 100%)",
+      "linear-gradient(145deg, #06101d 0%, #101827 48%, #07111f 100%)",
     color: "#ffffff",
     fontFamily:
       '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
   },
 
+  backgroundGlowOne: {
+    position: "fixed",
+    width: "280px",
+    height: "280px",
+    top: "-100px",
+    right: "-100px",
+    borderRadius: "50%",
+    background:
+      "rgba(59,130,246,0.16)",
+    filter: "blur(70px)",
+    pointerEvents: "none",
+  },
+
+  backgroundGlowTwo: {
+    position: "fixed",
+    width: "260px",
+    height: "260px",
+    left: "-120px",
+    bottom: "-80px",
+    borderRadius: "50%",
+    background:
+      "rgba(14,165,233,0.10)",
+    filter: "blur(70px)",
+    pointerEvents: "none",
+  },
+
   container: {
+    position: "relative",
+    zIndex: 2,
     width: "100%",
     maxWidth: "460px",
     margin: "0 auto",
-    padding: "28px 18px 40px",
+    padding: "24px 16px 34px",
     boxSizing: "border-box",
   },
 
   languageCard: {
     width: "100%",
-    padding: "28px 18px",
+    padding: "26px 16px 16px",
     boxSizing: "border-box",
-    borderRadius: "28px",
-    background: "rgba(255,255,255,0.08)",
-    border: "1px solid rgba(255,255,255,0.13)",
-    backdropFilter: "blur(20px)",
-    WebkitBackdropFilter: "blur(20px)",
+    borderRadius: "30px",
+    background:
+      "rgba(255,255,255,0.075)",
+    border:
+      "1px solid rgba(255,255,255,0.12)",
+    boxShadow:
+      "0 24px 70px rgba(0,0,0,0.28)",
+    backdropFilter: "blur(24px)",
+    WebkitBackdropFilter: "blur(24px)",
   },
 
   icon: {
-    width: "66px",
-    height: "66px",
-    margin: "0 auto 18px",
+    width: "62px",
+    height: "62px",
+    margin: "0 auto 16px",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     borderRadius: "20px",
-    background: "rgba(255,255,255,0.10)",
-    fontSize: "32px",
+    background:
+      "rgba(255,255,255,0.10)",
+    border:
+      "1px solid rgba(255,255,255,0.10)",
+    fontSize: "29px",
   },
 
   title: {
     margin: 0,
     textAlign: "center",
-    fontSize: "28px",
+    fontSize: "27px",
+    lineHeight: 1.15,
     fontWeight: "800",
+    letterSpacing: "-0.5px",
   },
 
   subtitle: {
-    marginTop: "8px",
-    marginBottom: "26px",
+    margin: "9px 0 22px",
     textAlign: "center",
-    fontSize: "15px",
-    color: "rgba(255,255,255,0.58)",
+    fontSize: "14px",
+    lineHeight: 1.5,
+    color: "rgba(255,255,255,0.56)",
   },
 
-  languageGrid: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
+  searchWrapper: {
+    width: "100%",
+    height: "54px",
+    display: "flex",
+    alignItems: "center",
     gap: "10px",
+    padding: "0 15px",
+    marginBottom: "12px",
+    boxSizing: "border-box",
+    borderRadius: "17px",
+    background:
+      "rgba(255,255,255,0.085)",
+    border:
+      "1px solid rgba(255,255,255,0.11)",
+  },
+
+  searchIcon: {
+    flexShrink: 0,
+    fontSize: "25px",
+    lineHeight: 1,
+    color: "rgba(255,255,255,0.55)",
+    transform: "rotate(-20deg)",
+  },
+
+  searchInput: {
+    width: "100%",
+    height: "100%",
+    padding: 0,
+    margin: 0,
+    outline: "none",
+    border: "none",
+    background: "transparent",
+    color: "#ffffff",
+    fontSize: "16px",
+    fontFamily: "inherit",
+  },
+
+  languageList: {
+    width: "100%",
+    maxHeight: "54vh",
+    overflowY: "auto",
+    WebkitOverflowScrolling: "touch",
+    display: "flex",
+    flexDirection: "column",
+    gap: "7px",
+    paddingRight: "2px",
+    boxSizing: "border-box",
   },
 
   languageButton: {
     width: "100%",
-    minHeight: "54px",
-    padding: "10px 8px",
-    border: "1px solid rgba(255,255,255,0.13)",
-    borderRadius: "16px",
-    background: "rgba(255,255,255,0.09)",
+    minHeight: "58px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: "12px",
+    padding: "9px 15px",
+    boxSizing: "border-box",
+    borderRadius: "17px",
+    border:
+      "1px solid rgba(255,255,255,0.09)",
+    background:
+      "rgba(255,255,255,0.065)",
     color: "#ffffff",
-    fontSize: "16px",
-    fontWeight: "600",
     cursor: "pointer",
+    textAlign: "left",
+    fontFamily: "inherit",
+  },
+
+  languageText: {
+    minWidth: 0,
+    display: "flex",
+    flexDirection: "column",
+    gap: "3px",
+  },
+
+  nativeName: {
+    fontSize: "16px",
+    lineHeight: 1.25,
+    fontWeight: "650",
+    color: "#ffffff",
+  },
+
+  englishName: {
+    fontSize: "12px",
+    lineHeight: 1.2,
+    color: "rgba(255,255,255,0.46)",
+  },
+
+  arrow: {
+    flexShrink: 0,
+    fontSize: "25px",
+    fontWeight: "300",
+    color: "rgba(255,255,255,0.40)",
+  },
+
+  noResult: {
+    padding: "30px 15px",
+    textAlign: "center",
+    fontSize: "14px",
+    color: "rgba(255,255,255,0.50)",
   },
 
   errorBox: {
     marginTop: "30px",
     padding: "18px",
     borderRadius: "18px",
-    background: "rgba(220,38,38,0.16)",
-    border: "1px solid rgba(248,113,113,0.35)",
+    background:
+      "rgba(220,38,38,0.16)",
+    border:
+      "1px solid rgba(248,113,113,0.35)",
     fontSize: "15px",
     lineHeight: "1.5",
   },

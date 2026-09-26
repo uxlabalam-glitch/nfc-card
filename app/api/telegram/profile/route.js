@@ -63,14 +63,16 @@ function verifyTelegramInitData(
     };
   }
 
-  params.delete("hash");
-
   /*
-    Ba'zi Telegram versiyalarida signature
-    ham kelishi mumkin. Hash tekshiruvida
-    uni data-check-string ichiga kiritmaymiz.
+    Telegram Bot Token HMAC verification:
+    faqat hash data-check-stringdan olib
+    tashlanadi.
+
+    Yangi Telegram Mini App initData ichida
+    signature maydoni ham bo'lishi mumkin.
+    Uni bu HMAC tekshiruvda o'chirmaymiz.
   */
-  params.delete("signature");
+  params.delete("hash");
 
   const dataCheckString = [
     ...params.entries(),
@@ -555,10 +557,6 @@ async function createProfileAction(
   const telegramUser =
     verification.user;
 
-  /*
-    Avval shu Telegram akkauntga
-    profil mavjudligini tekshiramiz.
-  */
   const {
     data: existing,
     error: existingError,
@@ -611,10 +609,6 @@ async function createProfileAction(
   let cardId =
     baseCardId;
 
-  /*
-    Juda kam ehtimol bilan card_id
-    band bo'lsa, unique suffix qo'shamiz.
-  */
   const {
     data: sameCard,
     error: sameCardError,
@@ -799,11 +793,6 @@ async function saveEditAction(
     throw updateError;
   }
 
-  /*
-    Eski linklarni o'chiramiz va
-    client yuborgan yangi ro'yxatni
-    qayta yozamiz.
-  */
   const {
     error: deleteLinksError,
   } = await owner.supabase
@@ -1098,9 +1087,6 @@ async function uploadImageAction(
     );
   }
 
-  /*
-    10 MB limit.
-  */
   if (
     typeof file.size ===
       "number" &&
@@ -1218,10 +1204,6 @@ async function uploadImageAction(
     throw profileError;
   }
 
-  /*
-    Yangi rasm DBga yozilgandan
-    keyingina eski rasmni o'chiramiz.
-  */
   const oldPath =
     storagePathFromPublicUrl(
       oldUrl,
@@ -1326,10 +1308,6 @@ async function deleteProfileAction(
     throw profileError;
   }
 
-  /*
-    Profil DBdan o'chirilgach,
-    storage rasmlarini ham tozalaymiz.
-  */
   if (avatarPath) {
     const {
       error,
@@ -1385,9 +1363,6 @@ export async function POST(
         "content-type"
       ) || "";
 
-    /*
-      Avatar va background FormData orqali.
-    */
     if (
       contentType.includes(
         "multipart/form-data"

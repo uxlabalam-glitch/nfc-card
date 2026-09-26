@@ -24,7 +24,13 @@ import {
   FaGear,
   FaQrcode,
   FaXmark,
+  FaXTwitter,
 } from "react-icons/fa6";
+
+import {
+  FaVk,
+  FaOdnoklassniki,
+} from "react-icons/fa";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL ||
@@ -254,6 +260,37 @@ export default function MyCardPage() {
   }
 
   /* =======================================================
+     SCREEN LED
+  ======================================================= */
+
+  const screenLedStyle =
+    profile.screen_led_enabled
+      ? {
+          boxShadow: `
+            0 0 45px rgba(0,0,0,0.22),
+            0 0 7px ${profile.screen_led_color || "#3B82F6"},
+            0 0 16px ${profile.screen_led_color || "#3B82F6"},
+            0 0 28px ${profile.screen_led_color || "#3B82F6"}
+          `,
+        }
+      : {};
+
+  /* =======================================================
+     CARD LED
+  ======================================================= */
+
+  const cardLedStyle =
+    profile.card_led_enabled
+      ? {
+          boxShadow: `
+            0 0 5px ${profile.card_led_color || "#3B82F6"},
+            0 0 14px ${profile.card_led_color || "#3B82F6"},
+            0 12px 40px rgba(0,0,0,0.14)
+          `,
+        }
+      : {};
+
+  /* =======================================================
      UI
   ======================================================= */
 
@@ -282,7 +319,12 @@ export default function MyCardPage() {
           ASOSIY MARKAZIY QISM
       =================================================== */}
 
-      <section style={styles.centerSection}>
+      <section
+        style={{
+          ...styles.centerSection,
+          ...screenLedStyle,
+        }}
+      >
         {/* =================================================
             MARKAZDAGI TINIQ FON
         ================================================= */}
@@ -395,7 +437,12 @@ export default function MyCardPage() {
               GLASS PANEL
           =============================================== */}
 
-          <div style={styles.glassPanel}>
+          <div
+            style={{
+              ...styles.glassPanel,
+              ...cardLedStyle,
+            }}
+          >
             {/* =============================================
                 PROFIL RASMI
             ============================================= */}
@@ -750,6 +797,23 @@ function SocialIcon({ icon }) {
         <FaLinkedin size={29} />
       );
 
+    case "x":
+    case "twitter":
+      return (
+        <FaXTwitter size={28} />
+      );
+
+    case "vk":
+      return (
+        <FaVk size={29} />
+      );
+
+    case "ok":
+    case "odnoklassniki":
+      return (
+        <FaOdnoklassniki size={28} />
+      );
+
     case "phone":
       return (
         <FaPhone size={25} />
@@ -820,6 +884,23 @@ function getIconColor(icon) {
     case "linkedin":
       return {
         color: "#0A66C2",
+      };
+
+    case "x":
+    case "twitter":
+      return {
+        color: "#000000",
+      };
+
+    case "vk":
+      return {
+        color: "#0077FF",
+      };
+
+    case "ok":
+    case "odnoklassniki":
+      return {
+        color: "#EE8208",
       };
 
     case "phone":

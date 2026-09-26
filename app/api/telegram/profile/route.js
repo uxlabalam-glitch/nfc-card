@@ -44,8 +44,7 @@ function verifyTelegramInitData(
   if (!initData || !botToken) {
     return {
       valid: false,
-      error:
-        "Telegram security data is missing.",
+      error: "Telegram security data is missing.",
     };
   }
 
@@ -58,19 +57,13 @@ function verifyTelegramInitData(
   if (!receivedHash) {
     return {
       valid: false,
-      error:
-        "Telegram hash is missing.",
+      error: "Telegram hash is missing.",
     };
   }
 
   /*
-    Telegram Bot Token HMAC verification:
-    faqat hash data-check-stringdan olib
-    tashlanadi.
-
-    Yangi Telegram Mini App initData ichida
-    signature maydoni ham bo'lishi mumkin.
-    Uni bu HMAC tekshiruvda o'chirmaymiz.
+    Hash data-check-string ichiga kirmaydi.
+    signature bo'lsa esa uni qoldiramiz.
   */
   params.delete("hash");
 
@@ -120,8 +113,7 @@ function verifyTelegramInitData(
   } catch {
     return {
       valid: false,
-      error:
-        "Telegram hash is invalid.",
+      error: "Telegram hash is invalid.",
     };
   }
 
@@ -135,8 +127,7 @@ function verifyTelegramInitData(
   ) {
     return {
       valid: false,
-      error:
-        "Telegram verification failed.",
+      error: "Telegram verification failed.",
     };
   }
 
@@ -147,8 +138,7 @@ function verifyTelegramInitData(
   if (!authDate) {
     return {
       valid: false,
-      error:
-        "Telegram auth date is missing.",
+      error: "Telegram auth date is missing.",
     };
   }
 
@@ -162,8 +152,7 @@ function verifyTelegramInitData(
   ) {
     return {
       valid: false,
-      error:
-        "Telegram session has expired.",
+      error: "Telegram session has expired.",
     };
   }
 
@@ -173,28 +162,26 @@ function verifyTelegramInitData(
   if (!userRaw) {
     return {
       valid: false,
-      error:
-        "Telegram user is missing.",
+      error: "Telegram user is missing.",
     };
   }
 
   let user;
 
   try {
-    user = JSON.parse(userRaw);
+    user =
+      JSON.parse(userRaw);
   } catch {
     return {
       valid: false,
-      error:
-        "Telegram user data is invalid.",
+      error: "Telegram user data is invalid.",
     };
   }
 
   if (!user?.id) {
     return {
       valid: false,
-      error:
-        "Telegram user ID is missing.",
+      error: "Telegram user ID is missing.",
     };
   }
 
@@ -202,7 +189,8 @@ function verifyTelegramInitData(
     valid: true,
 
     user: {
-      id: Number(user.id),
+      id:
+        Number(user.id),
 
       first_name:
         user.first_name || "",
@@ -331,9 +319,10 @@ async function getVerifiedOwner(
     return {
       ok: false,
 
-      response: unauthorized(
-        verification.error
-      ),
+      response:
+        unauthorized(
+          verification.error
+        ),
     };
   }
 
@@ -341,9 +330,10 @@ async function getVerifiedOwner(
     return {
       ok: false,
 
-      response: badRequest(
-        "Card ID is missing."
-      ),
+      response:
+        badRequest(
+          "Card ID is missing."
+        ),
     };
   }
 
@@ -356,7 +346,10 @@ async function getVerifiedOwner(
   } = await supabase
     .from("profiles")
     .select("*")
-    .eq("card_id", cardId)
+    .eq(
+      "card_id",
+      cardId
+    )
     .maybeSingle();
 
   if (profileError) {
@@ -367,22 +360,28 @@ async function getVerifiedOwner(
     return {
       ok: false,
 
-      response: notFound(
-        "Profile not found."
-      ),
+      response:
+        notFound(
+          "Profile not found."
+        ),
     };
   }
 
   if (
-    String(profile.telegram_id) !==
-    String(verification.user.id)
+    String(
+      profile.telegram_id
+    ) !==
+    String(
+      verification.user.id
+    )
   ) {
     return {
       ok: false,
 
-      response: forbidden(
-        "This profile does not belong to this Telegram account."
-      ),
+      response:
+        forbidden(
+          "This profile does not belong to this Telegram account."
+        ),
     };
   }
 
@@ -390,6 +389,7 @@ async function getVerifiedOwner(
     ok: true,
     supabase,
     profile,
+
     telegramUser:
       verification.user,
   };
@@ -433,7 +433,9 @@ async function getLinks(
 
 function safeFileExtension(file) {
   const originalName =
-    String(file?.name || "");
+    String(
+      file?.name || ""
+    );
 
   const lastPart =
     originalName
@@ -443,16 +445,22 @@ function safeFileExtension(file) {
 
   if (
     lastPart &&
-    /^[a-z0-9]+$/.test(lastPart) &&
+    /^[a-z0-9]+$/.test(
+      lastPart
+    ) &&
     lastPart.length <= 10
   ) {
     return lastPart;
   }
 
   const type =
-    String(file?.type || "");
+    String(
+      file?.type || ""
+    );
 
-  if (type === "image/png") {
+  if (
+    type === "image/png"
+  ) {
     return "png";
   }
 
@@ -463,11 +471,15 @@ function safeFileExtension(file) {
     return "jpg";
   }
 
-  if (type === "image/webp") {
+  if (
+    type === "image/webp"
+  ) {
     return "webp";
   }
 
-  if (type === "image/avif") {
+  if (
+    type === "image/avif"
+  ) {
     return "avif";
   }
 
@@ -488,8 +500,9 @@ function isAllowedImage(file) {
   ];
 
   return allowed.includes(
-    String(file.type || "")
-      .toLowerCase()
+    String(
+      file.type || ""
+    ).toLowerCase()
   );
 }
 
@@ -519,7 +532,8 @@ function storagePathFromPublicUrl(
 
     return decodeURIComponent(
       parsed.pathname.slice(
-        index + marker.length
+        index +
+          marker.length
       )
     );
   } catch {
@@ -528,10 +542,13 @@ function storagePathFromPublicUrl(
 }
 
 /* =========================================================
-   CREATE PROFILE
+   BOOTSTRAP
+
+   Faqat tekshiradi.
+   Profil YO'Q bo'lsa yangi profil yaratmaydi.
 ========================================================= */
 
-async function createProfileAction(
+async function bootstrapAction(
   body
 ) {
   const initData =
@@ -551,12 +568,108 @@ async function createProfileAction(
     );
   }
 
+  const telegramUser =
+    verification.user;
+
+  const supabase =
+    getSupabaseAdmin();
+
+  const {
+    data: profile,
+    error,
+  } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq(
+      "telegram_id",
+      telegramUser.id
+    )
+    .maybeSingle();
+
+  if (error) {
+    throw error;
+  }
+
+  /*
+    Yangi foydalanuvchi.
+
+    MUHIM:
+    bu yerda hech qanday profil
+    yaratilmaydi.
+  */
+  if (!profile) {
+    return Response.json({
+      ok: true,
+      exists: false,
+      profile: null,
+      links: [],
+      telegramUser,
+    });
+  }
+
+  const links =
+    await getLinks(
+      supabase,
+      profile.id
+    );
+
+  return Response.json({
+    ok: true,
+    exists: true,
+    profile,
+    links,
+    telegramUser,
+  });
+}
+
+/* =========================================================
+   CREATE PROFILE
+
+   Faqat til tanlangandan keyin yangi profil yaratadi.
+========================================================= */
+
+async function createProfileAction(
+  body
+) {
+  const initData =
+    typeof body?.initData ===
+    "string"
+      ? body.initData
+      : "";
+
+  const requestedLanguage =
+    typeof body?.language ===
+    "string"
+      ? body.language.trim()
+      : "";
+
+  if (!requestedLanguage) {
+    return badRequest(
+      "Language is missing."
+    );
+  }
+
+  const verification =
+    getVerifiedTelegramUser(
+      initData
+    );
+
+  if (!verification.valid) {
+    return unauthorized(
+      verification.error
+    );
+  }
+
   const supabase =
     getSupabaseAdmin();
 
   const telegramUser =
     verification.user;
 
+  /*
+    Shu Telegram akkaunt uchun
+    profil allaqachon bormi?
+  */
   const {
     data: existing,
     error: existingError,
@@ -573,27 +686,58 @@ async function createProfileAction(
     throw existingError;
   }
 
+  /*
+    Bir xil Telegram foydalanuvchi
+    ikkinchi profil yaratib yubormaydi.
+  */
   if (existing) {
+    /*
+      Agar eski profilning tili
+      hali bo'sh bo'lsa,
+      hozir tanlangan tilni saqlaymiz.
+    */
+    let profile =
+      existing;
+
+    if (!existing.language) {
+      const {
+        data: updated,
+        error: updateError,
+      } = await supabase
+        .from("profiles")
+        .update({
+          language:
+            requestedLanguage,
+        })
+        .eq(
+          "id",
+          existing.id
+        )
+        .select("*")
+        .single();
+
+      if (updateError) {
+        throw updateError;
+      }
+
+      profile =
+        updated;
+    }
+
     const links =
       await getLinks(
         supabase,
-        existing.id
+        profile.id
       );
 
     return Response.json({
       ok: true,
       created: false,
-      profile: existing,
+      profile,
       links,
       telegramUser,
     });
   }
-
-  const requestedLanguage =
-    typeof body?.language ===
-    "string"
-      ? body.language.trim()
-      : "";
 
   const fullName = [
     telegramUser.first_name,
@@ -609,6 +753,10 @@ async function createProfileAction(
   let cardId =
     baseCardId;
 
+  /*
+    card_id band bo'lib qolgan
+    juda kam holat uchun.
+  */
   const {
     data: sameCard,
     error: sameCardError,
@@ -645,14 +793,15 @@ async function createProfileAction(
         cardId,
 
       full_name:
-        fullName || "NFC Card",
+        fullName || "",
 
       bio: "",
 
       language:
-        requestedLanguage || null,
+        requestedLanguage,
 
-      is_premium: false,
+      is_premium:
+        false,
 
       screen_led_enabled:
         false,
@@ -676,7 +825,8 @@ async function createProfileAction(
   return Response.json({
     ok: true,
     created: true,
-    profile: created,
+    profile:
+      created,
     links: [],
     telegramUser,
   });
@@ -719,8 +869,12 @@ async function getProfileAction(
 
   return Response.json({
     ok: true,
-    profile: owner.profile,
+
+    profile:
+      owner.profile,
+
     links,
+
     telegramUser:
       owner.telegramUser,
   });
@@ -768,18 +922,23 @@ async function saveEditAction(
       : "";
 
   const links =
-    Array.isArray(body?.links)
+    Array.isArray(
+      body?.links
+    )
       ? body.links
       : [];
 
   const {
-    data: updatedProfile,
-    error: updateError,
+    data:
+      updatedProfile,
+    error:
+      updateError,
   } = await owner.supabase
     .from("profiles")
     .update({
       full_name:
         fullName,
+
       bio,
     })
     .eq(
@@ -794,7 +953,8 @@ async function saveEditAction(
   }
 
   const {
-    error: deleteLinksError,
+    error:
+      deleteLinksError,
   } = await owner.supabase
     .from("links")
     .delete()
@@ -810,23 +970,29 @@ async function saveEditAction(
   const cleanLinks =
     links
       .map(
-        (link, index) => ({
+        (
+          link,
+          index
+        ) => ({
           profile_id:
             owner.profile.id,
 
           label:
             String(
-              link?.label || ""
+              link?.label ||
+                ""
             ).trim(),
 
           url:
             String(
-              link?.url || ""
+              link?.url ||
+                ""
             ).trim(),
 
           icon:
             String(
-              link?.icon || ""
+              link?.icon ||
+                ""
             ).trim(),
 
           sort_order:
@@ -848,14 +1014,21 @@ async function saveEditAction(
           link.icon
       );
 
-  if (cleanLinks.length > 0) {
+  if (
+    cleanLinks.length > 0
+  ) {
     const {
-      error: insertLinksError,
+      error:
+        insertLinksError,
     } = await owner.supabase
       .from("links")
-      .insert(cleanLinks);
+      .insert(
+        cleanLinks
+      );
 
-    if (insertLinksError) {
+    if (
+      insertLinksError
+    ) {
       throw insertLinksError;
     }
   }
@@ -868,8 +1041,10 @@ async function saveEditAction(
 
   return Response.json({
     ok: true,
+
     profile:
       updatedProfile,
+
     links:
       savedLinks,
   });
@@ -1059,7 +1234,9 @@ async function uploadImageAction(
     ).trim();
 
   const file =
-    formData.get("file");
+    formData.get(
+      "file"
+    );
 
   const owner =
     await getVerifiedOwner(
@@ -1081,7 +1258,11 @@ async function uploadImageAction(
     );
   }
 
-  if (!isAllowedImage(file)) {
+  if (
+    !isAllowedImage(
+      file
+    )
+  ) {
     return badRequest(
       "Unsupported image format."
     );
@@ -1091,7 +1272,9 @@ async function uploadImageAction(
     typeof file.size ===
       "number" &&
     file.size >
-      10 * 1024 * 1024
+      10 *
+        1024 *
+        1024
   ) {
     return badRequest(
       "Image is too large."
@@ -1112,16 +1295,23 @@ async function uploadImageAction(
       : "background_url";
 
   const oldUrl =
-    owner.profile[column] ||
-    "";
+    owner.profile[
+      column
+    ] || "";
 
   const extension =
-    safeFileExtension(file);
+    safeFileExtension(
+      file
+    );
 
   const filePath =
-    `${owner.profile.id}/${Date.now()}-${crypto
+    `${
+      owner.profile.id
+    }/${Date.now()}-${crypto
       .randomBytes(6)
-      .toString("hex")}.${extension}`;
+      .toString(
+        "hex"
+      )}.${extension}`;
 
   const arrayBuffer =
     await file.arrayBuffer();
@@ -1132,7 +1322,8 @@ async function uploadImageAction(
     );
 
   const {
-    error: uploadError,
+    error:
+      uploadError,
   } = await owner.supabase
     .storage
     .from(bucket)
@@ -1153,7 +1344,8 @@ async function uploadImageAction(
   }
 
   const {
-    data: publicData,
+    data:
+      publicData,
   } = owner.supabase
     .storage
     .from(bucket)
@@ -1179,7 +1371,8 @@ async function uploadImageAction(
 
   const {
     data: profile,
-    error: profileError,
+    error:
+      profileError,
   } = await owner.supabase
     .from("profiles")
     .update({
@@ -1193,7 +1386,9 @@ async function uploadImageAction(
     .select("*")
     .single();
 
-  if (profileError) {
+  if (
+    profileError
+  ) {
     await owner.supabase
       .storage
       .from(bucket)
@@ -1212,10 +1407,12 @@ async function uploadImageAction(
 
   if (
     oldPath &&
-    oldPath !== filePath
+    oldPath !==
+      filePath
   ) {
     const {
-      error: removeOldError,
+      error:
+        removeOldError,
     } = await owner.supabase
       .storage
       .from(bucket)
@@ -1223,7 +1420,9 @@ async function uploadImageAction(
         oldPath,
       ]);
 
-    if (removeOldError) {
+    if (
+      removeOldError
+    ) {
       console.error(
         "OLD IMAGE DELETE ERROR:",
         removeOldError
@@ -1270,18 +1469,21 @@ async function deleteProfileAction(
 
   const avatarPath =
     storagePathFromPublicUrl(
-      owner.profile.photo_url,
+      owner.profile
+        .photo_url,
       "avatars"
     );
 
   const backgroundPath =
     storagePathFromPublicUrl(
-      owner.profile.background_url,
+      owner.profile
+        .background_url,
       "backgrounds"
     );
 
   const {
-    error: linksError,
+    error:
+      linksError,
   } = await owner.supabase
     .from("links")
     .delete()
@@ -1295,7 +1497,8 @@ async function deleteProfileAction(
   }
 
   const {
-    error: profileError,
+    error:
+      profileError,
   } = await owner.supabase
     .from("profiles")
     .delete()
@@ -1304,7 +1507,9 @@ async function deleteProfileAction(
       owner.profile.id
     );
 
-  if (profileError) {
+  if (
+    profileError
+  ) {
     throw profileError;
   }
 
@@ -1326,12 +1531,16 @@ async function deleteProfileAction(
     }
   }
 
-  if (backgroundPath) {
+  if (
+    backgroundPath
+  ) {
     const {
       error,
     } = await owner.supabase
       .storage
-      .from("backgrounds")
+      .from(
+        "backgrounds"
+      )
       .remove([
         backgroundPath,
       ]);
@@ -1363,6 +1572,9 @@ export async function POST(
         "content-type"
       ) || "";
 
+    /*
+      Avatar / background
+    */
     if (
       contentType.includes(
         "multipart/form-data"
@@ -1411,6 +1623,19 @@ export async function POST(
       "string"
         ? body.action
         : "get";
+
+    /*
+      Yangi 2-etap uchun:
+      faqat mavjud profilni tekshiradi.
+    */
+    if (
+      action ===
+      "bootstrap"
+    ) {
+      return await bootstrapAction(
+        body
+      );
+    }
 
     if (
       action === "get"

@@ -1,7 +1,15 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { useParams } from "next/navigation";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+
+import {
+  useParams,
+} from "next/navigation";
 
 import {
   SiTelegram,
@@ -34,6 +42,8 @@ import {
   FaCamera,
   FaImage,
   FaCheck,
+  FaMagnifyingGlass,
+  FaFont,
 } from "react-icons/fa6";
 
 import {
@@ -52,44 +62,71 @@ const TEXTS = {
     design: "Asosiy fon",
     language: "Til",
     deleteProfile: "Profilni o‘chirish",
+
     qr: "QR kod",
     qrEdit: "QR kodni tahrirlash",
 
     name: "Ism Familiya",
     bio: "Qisqa ma’lumot",
+
     links: "Havolalar",
     addLink: "Havola qo‘shish",
+
     service: "Xizmat",
     linkName: "Nomi",
     linkUrl: "Havola",
+
     save: "Saqlash",
     saved: "Saqlandi",
 
     avatar: "Profil rasmi",
     background: "Orqa fon",
+
     changeAvatar: "Rasmni almashtirish",
     changeBackground: "Fonni almashtirish",
 
     screenLed: "Ekran cheti LED",
     cardLed: "Karta cheti LED",
+
     ledColor: "LED rangi",
     customColor: "Maxsus rang",
 
+    textStyle: "Yozuv stili",
+    textStyleInfo:
+      "Ism va qisqa ma’lumot ko‘rinishini tanlang",
+
+    standard: "Standart",
+    elegant: "Elegant",
+    modern: "Modern",
+    strong: "Qalin",
+
     chooseLanguage: "Tilni tanlang",
+    searchLanguage: "Tilni qidirish...",
 
     deleteTitle: "Profil o‘chirilsinmi?",
+
     deleteWarning:
       "Barcha ma’lumotlaringiz o‘chiriladi va ularni qayta tiklab bo‘lmaydi.",
+
     no: "Yo‘q",
     yes: "Ha",
 
     empty: "Afsuski, hozircha bo‘sh",
-    enterName: "Ism va familiyani kiriting.",
-    onlyImage: "Faqat rasm yuklash mumkin.",
+
+    enterName:
+      "Ism va familiyani kiriting.",
+
+    onlyImage:
+      "Faqat rasm yuklash mumkin.",
+
     photoTooBig:
       "Profil rasmi 5 MB dan oshmasligi kerak.",
+
     backgroundTooBig:
       "Orqa fon 10 MB dan oshmasligi kerak.",
+
+    noLanguage:
+      "Til topilmadi",
   },
 
   ru: {
@@ -98,45 +135,71 @@ const TEXTS = {
     design: "Основной фон",
     language: "Язык",
     deleteProfile: "Удалить профиль",
+
     qr: "QR-код",
     qrEdit: "Редактировать QR-код",
 
     name: "Имя и фамилия",
     bio: "Краткая информация",
+
     links: "Ссылки",
     addLink: "Добавить ссылку",
+
     service: "Сервис",
     linkName: "Название",
     linkUrl: "Ссылка",
+
     save: "Сохранить",
     saved: "Сохранено",
 
     avatar: "Фото профиля",
     background: "Фон",
+
     changeAvatar: "Изменить фото",
     changeBackground: "Изменить фон",
 
     screenLed: "LED по краю экрана",
     cardLed: "LED по краю карточки",
+
     ledColor: "Цвет LED",
     customColor: "Свой цвет",
 
+    textStyle: "Стиль текста",
+    textStyleInfo:
+      "Выберите стиль имени и описания",
+
+    standard: "Стандарт",
+    elegant: "Элегант",
+    modern: "Современный",
+    strong: "Жирный",
+
     chooseLanguage: "Выберите язык",
+    searchLanguage: "Поиск языка...",
 
     deleteTitle: "Удалить профиль?",
+
     deleteWarning:
       "Все ваши данные будут удалены без возможности восстановления.",
+
     no: "Нет",
     yes: "Да",
 
     empty: "К сожалению, пока пусто",
-    enterName: "Введите имя и фамилию.",
+
+    enterName:
+      "Введите имя и фамилию.",
+
     onlyImage:
       "Можно загружать только изображения.",
+
     photoTooBig:
       "Фото профиля не должно превышать 5 МБ.",
+
     backgroundTooBig:
       "Фон не должен превышать 10 МБ.",
+
+    noLanguage:
+      "Язык не найден",
   },
 
   en: {
@@ -145,45 +208,71 @@ const TEXTS = {
     design: "Main background",
     language: "Language",
     deleteProfile: "Delete profile",
+
     qr: "QR Code",
     qrEdit: "Edit QR Code",
 
     name: "Full name",
     bio: "Short information",
+
     links: "Links",
     addLink: "Add link",
+
     service: "Service",
     linkName: "Name",
     linkUrl: "Link",
+
     save: "Save",
     saved: "Saved",
 
     avatar: "Profile photo",
     background: "Background",
+
     changeAvatar: "Change photo",
     changeBackground: "Change background",
 
     screenLed: "Screen edge LED",
     cardLed: "Card edge LED",
+
     ledColor: "LED color",
     customColor: "Custom color",
 
+    textStyle: "Text style",
+    textStyleInfo:
+      "Choose the appearance of your name and description",
+
+    standard: "Standard",
+    elegant: "Elegant",
+    modern: "Modern",
+    strong: "Bold",
+
     chooseLanguage: "Choose language",
+    searchLanguage: "Search language...",
 
     deleteTitle: "Delete profile?",
+
     deleteWarning:
       "All your data will be deleted and cannot be restored.",
+
     no: "No",
     yes: "Yes",
 
     empty: "Unfortunately, it is empty for now",
-    enterName: "Enter your full name.",
+
+    enterName:
+      "Enter your full name.",
+
     onlyImage:
       "Only images can be uploaded.",
+
     photoTooBig:
       "Profile photo must not exceed 5 MB.",
+
     backgroundTooBig:
       "Background must not exceed 10 MB.",
+
+    noLanguage:
+      "No language found",
   },
 
   tr: {
@@ -192,46 +281,71 @@ const TEXTS = {
     design: "Ana arka plan",
     language: "Dil",
     deleteProfile: "Profili sil",
+
     qr: "QR Kod",
     qrEdit: "QR kodu düzenle",
 
     name: "Ad Soyad",
     bio: "Kısa bilgi",
+
     links: "Bağlantılar",
     addLink: "Bağlantı ekle",
+
     service: "Hizmet",
     linkName: "Ad",
     linkUrl: "Bağlantı",
+
     save: "Kaydet",
     saved: "Kaydedildi",
 
     avatar: "Profil fotoğrafı",
     background: "Arka plan",
+
     changeAvatar: "Fotoğrafı değiştir",
     changeBackground: "Arka planı değiştir",
 
     screenLed: "Ekran kenarı LED",
     cardLed: "Kart kenarı LED",
+
     ledColor: "LED rengi",
     customColor: "Özel renk",
 
+    textStyle: "Yazı stili",
+    textStyleInfo:
+      "Ad ve açıklama stilini seçin",
+
+    standard: "Standart",
+    elegant: "Zarif",
+    modern: "Modern",
+    strong: "Kalın",
+
     chooseLanguage: "Dil seçin",
+    searchLanguage: "Dil ara...",
 
     deleteTitle: "Profil silinsin mi?",
+
     deleteWarning:
       "Tüm verileriniz silinecek ve geri yüklenemeyecek.",
+
     no: "Hayır",
     yes: "Evet",
 
     empty: "Maalesef, şimdilik boş",
+
     enterName:
       "Adınızı ve soyadınızı girin.",
+
     onlyImage:
       "Yalnızca resim yüklenebilir.",
+
     photoTooBig:
       "Profil fotoğrafı 5 MB'ı geçmemelidir.",
+
     backgroundTooBig:
       "Arka plan 10 MB'ı geçmemelidir.",
+
+    noLanguage:
+      "Dil bulunamadı",
   },
 };
 
@@ -240,82 +354,280 @@ const TEXTS = {
 ========================================================= */
 
 const SERVICES = [
-  {
-    value: "telegram",
-    label: "Telegram",
-  },
-  {
-    value: "whatsapp",
-    label: "WhatsApp",
-  },
-  {
-    value: "instagram",
-    label: "Instagram",
-  },
-  {
-    value: "youtube",
-    label: "YouTube",
-  },
-  {
-    value: "tiktok",
-    label: "TikTok",
-  },
-  {
-    value: "facebook",
-    label: "Facebook",
-  },
-  {
-    value: "linkedin",
-    label: "LinkedIn",
-  },
-  {
-    value: "x",
-    label: "X",
-  },
-  {
-    value: "vk",
-    label: "VK",
-  },
-  {
-    value: "ok",
-    label: "OK",
-  },
-  {
-    value: "phone",
-    label: "Telefon",
-  },
-  {
-    value: "email",
-    label: "Email",
-  },
-  {
-    value: "website",
-    label: "Website",
-  },
-  {
-    value: "location",
-    label: "Manzil",
-  },
+  { value: "telegram", label: "Telegram" },
+  { value: "whatsapp", label: "WhatsApp" },
+  { value: "instagram", label: "Instagram" },
+  { value: "youtube", label: "YouTube" },
+  { value: "tiktok", label: "TikTok" },
+  { value: "facebook", label: "Facebook" },
+  { value: "linkedin", label: "LinkedIn" },
+  { value: "x", label: "X" },
+  { value: "vk", label: "VK" },
+  { value: "ok", label: "OK" },
+  { value: "phone", label: "Telefon" },
+  { value: "email", label: "Email" },
+  { value: "website", label: "Website" },
+  { value: "location", label: "Manzil" },
 ];
+
+/* =========================================================
+   LANGUAGES
+========================================================= */
 
 const LANGUAGES = [
   {
-    code: "uz",
-    name: "O‘zbekcha",
+    code: "ar",
+    name: "العربية",
+    english: "Arabic",
+    search: "arabic arab العربية",
   },
   {
-    code: "ru",
-    name: "Русский",
+    code: "az",
+    name: "Azərbaycanca",
+    english: "Azerbaijani",
+    search: "azerbaijani azeri azərbaycan",
+  },
+  {
+    code: "bn",
+    name: "বাংলা",
+    english: "Bengali",
+    search: "bengali bangla বাংলা",
+  },
+  {
+    code: "bg",
+    name: "Български",
+    english: "Bulgarian",
+    search: "bulgarian български",
+  },
+  {
+    code: "zh",
+    name: "中文",
+    english: "Chinese",
+    search: "chinese china 中文",
+  },
+  {
+    code: "cs",
+    name: "Čeština",
+    english: "Czech",
+    search: "czech čeština",
+  },
+  {
+    code: "da",
+    name: "Dansk",
+    english: "Danish",
+    search: "danish dansk",
+  },
+  {
+    code: "nl",
+    name: "Nederlands",
+    english: "Dutch",
+    search: "dutch nederlands",
   },
   {
     code: "en",
     name: "English",
+    english: "English",
+    search: "english",
+  },
+  {
+    code: "fi",
+    name: "Suomi",
+    english: "Finnish",
+    search: "finnish suomi",
+  },
+  {
+    code: "fr",
+    name: "Français",
+    english: "French",
+    search: "french français francais",
+  },
+  {
+    code: "de",
+    name: "Deutsch",
+    english: "German",
+    search: "german deutsch",
+  },
+  {
+    code: "el",
+    name: "Ελληνικά",
+    english: "Greek",
+    search: "greek ελληνικά",
+  },
+  {
+    code: "he",
+    name: "עברית",
+    english: "Hebrew",
+    search: "hebrew עברית",
+  },
+  {
+    code: "hi",
+    name: "हिन्दी",
+    english: "Hindi",
+    search: "hindi हिन्दी india",
+  },
+  {
+    code: "hu",
+    name: "Magyar",
+    english: "Hungarian",
+    search: "hungarian magyar",
+  },
+  {
+    code: "id",
+    name: "Bahasa Indonesia",
+    english: "Indonesian",
+    search: "indonesian indonesia bahasa",
+  },
+  {
+    code: "it",
+    name: "Italiano",
+    english: "Italian",
+    search: "italian italiano",
+  },
+  {
+    code: "ja",
+    name: "日本語",
+    english: "Japanese",
+    search: "japanese japan 日本語",
+  },
+  {
+    code: "kk",
+    name: "Қазақша",
+    english: "Kazakh",
+    search: "kazakh қазақша qazaq",
+  },
+  {
+    code: "ko",
+    name: "한국어",
+    english: "Korean",
+    search: "korean korea 한국어",
+  },
+  {
+    code: "ky",
+    name: "Кыргызча",
+    english: "Kyrgyz",
+    search: "kyrgyz кыргызча kirgiz",
+  },
+  {
+    code: "ms",
+    name: "Bahasa Melayu",
+    english: "Malay",
+    search: "malay malaysia melayu",
+  },
+  {
+    code: "no",
+    name: "Norsk",
+    english: "Norwegian",
+    search: "norwegian norsk",
+  },
+  {
+    code: "fa",
+    name: "فارسی",
+    english: "Persian",
+    search: "persian farsi فارسی",
+  },
+  {
+    code: "pl",
+    name: "Polski",
+    english: "Polish",
+    search: "polish polski",
+  },
+  {
+    code: "pt",
+    name: "Português",
+    english: "Portuguese",
+    search: "portuguese português portugues",
+  },
+  {
+    code: "ro",
+    name: "Română",
+    english: "Romanian",
+    search: "romanian română romana",
+  },
+  {
+    code: "ru",
+    name: "Русский",
+    english: "Russian",
+    search: "russian rus русский",
+  },
+  {
+    code: "sr",
+    name: "Српски",
+    english: "Serbian",
+    search: "serbian српски",
+  },
+  {
+    code: "sk",
+    name: "Slovenčina",
+    english: "Slovak",
+    search: "slovak slovenčina",
+  },
+  {
+    code: "es",
+    name: "Español",
+    english: "Spanish",
+    search: "spanish español espanol",
+  },
+  {
+    code: "sv",
+    name: "Svenska",
+    english: "Swedish",
+    search: "swedish svenska",
+  },
+  {
+    code: "tg",
+    name: "Тоҷикӣ",
+    english: "Tajik",
+    search: "tajik тоҷикӣ tojik",
+  },
+  {
+    code: "th",
+    name: "ไทย",
+    english: "Thai",
+    search: "thai thailand ไทย",
   },
   {
     code: "tr",
     name: "Türkçe",
+    english: "Turkish",
+    search: "turkish türkçe turk",
   },
-];
+  {
+    code: "tk",
+    name: "Türkmençe",
+    english: "Turkmen",
+    search: "turkmen türkmençe",
+  },
+  {
+    code: "uk",
+    name: "Українська",
+    english: "Ukrainian",
+    search: "ukrainian українська",
+  },
+  {
+    code: "ur",
+    name: "اردو",
+    english: "Urdu",
+    search: "urdu اردو pakistan",
+  },
+  {
+    code: "uz",
+    name: "O‘zbekcha",
+    english: "Uzbek",
+    search: "uzbek o‘zbekcha ozbek o'zbek",
+  },
+  {
+    code: "vi",
+    name: "Tiếng Việt",
+    english: "Vietnamese",
+    search: "vietnamese vietnam tiếng việt",
+  },
+].sort((a, b) =>
+  a.english.localeCompare(b.english)
+);
+
+/* =========================================================
+   COLORS
+========================================================= */
 
 const LED_COLORS = [
   "#000000",
@@ -330,6 +642,47 @@ const LED_COLORS = [
   "#06B6D4",
   "#14B8A6",
   "#6366F1",
+];
+
+/* =========================================================
+   TEXT STYLE PREVIEW
+
+   Hozir UI preview.
+   DB/API bosqichida font_style saqlanadi.
+========================================================= */
+
+const TEXT_STYLES = [
+  {
+    id: "standard",
+    fontFamily:
+      '-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif',
+    fontWeight: 800,
+    letterSpacing: "-0.5px",
+  },
+
+  {
+    id: "elegant",
+    fontFamily:
+      'Georgia,"Times New Roman",serif',
+    fontWeight: 700,
+    letterSpacing: "0",
+  },
+
+  {
+    id: "modern",
+    fontFamily:
+      '"Trebuchet MS","Segoe UI",sans-serif',
+    fontWeight: 700,
+    letterSpacing: "0.3px",
+  },
+
+  {
+    id: "strong",
+    fontFamily:
+      'Arial,"Helvetica Neue",sans-serif',
+    fontWeight: 900,
+    letterSpacing: "-0.8px",
+  },
 ];
 
 /* =========================================================
@@ -420,11 +773,25 @@ export default function MyCardPage() {
     setDeleteSeconds,
   ] = useState(10);
 
-  const [deleting, setDeleting] =
-    useState(false);
+  const [
+    deleting,
+    setDeleting,
+  ] = useState(false);
 
-  const [publicUrl, setPublicUrl] =
-    useState("");
+  const [
+    publicUrl,
+    setPublicUrl,
+  ] = useState("");
+
+  const [
+    languageSearch,
+    setLanguageSearch,
+  ] = useState("");
+
+  const [
+    previewTextStyle,
+    setPreviewTextStyle,
+  ] = useState("standard");
 
   const languageCode =
     profile?.language || "en";
@@ -432,6 +799,42 @@ export default function MyCardPage() {
   const t =
     TEXTS[languageCode] ||
     TEXTS.en;
+
+  const selectedTextStyle =
+    TEXT_STYLES.find(
+      (item) =>
+        item.id ===
+        previewTextStyle
+    ) || TEXT_STYLES[0];
+
+  const filteredLanguages =
+    useMemo(() => {
+      const query =
+        languageSearch
+          .trim()
+          .toLocaleLowerCase();
+
+      if (!query) {
+        return LANGUAGES;
+      }
+
+      return LANGUAGES.filter(
+        (item) => {
+          const text = [
+            item.code,
+            item.name,
+            item.english,
+            item.search,
+          ]
+            .join(" ")
+            .toLocaleLowerCase();
+
+          return text.includes(
+            query
+          );
+        }
+      );
+    }, [languageSearch]);
 
   /* =========================================================
      TELEGRAM
@@ -452,7 +855,7 @@ export default function MyCardPage() {
   }
 
   /* =========================================================
-     SECURE JSON API
+     API JSON
   ========================================================= */
 
   async function apiJson(
@@ -478,6 +881,8 @@ export default function MyCardPage() {
             "Content-Type":
               "application/json",
           },
+
+          cache: "no-store",
 
           body: JSON.stringify({
             action,
@@ -513,7 +918,7 @@ export default function MyCardPage() {
   }
 
   /* =========================================================
-     SECURE UPLOAD API
+     API UPLOAD
   ========================================================= */
 
   async function apiUpload(
@@ -624,7 +1029,8 @@ export default function MyCardPage() {
       );
 
       setBio(
-        profileData?.bio || ""
+        profileData?.bio ||
+          ""
       );
 
       setScreenLedEnabled(
@@ -712,13 +1118,9 @@ export default function MyCardPage() {
         link?.icon || ""
       ).toLowerCase();
 
-    if (
-      icon === "phone"
-    ) {
+    if (icon === "phone") {
       if (
-        !url.startsWith(
-          "tel:"
-        )
+        !url.startsWith("tel:")
       ) {
         url = `tel:${url}`;
       }
@@ -729,9 +1131,7 @@ export default function MyCardPage() {
       return;
     }
 
-    if (
-      icon === "email"
-    ) {
+    if (icon === "email") {
       if (
         !url.startsWith(
           "mailto:"
@@ -807,13 +1207,15 @@ export default function MyCardPage() {
       null
     );
 
+    setLanguageSearch("");
+
     setModal(
       "settings"
     );
   }
 
   /* =========================================================
-     EDIT LINKS
+     LINKS
   ========================================================= */
 
   function addLink() {
@@ -891,8 +1293,7 @@ export default function MyCardPage() {
             return {
               ...link,
 
-              icon:
-                value,
+              icon: value,
 
               label:
                 service?.label ||
@@ -1188,7 +1589,7 @@ export default function MyCardPage() {
   }
 
   /* =========================================================
-     DESIGN
+     SAVE DESIGN
   ========================================================= */
 
   async function saveDesign() {
@@ -1259,6 +1660,8 @@ export default function MyCardPage() {
         data.profile
       );
 
+      setLanguageSearch("");
+
       setModal(
         "settings"
       );
@@ -1273,24 +1676,20 @@ export default function MyCardPage() {
   }
 
   /* =========================================================
-     DELETE COUNTDOWN
+     DELETE TIMER
   ========================================================= */
 
   useEffect(() => {
     if (
-      modal !==
-      "delete"
+      modal !== "delete"
     ) {
-      setDeleteSeconds(
-        10
-      );
+      setDeleteSeconds(10);
 
       return;
     }
 
     if (
-      deleteSeconds <=
-      0
+      deleteSeconds <= 0
     ) {
       return;
     }
@@ -1343,9 +1742,7 @@ export default function MyCardPage() {
           "Delete error"
       );
 
-      setDeleting(
-        false
-      );
+      setDeleting(false);
     }
   }
 
@@ -1361,35 +1758,28 @@ export default function MyCardPage() {
       : "";
 
   /* =========================================================
-     LED
+     CARD LED
   ========================================================= */
-
-  const screenLedStyle =
-    profile
-      ?.screen_led_enabled
-      ? {
-          boxShadow: `
-            0 0 7px ${profile.screen_led_color},
-            0 0 16px ${profile.screen_led_color},
-            0 0 28px ${profile.screen_led_color}
-          `,
-        }
-      : {};
 
   const cardLedStyle =
     profile
       ?.card_led_enabled
       ? {
-          boxShadow: `
-            0 0 5px ${profile.card_led_color},
-            0 0 13px ${profile.card_led_color},
-            0 12px 40px rgba(0,0,0,.14)
-          `,
-
           border:
             `1px solid ${profile.card_led_color}`,
+
+          boxShadow: `
+            0 0 7px ${profile.card_led_color},
+            0 0 18px ${profile.card_led_color},
+            0 18px 55px rgba(0,0,0,.18)
+          `,
         }
       : {};
+
+  const profileEmpty =
+    !profile?.full_name?.trim() &&
+    !profile?.bio?.trim() &&
+    links.length === 0;
 
   /* =========================================================
      INITIAL
@@ -1416,13 +1806,9 @@ export default function MyCardPage() {
   if (!profile) {
     return (
       <main
-        style={{
-          minHeight:
-            "100vh",
-
-          background:
-            "#dfe7ef",
-        }}
+        style={
+          styles.blankPage
+        }
       />
     );
   }
@@ -1454,11 +1840,52 @@ export default function MyCardPage() {
         }
       />
 
+      {/* ===============================================
+          SCREEN LED
+
+          Endi center card shadow emas.
+          Telefon viewportining 4 chetida.
+      =============================================== */}
+
+      {profile.screen_led_enabled && (
+        <div
+          style={{
+            ...styles.screenLed,
+
+            "--led-color":
+              profile.screen_led_color ||
+              "#3B82F6",
+
+            borderColor:
+              profile.screen_led_color ||
+              "#3B82F6",
+
+            boxShadow: `
+              inset 0 0 8px ${
+                profile.screen_led_color ||
+                "#3B82F6"
+              },
+              inset 0 0 18px ${
+                profile.screen_led_color ||
+                "#3B82F6"
+              },
+              0 0 8px ${
+                profile.screen_led_color ||
+                "#3B82F6"
+              },
+              0 0 22px ${
+                profile.screen_led_color ||
+                "#3B82F6"
+              }
+            `,
+          }}
+        />
+      )}
+
       <section
-        style={{
-          ...styles.centerSection,
-          ...screenLedStyle,
-        }}
+        style={
+          styles.centerSection
+        }
       >
         {profile.background_url && (
           <div
@@ -1476,6 +1903,8 @@ export default function MyCardPage() {
             styles.centerOverlay
           }
         />
+
+        {/* MENU */}
 
         <div
           style={
@@ -1506,13 +1935,12 @@ export default function MyCardPage() {
               <>
                 <button
                   type="button"
+                  aria-label="Close"
                   style={
                     styles.menuBackdrop
                   }
                   onClick={() =>
-                    setMenuOpen(
-                      false
-                    )
+                    setMenuOpen(false)
                   }
                 />
 
@@ -1549,13 +1977,8 @@ export default function MyCardPage() {
                       styles.menuItem
                     }
                     onClick={() => {
-                      setMenuOpen(
-                        false
-                      );
-
-                      setModal(
-                        "qr"
-                      );
+                      setMenuOpen(false);
+                      setModal("qr");
                     }}
                   >
                     <FaQrcode />
@@ -1570,15 +1993,21 @@ export default function MyCardPage() {
           </div>
         </div>
 
+        {/* MAIN CARD */}
+
         <div
           style={{
             ...styles.content,
 
             filter:
-              modal &&
-              modal !== "qr"
-                ? "blur(7px)"
+              modal
+                ? "blur(5px)"
                 : "none",
+
+            transform:
+              modal
+                ? "scale(.985)"
+                : "scale(1)",
           }}
         >
           <div
@@ -1616,21 +2045,11 @@ export default function MyCardPage() {
               )}
             </div>
 
-            {profile.full_name?.trim() ? (
-              <h1
-                style={
-                  styles.name
-                }
-              >
-                {
-                  profile.full_name
-                }
-              </h1>
-            ) : (
+            {profileEmpty ? (
               <button
                 type="button"
                 style={
-                  styles.emptyText
+                  styles.singleEmpty
                 }
                 onClick={
                   showEmpty
@@ -1638,102 +2057,116 @@ export default function MyCardPage() {
               >
                 {t.empty}
               </button>
-            )}
-
-            {profile.bio?.trim() ? (
-              <p
-                style={
-                  styles.bio
-                }
-              >
-                {profile.bio}
-              </p>
             ) : (
-              <button
-                type="button"
-                style={
-                  styles.emptyText
-                }
-                onClick={
-                  showEmpty
-                }
-              >
-                {t.empty}
-              </button>
-            )}
+              <>
+                {profile.full_name
+                  ?.trim() && (
+                  <h1
+                    style={{
+                      ...styles.name,
 
-            <div
-              style={
-                styles.linksGrid
-              }
-            >
-              {links.length ? (
-                links.map(
-                  (link) => (
-                    <button
-                      key={
-                        link.id
-                      }
-                      type="button"
-                      style={
-                        styles.linkButton
-                      }
-                      onClick={() =>
-                        openLink(
-                          link
-                        )
-                      }
-                    >
-                      <span
-                        style={{
-                          ...styles.iconBox,
-                          ...getIconColor(
-                            link.icon
-                          ),
-                        }}
-                      >
-                        <SocialIcon
-                          icon={
-                            link.icon
+                      fontFamily:
+                        selectedTextStyle.fontFamily,
+
+                      fontWeight:
+                        selectedTextStyle.fontWeight,
+
+                      letterSpacing:
+                        selectedTextStyle.letterSpacing,
+                    }}
+                  >
+                    {
+                      profile.full_name
+                    }
+                  </h1>
+                )}
+
+                {profile.bio
+                  ?.trim() && (
+                  <p
+                    style={{
+                      ...styles.bio,
+
+                      fontFamily:
+                        selectedTextStyle.fontFamily,
+                    }}
+                  >
+                    {profile.bio}
+                  </p>
+                )}
+
+                {links.length >
+                  0 && (
+                  <div
+                    style={
+                      styles.linksGrid
+                    }
+                  >
+                    {links.map(
+                      (
+                        link,
+                        index
+                      ) => (
+                        <button
+                          key={
+                            link.id ||
+                            `${link.icon}-${index}`
                           }
-                        />
-                      </span>
+                          type="button"
+                          style={
+                            styles.linkButton
+                          }
+                          onClick={() =>
+                            openLink(
+                              link
+                            )
+                          }
+                        >
+                          <span
+                            style={{
+                              ...styles.iconBox,
 
-                      <span
-                        style={
-                          styles.linkLabel
-                        }
-                      >
-                        {link.label ||
-                          SERVICES.find(
-                            (
-                              item
-                            ) =>
-                              item.value ===
-                              link.icon
-                          )
-                            ?.label ||
-                          ""}
-                      </span>
-                    </button>
-                  )
-                )
-              ) : (
-                <button
-                  type="button"
-                  style={
-                    styles.emptyText
-                  }
-                  onClick={
-                    showEmpty
-                  }
-                >
-                  {t.empty}
-                </button>
-              )}
-            </div>
+                              ...getIconColor(
+                                link.icon
+                              ),
+                            }}
+                          >
+                            <SocialIcon
+                              icon={
+                                link.icon
+                              }
+                            />
+                          </span>
+
+                          <span
+                            style={
+                              styles.linkLabel
+                            }
+                          >
+                            {link.label ||
+                              SERVICES.find(
+                                (
+                                  item
+                                ) =>
+                                  item.value ===
+                                  link.icon
+                              )
+                                ?.label ||
+                              ""}
+                          </span>
+                        </button>
+                      )
+                    )}
+                  </div>
+                )}
+              </>
+            )}
           </div>
         </div>
+
+        {/* =============================================
+            SETTINGS
+        ============================================= */}
 
         {modal ===
           "settings" && (
@@ -1786,11 +2219,15 @@ export default function MyCardPage() {
                 label={
                   t.language
                 }
-                onClick={() =>
+                onClick={() => {
+                  setLanguageSearch(
+                    ""
+                  );
+
                   setModal(
                     "language"
-                  )
-                }
+                  );
+                }}
               />
 
               <SettingsButton
@@ -1811,10 +2248,18 @@ export default function MyCardPage() {
           </ModalShell>
         )}
 
+        {/* =============================================
+            EDIT
+        ============================================= */}
+
         {modal === "edit" && (
           <ModalShell
-            title={t.edit}
-            icon={<FaPen />}
+            title={
+              t.edit
+            }
+            icon={
+              <FaPen />
+            }
             onBack={
               backToSettings
             }
@@ -1844,8 +2289,7 @@ export default function MyCardPage() {
                   event
                 ) =>
                   setFullName(
-                    event.target
-                      .value
+                    event.target.value
                   )
                 }
                 style={
@@ -1867,8 +2311,7 @@ export default function MyCardPage() {
                   event
                 ) =>
                   setBio(
-                    event.target
-                      .value
+                    event.target.value
                   )
                 }
                 style={
@@ -1878,29 +2321,13 @@ export default function MyCardPage() {
 
               <div
                 style={
-                  styles.sectionHeader
+                  styles.sectionTitle
                 }
               >
-                <strong>
-                  {t.links}
-                </strong>
-
-                <button
-                  type="button"
-                  style={
-                    styles.addButton
-                  }
-                  onClick={
-                    addLink
-                  }
-                >
-                  <FaPlus />
-
-                  {
-                    t.addLink
-                  }
-                </button>
+                {t.links}
               </div>
+
+              {/* LINKS FIRST */}
 
               {editLinks.map(
                 (
@@ -1948,6 +2375,7 @@ export default function MyCardPage() {
                         <span
                           style={{
                             ...styles.smallIcon,
+
                             ...getIconColor(
                               link.icon
                             ),
@@ -1962,18 +2390,26 @@ export default function MyCardPage() {
                         </span>
 
                         <span
-                          style={{
-                            flex: 1,
-                            textAlign:
-                              "left",
-                          }}
+                          style={
+                            styles.accordionText
+                          }
                         >
                           {
                             service.label
                           }
                         </span>
 
-                        <FaChevronDown />
+                        <FaChevronDown
+                          style={{
+                            transform:
+                              opened
+                                ? "rotate(180deg)"
+                                : "rotate(0deg)",
+
+                            transition:
+                              "transform .2s ease",
+                          }}
+                        />
                       </button>
 
                       {opened && (
@@ -2002,9 +2438,7 @@ export default function MyCardPage() {
                             ) =>
                               chooseService(
                                 index,
-                                event
-                                  .target
-                                  .value
+                                event.target.value
                               )
                             }
                             style={
@@ -2052,9 +2486,7 @@ export default function MyCardPage() {
                               updateEditLink(
                                 index,
                                 "label",
-                                event
-                                  .target
-                                  .value
+                                event.target.value
                               )
                             }
                             style={
@@ -2083,9 +2515,7 @@ export default function MyCardPage() {
                               updateEditLink(
                                 index,
                                 "url",
-                                event
-                                  .target
-                                  .value
+                                event.target.value
                               )
                             }
                             style={
@@ -2113,6 +2543,22 @@ export default function MyCardPage() {
                 }
               )}
 
+              {/* ADD BUTTON ALWAYS AFTER LAST LINK */}
+
+              <button
+                type="button"
+                style={
+                  styles.addButton
+                }
+                onClick={
+                  addLink
+                }
+              >
+                <FaPlus />
+
+                {t.addLink}
+              </button>
+
               <button
                 type="button"
                 disabled={
@@ -2137,6 +2583,10 @@ export default function MyCardPage() {
             </div>
           </ModalShell>
         )}
+
+        {/* =============================================
+            DESIGN
+        ============================================= */}
 
         {modal ===
           "design" && (
@@ -2184,65 +2634,194 @@ export default function MyCardPage() {
                 }
               />
 
-              <strong>
-                {t.avatar}
-              </strong>
-
-              <button
-                type="button"
-                disabled={
-                  uploadingPhoto
+              <div
+                style={
+                  styles.designSection
                 }
-                style={{
-                  ...styles.uploadButton,
+              >
+                <strong>
+                  {t.avatar}
+                </strong>
 
-                  opacity:
+                <button
+                  type="button"
+                  disabled={
                     uploadingPhoto
-                      ? 0.55
-                      : 1,
-                }}
-                onClick={() =>
-                  avatarInputRef
-                    .current
-                    ?.click()
+                  }
+                  style={{
+                    ...styles.uploadButton,
+
+                    opacity:
+                      uploadingPhoto
+                        ? 0.55
+                        : 1,
+                  }}
+                  onClick={() =>
+                    avatarInputRef
+                      .current
+                      ?.click()
+                  }
+                >
+                  <FaCamera />
+
+                  {
+                    t.changeAvatar
+                  }
+                </button>
+              </div>
+
+              <div
+                style={
+                  styles.designSection
                 }
               >
-                <FaCamera />
+                <strong>
+                  {
+                    t.background
+                  }
+                </strong>
 
-                {
-                  t.changeAvatar
-                }
-              </button>
-
-              <strong>
-                {t.background}
-              </strong>
-
-              <button
-                type="button"
-                disabled={
-                  uploadingBackground
-                }
-                style={{
-                  ...styles.uploadButton,
-
-                  opacity:
+                <button
+                  type="button"
+                  disabled={
                     uploadingBackground
-                      ? 0.55
-                      : 1,
-                }}
-                onClick={() =>
-                  backgroundInputRef
-                    .current
-                    ?.click()
+                  }
+                  style={{
+                    ...styles.uploadButton,
+
+                    opacity:
+                      uploadingBackground
+                        ? 0.55
+                        : 1,
+                  }}
+                  onClick={() =>
+                    backgroundInputRef
+                      .current
+                      ?.click()
+                  }
+                >
+                  <FaImage />
+
+                  {
+                    t.changeBackground
+                  }
+                </button>
+              </div>
+
+              {/* TEXT STYLE */}
+
+              <div
+                style={
+                  styles.textStyleBox
                 }
               >
-                <FaImage />
+                <div
+                  style={
+                    styles.textStyleHeader
+                  }
+                >
+                  <span
+                    style={
+                      styles.textStyleIcon
+                    }
+                  >
+                    <FaFont />
+                  </span>
 
-                {
-                  t.changeBackground
-                }
-              </button>
+                  <div>
+                    <strong>
+                      {
+                        t.textStyle
+                      }
+                    </strong>
+
+                    <div
+                      style={
+                        styles.textStyleInfo
+                      }
+                    >
+                      {
+                        t.textStyleInfo
+                      }
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  style={
+                    styles.textStyleGrid
+                  }
+                >
+                  {TEXT_STYLES.map(
+                    (item) => {
+                      const active =
+                        previewTextStyle ===
+                        item.id;
+
+                      const label =
+                        t[
+                          item.id
+                        ] ||
+                        item.id;
+
+                      return (
+                        <button
+                          type="button"
+                          key={
+                            item.id
+                          }
+                          style={{
+                            ...styles.textStyleButton,
+
+                            ...(active
+                              ? styles.textStyleButtonActive
+                              : {}),
+                          }}
+                          onClick={() =>
+                            setPreviewTextStyle(
+                              item.id
+                            )
+                          }
+                        >
+                          <span
+                            style={{
+                              fontFamily:
+                                item.fontFamily,
+
+                              fontWeight:
+                                item.fontWeight,
+
+                              letterSpacing:
+                                item.letterSpacing,
+
+                              fontSize:
+                                "18px",
+                            }}
+                          >
+                            Aa
+                          </span>
+
+                          <small>
+                            {
+                              label
+                            }
+                          </small>
+
+                          {active && (
+                            <span
+                              style={
+                                styles.textStyleCheck
+                              }
+                            >
+                              <FaCheck />
+                            </span>
+                          )}
+                        </button>
+                      );
+                    }
+                  )}
+                </div>
+              </div>
 
               <LedEditor
                 title={
@@ -2317,6 +2896,10 @@ export default function MyCardPage() {
           </ModalShell>
         )}
 
+        {/* =============================================
+            LANGUAGE
+        ============================================= */}
+
         {modal ===
           "language" && (
           <ModalShell
@@ -2329,62 +2912,132 @@ export default function MyCardPage() {
             onBack={
               backToSettings
             }
-            onClose={() =>
-              setModal(null)
-            }
+            onClose={() => {
+              setLanguageSearch(
+                ""
+              );
+
+              setModal(null);
+            }}
+            large
           >
             <div
               style={
-                styles.languageList
+                styles.languageContainer
               }
             >
-              {LANGUAGES.map(
-                (item) => {
-                  const active =
-                    profile.language ===
-                    item.code;
-
-                  return (
-                    <button
-                      type="button"
-                      key={
-                        item.code
-                      }
-                      style={{
-                        ...styles.languageButton,
-
-                        borderColor:
-                          active
-                            ? "#2563EB"
-                            : "#E5E7EB",
-                      }}
-                      onClick={() =>
-                        changeLanguage(
-                          item.code
-                        )
-                      }
-                    >
-                      <span>
-                        {
-                          item.name
-                        }
-                      </span>
-
-                      {active && (
-                        <FaCheck
-                          style={{
-                            color:
-                              "#2563EB",
-                          }}
-                        />
-                      )}
-                    </button>
-                  );
+              <div
+                style={
+                  styles.languageSearch
                 }
-              )}
+              >
+                <FaMagnifyingGlass />
+
+                <input
+                  value={
+                    languageSearch
+                  }
+                  onChange={(
+                    event
+                  ) =>
+                    setLanguageSearch(
+                      event.target.value
+                    )
+                  }
+                  placeholder={
+                    t.searchLanguage
+                  }
+                  style={
+                    styles.languageSearchInput
+                  }
+                />
+              </div>
+
+              <div
+                style={
+                  styles.languageList
+                }
+              >
+                {filteredLanguages.length >
+                0 ? (
+                  filteredLanguages.map(
+                    (item) => {
+                      const active =
+                        profile.language ===
+                        item.code;
+
+                      return (
+                        <button
+                          type="button"
+                          key={
+                            item.code
+                          }
+                          style={{
+                            ...styles.languageButton,
+
+                            ...(active
+                              ? styles.languageButtonActive
+                              : {}),
+                          }}
+                          onClick={() =>
+                            changeLanguage(
+                              item.code
+                            )
+                          }
+                        >
+                          <span
+                            style={
+                              styles.languageNames
+                            }
+                          >
+                            <strong>
+                              {
+                                item.name
+                              }
+                            </strong>
+
+                            {item.name !==
+                              item.english && (
+                              <small>
+                                {
+                                  item.english
+                                }
+                              </small>
+                            )}
+                          </span>
+
+                          {active && (
+                            <span
+                              style={
+                                styles.languageCheck
+                              }
+                            >
+                              <FaCheck />
+                            </span>
+                          )}
+                        </button>
+                      );
+                    }
+                  )
+                ) : (
+                  <div
+                    style={
+                      styles.noLanguage
+                    }
+                  >
+                    {
+                      t.noLanguage
+                    }
+                  </div>
+                )}
+              </div>
             </div>
           </ModalShell>
         )}
+
+        {/* =============================================
+            DELETE
+        ============================================= */}
 
         {modal ===
           "delete" && (
@@ -2459,9 +3112,15 @@ export default function MyCardPage() {
           </ModalShell>
         )}
 
+        {/* =============================================
+            QR
+        ============================================= */}
+
         {modal === "qr" && (
           <ModalShell
-            title={t.qr}
+            title={
+              t.qr
+            }
             icon={
               <FaQrcode />
             }
@@ -2476,20 +3135,26 @@ export default function MyCardPage() {
             >
               <div
                 style={
-                  styles.qrWhiteBox
+                  styles.qrGlow
                 }
               >
-                {qrImageUrl && (
-                  <img
-                    src={
-                      qrImageUrl
-                    }
-                    alt="QR Code"
-                    style={
-                      styles.qrImage
-                    }
-                  />
-                )}
+                <div
+                  style={
+                    styles.qrWhiteBox
+                  }
+                >
+                  {qrImageUrl && (
+                    <img
+                      src={
+                        qrImageUrl
+                      }
+                      alt="QR Code"
+                      style={
+                        styles.qrImage
+                      }
+                    />
+                  )}
+                </div>
               </div>
 
               <button
@@ -2543,9 +3208,14 @@ function ModalShell({
         styles.modalLayer
       }
     >
-      <div
+      <button
+        type="button"
+        aria-label="Close"
         style={
           styles.modalBackdrop
+        }
+        onClick={
+          onClose
         }
       />
 
@@ -2558,6 +3228,12 @@ function ModalShell({
             : {}),
         }}
       >
+        <div
+          style={
+            styles.modalShine
+          }
+        />
+
         <div
           style={
             styles.modalHeader
@@ -2642,26 +3318,30 @@ function SettingsButton({
 
         color:
           danger
-            ? "#DC2626"
-            : "#111827",
+            ? "#ff7b86"
+            : "#ffffff",
       }}
       onClick={
         onClick
       }
     >
       <span
-        style={
-          styles.settingsIcon
-        }
+        style={{
+          ...styles.settingsIcon,
+
+          color:
+            danger
+              ? "#ff7b86"
+              : "#ffffff",
+        }}
       >
         {icon}
       </span>
 
       <span
-        style={{
-          flex: 1,
-          textAlign: "left",
-        }}
+        style={
+          styles.settingsLabel
+        }
       >
         {label}
       </span>
@@ -2672,7 +3352,7 @@ function SettingsButton({
             "rotate(180deg)",
 
           opacity:
-            0.4,
+            0.55,
         }}
       />
     </button>
@@ -2680,7 +3360,7 @@ function SettingsButton({
 }
 
 /* =========================================================
-   LED
+   LED EDITOR
 ========================================================= */
 
 function LedEditor({
@@ -2717,8 +3397,13 @@ function LedEditor({
 
             background:
               enabled
-                ? "#2563EB"
-                : "#CBD5E1",
+                ? color
+                : "rgba(255,255,255,.18)",
+
+            boxShadow:
+              enabled
+                ? `0 0 16px ${color}`
+                : "none",
           }}
           onClick={() =>
             setEnabled(
@@ -2772,8 +3457,14 @@ function LedEditor({
                     outline:
                       color.toUpperCase() ===
                       item.toUpperCase()
-                        ? "3px solid #2563EB"
-                        : "2px solid rgba(0,0,0,.08)",
+                        ? `3px solid ${color}`
+                        : "2px solid rgba(255,255,255,.18)",
+
+                    boxShadow:
+                      color.toUpperCase() ===
+                      item.toUpperCase()
+                        ? `0 0 13px ${color}`
+                        : "none",
                   }}
                   onClick={() =>
                     setColor(
@@ -2801,8 +3492,7 @@ function LedEditor({
                   event
                 ) =>
                   setColor(
-                    event.target
-                      .value
+                    event.target.value
                   )
                 }
                 style={
@@ -2826,7 +3516,7 @@ function SocialIcon({
   small = false,
 }) {
   const size =
-    small ? 20 : 29;
+    small ? 20 : 28;
 
   const name =
     String(
@@ -2961,6 +3651,10 @@ function SocialIcon({
   }
 }
 
+/* =========================================================
+   ICON COLORS
+========================================================= */
+
 function getIconColor(icon) {
   switch (
     String(
@@ -2994,7 +3688,7 @@ function getIconColor(icon) {
     case "tiktok":
       return {
         color:
-          "#000000",
+          "#111111",
       };
 
     case "facebook":
@@ -3012,7 +3706,7 @@ function getIconColor(icon) {
     case "x":
       return {
         color:
-          "#000000",
+          "#111111",
       };
 
     case "vk":
@@ -3065,11 +3759,19 @@ function getIconColor(icon) {
 
 const styles = {
   page: {
-    minHeight:
-      "100vh",
-
     position:
-      "relative",
+      "fixed",
+
+    inset: 0,
+
+    width:
+      "100%",
+
+    height:
+      "100dvh",
+
+    overflow:
+      "hidden",
 
     display:
       "flex",
@@ -3077,14 +3779,27 @@ const styles = {
     justifyContent:
       "center",
 
-    overflowX:
-      "hidden",
-
     background:
       "#dfe7ef",
 
     fontFamily:
-      "Arial, sans-serif",
+      '-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif',
+  },
+
+  blankPage: {
+    position:
+      "fixed",
+
+    inset: 0,
+
+    width:
+      "100%",
+
+    height:
+      "100dvh",
+
+    background:
+      "#dfe7ef",
   },
 
   outerBackground: {
@@ -3092,7 +3807,7 @@ const styles = {
       "fixed",
 
     inset:
-      "-25px",
+      "-30px",
 
     backgroundSize:
       "cover",
@@ -3101,32 +3816,53 @@ const styles = {
       "center",
 
     filter:
-      "blur(14px)",
+      "blur(18px)",
 
     transform:
-      "scale(1.1)",
+      "scale(1.12)",
 
     opacity:
-      0.78,
+      0.8,
   },
 
   outerOverlay: {
     position:
       "fixed",
 
-    inset:
-      0,
+    inset: 0,
 
     background:
-      "rgba(255,255,255,.08)",
+      "linear-gradient(145deg,rgba(4,10,20,.16),rgba(255,255,255,.06))",
+  },
+
+  screenLed: {
+    position:
+      "fixed",
+
+    zIndex:
+      900,
+
+    inset:
+      "2px",
+
+    border:
+      "3px solid",
+
+    borderRadius:
+      "20px",
+
+    pointerEvents:
+      "none",
+
+    boxSizing:
+      "border-box",
   },
 
   centerSection: {
     position:
       "relative",
 
-    zIndex:
-      1,
+    zIndex: 1,
 
     width:
       "100%",
@@ -3134,28 +3870,25 @@ const styles = {
     maxWidth:
       "430px",
 
-    minHeight:
-      "100vh",
+    height:
+      "100dvh",
+
+    minHeight: 0,
 
     overflow:
       "hidden",
 
     background:
       "#eef3f7",
-
-    transition:
-      "box-shadow .25s ease",
   },
 
   centerBackground: {
     position:
       "absolute",
 
-    inset:
-      0,
+    inset: 0,
 
-    zIndex:
-      0,
+    zIndex: 0,
 
     backgroundSize:
       "cover",
@@ -3168,31 +3901,25 @@ const styles = {
     position:
       "absolute",
 
-    inset:
-      0,
+    inset: 0,
 
-    zIndex:
-      1,
+    zIndex: 1,
 
     background:
-      "linear-gradient(to bottom,rgba(255,255,255,.02),rgba(220,240,250,.18))",
+      "linear-gradient(to bottom,rgba(255,255,255,.02),rgba(20,30,45,.09))",
   },
 
   topMenu: {
     position:
       "absolute",
 
-    zIndex:
-      50,
+    zIndex: 50,
 
-    top:
-      0,
+    top: 0,
 
-    left:
-      0,
+    left: 0,
 
-    right:
-      0,
+    right: 0,
 
     display:
       "flex",
@@ -3201,7 +3928,7 @@ const styles = {
       "flex-end",
 
     padding:
-      "max(16px,env(safe-area-inset-top)) 16px 0",
+      "max(14px,env(safe-area-inset-top)) 15px 0",
 
     boxSizing:
       "border-box",
@@ -3211,16 +3938,15 @@ const styles = {
     position:
       "relative",
 
-    zIndex:
-      60,
+    zIndex: 60,
   },
 
   menuButton: {
     width:
-      "46px",
+      "44px",
 
     height:
-      "46px",
+      "44px",
 
     display:
       "flex",
@@ -3232,36 +3958,41 @@ const styles = {
       "center",
 
     border:
-      "1px solid rgba(255,255,255,.7)",
+      "1px solid rgba(255,255,255,.42)",
 
     borderRadius:
-      "16px",
+      "15px",
 
     background:
-      "rgba(255,255,255,.68)",
+      "rgba(20,27,38,.24)",
 
     color:
-      "#111827",
+      "#ffffff",
 
     cursor:
       "pointer",
 
     backdropFilter:
-      "blur(20px)",
+      "blur(22px) saturate(150%)",
+
+    WebkitBackdropFilter:
+      "blur(22px) saturate(150%)",
+
+    boxShadow:
+      "0 10px 30px rgba(0,0,0,.14)",
   },
 
   menuBackdrop: {
     position:
       "fixed",
 
-    inset:
-      0,
+    inset: 0,
 
-    zIndex:
-      55,
+    zIndex: 55,
 
-    border:
-      0,
+    padding: 0,
+
+    border: 0,
 
     background:
       "transparent",
@@ -3271,14 +4002,12 @@ const styles = {
     position:
       "absolute",
 
-    zIndex:
-      70,
+    zIndex: 70,
 
     top:
-      "54px",
+      "52px",
 
-    right:
-      0,
+    right: 0,
 
     width:
       "190px",
@@ -3287,16 +4016,25 @@ const styles = {
       "7px",
 
     border:
-      "1px solid rgba(255,255,255,.8)",
+      "1px solid rgba(255,255,255,.35)",
 
     borderRadius:
       "18px",
 
     background:
-      "rgba(255,255,255,.94)",
+      "rgba(25,32,44,.56)",
+
+    color:
+      "#fff",
+
+    backdropFilter:
+      "blur(26px) saturate(170%)",
+
+    WebkitBackdropFilter:
+      "blur(26px) saturate(170%)",
 
     boxShadow:
-      "0 18px 50px rgba(0,0,0,.2)",
+      "0 20px 60px rgba(0,0,0,.28)",
   },
 
   menuItem: {
@@ -3304,7 +4042,7 @@ const styles = {
       "100%",
 
     minHeight:
-      "45px",
+      "46px",
 
     display:
       "flex",
@@ -3318,8 +4056,7 @@ const styles = {
     padding:
       "0 11px",
 
-    border:
-      0,
+    border: 0,
 
     borderRadius:
       "12px",
@@ -3328,7 +4065,10 @@ const styles = {
       "transparent",
 
     color:
-      "#111827",
+      "#ffffff",
+
+    fontSize:
+      "14px",
 
     fontWeight:
       700,
@@ -3345,18 +4085,22 @@ const styles = {
       "4px 7px",
 
     background:
-      "rgba(17,24,39,.08)",
+      "rgba(255,255,255,.13)",
   },
 
   content: {
     position:
       "relative",
 
-    zIndex:
-      3,
+    zIndex: 3,
 
-    minHeight:
-      "100vh",
+    width:
+      "100%",
+
+    height:
+      "100dvh",
+
+    minHeight: 0,
 
     display:
       "flex",
@@ -3364,14 +4108,20 @@ const styles = {
     alignItems:
       "center",
 
+    justifyContent:
+      "center",
+
     padding:
-      "90px 18px 40px",
+      "82px 16px max(20px,env(safe-area-inset-bottom))",
 
     boxSizing:
       "border-box",
 
+    overflow:
+      "hidden",
+
     transition:
-      "filter .2s ease",
+      "filter .24s ease,transform .24s ease",
   },
 
   glassPanel: {
@@ -3381,35 +4131,41 @@ const styles = {
     width:
       "100%",
 
+    maxHeight:
+      "calc(100dvh - 115px)",
+
     minHeight:
-      "390px",
+      "330px",
 
     padding:
-      "78px 22px 28px",
+      "72px 18px 22px",
 
     boxSizing:
       "border-box",
 
     border:
-      "1px solid rgba(255,255,255,.7)",
+      "1px solid rgba(255,255,255,.55)",
 
     borderRadius:
-      "34px",
+      "32px",
 
     background:
-      "rgba(255,255,255,.58)",
+      "rgba(255,255,255,.42)",
 
     boxShadow:
-      "0 25px 65px rgba(0,0,0,.16)",
+      "0 24px 70px rgba(0,0,0,.15)",
 
     backdropFilter:
-      "blur(25px)",
+      "blur(24px) saturate(135%)",
 
     WebkitBackdropFilter:
-      "blur(25px)",
+      "blur(24px) saturate(135%)",
 
     textAlign:
       "center",
+
+    overflow:
+      "hidden",
   },
 
   avatarOuter: {
@@ -3417,7 +4173,7 @@ const styles = {
       "absolute",
 
     top:
-      "-58px",
+      "-51px",
 
     left:
       "50%",
@@ -3426,13 +4182,13 @@ const styles = {
       "translateX(-50%)",
 
     width:
-      "116px",
+      "104px",
 
     height:
-      "116px",
+      "104px",
 
     padding:
-      "5px",
+      "4px",
 
     boxSizing:
       "border-box",
@@ -3441,7 +4197,13 @@ const styles = {
       "50%",
 
     background:
-      "rgba(255,255,255,.9)",
+      "rgba(255,255,255,.68)",
+
+    border:
+      "1px solid rgba(255,255,255,.72)",
+
+    backdropFilter:
+      "blur(16px)",
 
     boxShadow:
       "0 12px 35px rgba(0,0,0,.18)",
@@ -3484,49 +4246,78 @@ const styles = {
       "50%",
 
     background:
-      "#E5E7EB",
+      "rgba(229,231,235,.78)",
 
     fontSize:
-      "45px",
+      "41px",
   },
 
   name: {
     margin:
-      "0 0 7px",
+      "0 0 6px",
 
     color:
       "#111827",
 
     fontSize:
-      "28px",
+      "clamp(22px,7vw,28px)",
 
-    fontWeight:
-      800,
+    lineHeight:
+      1.15,
+
+    overflow:
+      "hidden",
+
+    textOverflow:
+      "ellipsis",
+
+    whiteSpace:
+      "nowrap",
   },
 
   bio: {
     margin:
-      "0 auto 24px",
+      "0 auto 18px",
 
     maxWidth:
-      "330px",
+      "320px",
 
     color:
       "#475467",
 
     fontSize:
-      "15px",
+      "14px",
 
     lineHeight:
-      1.5,
+      1.4,
+
+    display:
+      "-webkit-box",
+
+    WebkitLineClamp: 3,
+
+    WebkitBoxOrient:
+      "vertical",
+
+    overflow:
+      "hidden",
   },
 
-  emptyText: {
+  singleEmpty: {
+    margin:
+      "28px auto",
+
+    padding:
+      "12px 18px",
+
     border:
-      0,
+      "1px solid rgba(17,24,39,.08)",
+
+    borderRadius:
+      "15px",
 
     background:
-      "transparent",
+      "rgba(255,255,255,.32)",
 
     color:
       "#667085",
@@ -3536,9 +4327,6 @@ const styles = {
 
     cursor:
       "pointer",
-
-    margin:
-      "5px",
   },
 
   linksGrid: {
@@ -3552,15 +4340,24 @@ const styles = {
       "center",
 
     gap:
-      "15px",
+      "13px",
 
     marginTop:
-      "20px",
+      "14px",
+
+    maxHeight:
+      "230px",
+
+    overflowY:
+      "auto",
+
+    overscrollBehavior:
+      "contain",
   },
 
   linkButton: {
     width:
-      "72px",
+      "66px",
 
     display:
       "flex",
@@ -3572,13 +4369,11 @@ const styles = {
       "center",
 
     gap:
-      "7px",
+      "6px",
 
-    padding:
-      0,
+    padding: 0,
 
-    border:
-      0,
+    border: 0,
 
     background:
       "transparent",
@@ -3592,10 +4387,10 @@ const styles = {
 
   iconBox: {
     width:
-      "58px",
+      "54px",
 
     height:
-      "58px",
+      "54px",
 
     display:
       "flex",
@@ -3607,13 +4402,19 @@ const styles = {
       "center",
 
     borderRadius:
-      "18px",
+      "17px",
 
     background:
-      "rgba(255,255,255,.88)",
+      "rgba(255,255,255,.72)",
+
+    border:
+      "1px solid rgba(255,255,255,.65)",
+
+    backdropFilter:
+      "blur(14px)",
 
     boxShadow:
-      "0 8px 24px rgba(0,0,0,.09)",
+      "0 7px 22px rgba(0,0,0,.09)",
   },
 
   linkLabel: {
@@ -3630,21 +4431,21 @@ const styles = {
       "nowrap",
 
     fontSize:
-      "12px",
+      "11px",
 
     fontWeight:
       700,
   },
 
+  /* MODAL */
+
   modalLayer: {
     position:
       "fixed",
 
-    zIndex:
-      1000,
+    zIndex: 1000,
 
-    inset:
-      0,
+    inset: 0,
 
     display:
       "flex",
@@ -3656,7 +4457,7 @@ const styles = {
       "center",
 
     padding:
-      "18px",
+      "16px",
 
     boxSizing:
       "border-box",
@@ -3666,22 +4467,33 @@ const styles = {
     position:
       "absolute",
 
-    inset:
-      0,
+    inset: 0,
+
+    width:
+      "100%",
+
+    height:
+      "100%",
+
+    padding: 0,
+
+    border: 0,
 
     background:
-      "rgba(15,23,42,.38)",
+      "rgba(4,10,20,.34)",
 
     backdropFilter:
-      "blur(8px)",
+      "blur(12px)",
+
+    WebkitBackdropFilter:
+      "blur(12px)",
   },
 
   modalCard: {
     position:
       "relative",
 
-    zIndex:
-      2,
+    zIndex: 2,
 
     width:
       "100%",
@@ -3690,7 +4502,7 @@ const styles = {
       "400px",
 
     maxHeight:
-      "88dvh",
+      "86dvh",
 
     display:
       "flex",
@@ -3698,26 +4510,35 @@ const styles = {
     flexDirection:
       "column",
 
+    overflow:
+      "hidden",
+
     padding:
-      "17px",
+      "16px",
 
     boxSizing:
       "border-box",
 
     border:
-      "1px solid rgba(255,255,255,.82)",
+      "1px solid rgba(255,255,255,.28)",
 
     borderRadius:
       "28px",
 
     background:
-      "rgba(255,255,255,.96)",
+      "linear-gradient(145deg,rgba(35,44,58,.72),rgba(17,24,39,.58))",
 
     color:
-      "#111827",
+      "#ffffff",
+
+    backdropFilter:
+      "blur(32px) saturate(165%)",
+
+    WebkitBackdropFilter:
+      "blur(32px) saturate(165%)",
 
     boxShadow:
-      "0 30px 90px rgba(0,0,0,.3)",
+      "0 30px 100px rgba(0,0,0,.42)",
   },
 
   largeModalCard: {
@@ -3725,9 +4546,39 @@ const styles = {
       "92dvh",
   },
 
+  modalShine: {
+    position:
+      "absolute",
+
+    zIndex: -1,
+
+    top:
+      "-100px",
+
+    right:
+      "-80px",
+
+    width:
+      "230px",
+
+    height:
+      "230px",
+
+    borderRadius:
+      "50%",
+
+    background:
+      "rgba(255,255,255,.10)",
+
+    filter:
+      "blur(50px)",
+
+    pointerEvents:
+      "none",
+  },
+
   modalHeader: {
-    flexShrink:
-      0,
+    flexShrink: 0,
 
     display:
       "flex",
@@ -3742,12 +4593,11 @@ const styles = {
       "10px",
 
     marginBottom:
-      "15px",
+      "14px",
   },
 
   modalLeft: {
-    minWidth:
-      0,
+    minWidth: 0,
 
     display:
       "flex",
@@ -3766,6 +4616,8 @@ const styles = {
     height:
       "38px",
 
+    flexShrink: 0,
+
     display:
       "flex",
 
@@ -3779,12 +4631,23 @@ const styles = {
       "12px",
 
     background:
-      "rgba(17,24,39,.06)",
+      "rgba(255,255,255,.10)",
+
+    border:
+      "1px solid rgba(255,255,255,.10)",
   },
 
   modalTitle: {
-    margin:
-      0,
+    margin: 0,
+
+    overflow:
+      "hidden",
+
+    textOverflow:
+      "ellipsis",
+
+    whiteSpace:
+      "nowrap",
 
     fontSize:
       "19px",
@@ -3800,6 +4663,8 @@ const styles = {
     height:
       "38px",
 
+    flexShrink: 0,
+
     display:
       "flex",
 
@@ -3810,27 +4675,32 @@ const styles = {
       "center",
 
     border:
-      0,
+      "1px solid rgba(255,255,255,.09)",
 
     borderRadius:
       "12px",
 
     background:
-      "rgba(17,24,39,.06)",
+      "rgba(255,255,255,.09)",
 
     color:
-      "#111827",
+      "#ffffff",
 
     cursor:
       "pointer",
   },
 
   modalBody: {
-    minHeight:
-      0,
+    minHeight: 0,
 
     overflowY:
       "auto",
+
+    overscrollBehavior:
+      "contain",
+
+    WebkitOverflowScrolling:
+      "touch",
 
     padding:
       "2px",
@@ -3867,13 +4737,13 @@ const styles = {
       "0 14px",
 
     border:
-      "1px solid rgba(17,24,39,.07)",
+      "1px solid rgba(255,255,255,.10)",
 
     borderRadius:
       "17px",
 
     background:
-      "rgba(17,24,39,.025)",
+      "rgba(255,255,255,.075)",
 
     fontSize:
       "15px",
@@ -3883,6 +4753,9 @@ const styles = {
 
     cursor:
       "pointer",
+
+    backdropFilter:
+      "blur(12px)",
   },
 
   settingsIcon: {
@@ -3905,7 +4778,14 @@ const styles = {
       "11px",
 
     background:
-      "rgba(17,24,39,.055)",
+      "rgba(255,255,255,.09)",
+  },
+
+  settingsLabel: {
+    flex: 1,
+
+    textAlign:
+      "left",
   },
 
   form: {
@@ -3924,7 +4804,7 @@ const styles = {
       "3px",
 
     color:
-      "#475467",
+      "rgba(255,255,255,.67)",
 
     fontSize:
       "13px",
@@ -3947,7 +4827,7 @@ const styles = {
       "border-box",
 
     border:
-      "1px solid #D0D5DD",
+      "1px solid rgba(255,255,255,.13)",
 
     borderRadius:
       "14px",
@@ -3956,13 +4836,16 @@ const styles = {
       "none",
 
     background:
-      "#fff",
+      "rgba(255,255,255,.09)",
 
     color:
-      "#111827",
+      "#ffffff",
 
     fontSize:
       "15px",
+
+    fontFamily:
+      "inherit",
   },
 
   textarea: {
@@ -3979,7 +4862,7 @@ const styles = {
       "border-box",
 
     border:
-      "1px solid #D0D5DD",
+      "1px solid rgba(255,255,255,.13)",
 
     borderRadius:
       "14px",
@@ -3991,18 +4874,38 @@ const styles = {
       "vertical",
 
     background:
-      "#fff",
+      "rgba(255,255,255,.09)",
 
     color:
-      "#111827",
+      "#ffffff",
 
     fontSize:
       "15px",
+
+    fontFamily:
+      "inherit",
   },
 
-  sectionHeader: {
-    marginTop:
-      "8px",
+  sectionTitle: {
+    margin:
+      "9px 2px 2px",
+
+    fontSize:
+      "15px",
+
+    fontWeight:
+      800,
+
+    color:
+      "#ffffff",
+  },
+
+  addButton: {
+    width:
+      "100%",
+
+    minHeight:
+      "46px",
 
     display:
       "flex",
@@ -4011,42 +4914,31 @@ const styles = {
       "center",
 
     justifyContent:
-      "space-between",
-
-    gap:
-      "10px",
-  },
-
-  addButton: {
-    minHeight:
-      "38px",
-
-    display:
-      "flex",
-
-    alignItems:
       "center",
 
     gap:
-      "7px",
+      "8px",
 
-    padding:
-      "0 11px",
+    marginTop:
+      "3px",
 
     border:
-      0,
+      "1px dashed rgba(255,255,255,.26)",
 
     borderRadius:
-      "12px",
+      "14px",
 
     background:
-      "#111827",
+      "rgba(255,255,255,.07)",
 
     color:
-      "#fff",
+      "#ffffff",
+
+    fontSize:
+      "14px",
 
     fontWeight:
-      700,
+      750,
 
     cursor:
       "pointer",
@@ -4057,13 +4949,13 @@ const styles = {
       "hidden",
 
     border:
-      "1px solid rgba(17,24,39,.08)",
+      "1px solid rgba(255,255,255,.10)",
 
     borderRadius:
       "16px",
 
     background:
-      "#fff",
+      "rgba(255,255,255,.065)",
   },
 
   accordionHeader: {
@@ -4085,20 +4977,26 @@ const styles = {
     padding:
       "8px 12px",
 
-    border:
-      0,
+    border: 0,
 
     background:
-      "#fff",
+      "transparent",
 
     color:
-      "#111827",
+      "#ffffff",
 
     fontWeight:
       700,
 
     cursor:
       "pointer",
+  },
+
+  accordionText: {
+    flex: 1,
+
+    textAlign:
+      "left",
   },
 
   accordionBody: {
@@ -4135,7 +5033,7 @@ const styles = {
       "11px",
 
     background:
-      "#F8FAFC",
+      "rgba(255,255,255,.80)",
   },
 
   deleteLink: {
@@ -4158,16 +5056,16 @@ const styles = {
       "center",
 
     border:
-      0,
+      "1px solid rgba(248,113,113,.18)",
 
     borderRadius:
       "12px",
 
     background:
-      "#FEE2E2",
+      "rgba(220,38,38,.18)",
 
     color:
-      "#DC2626",
+      "#ff9299",
 
     cursor:
       "pointer",
@@ -4196,16 +5094,16 @@ const styles = {
       "9px",
 
     border:
-      0,
+      "1px solid rgba(255,255,255,.15)",
 
     borderRadius:
       "16px",
 
     background:
-      "#111827",
+      "rgba(255,255,255,.92)",
 
     color:
-      "#fff",
+      "#111827",
 
     fontSize:
       "15px",
@@ -4215,6 +5113,32 @@ const styles = {
 
     cursor:
       "pointer",
+
+    boxShadow:
+      "0 12px 30px rgba(0,0,0,.15)",
+  },
+
+  designSection: {
+    display:
+      "flex",
+
+    flexDirection:
+      "column",
+
+    gap:
+      "8px",
+
+    padding:
+      "13px",
+
+    border:
+      "1px solid rgba(255,255,255,.10)",
+
+    borderRadius:
+      "18px",
+
+    background:
+      "rgba(255,255,255,.065)",
   },
 
   uploadButton: {
@@ -4222,7 +5146,7 @@ const styles = {
       "100%",
 
     minHeight:
-      "50px",
+      "48px",
 
     display:
       "flex",
@@ -4237,16 +5161,16 @@ const styles = {
       "9px",
 
     border:
-      "1px solid rgba(17,24,39,.1)",
+      "1px solid rgba(255,255,255,.11)",
 
     borderRadius:
-      "15px",
+      "14px",
 
     background:
-      "#fff",
+      "rgba(255,255,255,.08)",
 
     color:
-      "#111827",
+      "#ffffff",
 
     fontSize:
       "14px",
@@ -4258,21 +5182,190 @@ const styles = {
       "pointer",
   },
 
-  ledBox: {
-    marginTop:
-      "7px",
+  /* TEXT STYLE */
 
+  textStyleBox: {
     padding:
       "14px",
 
     border:
-      "1px solid rgba(17,24,39,.08)",
+      "1px solid rgba(255,255,255,.10)",
 
     borderRadius:
       "18px",
 
     background:
-      "#fff",
+      "rgba(255,255,255,.065)",
+  },
+
+  textStyleHeader: {
+    display:
+      "flex",
+
+    alignItems:
+      "center",
+
+    gap:
+      "10px",
+
+    marginBottom:
+      "13px",
+  },
+
+  textStyleIcon: {
+    width:
+      "38px",
+
+    height:
+      "38px",
+
+    flexShrink: 0,
+
+    display:
+      "flex",
+
+    alignItems:
+      "center",
+
+    justifyContent:
+      "center",
+
+    borderRadius:
+      "12px",
+
+    background:
+      "rgba(255,255,255,.10)",
+  },
+
+  textStyleInfo: {
+    marginTop:
+      "3px",
+
+    color:
+      "rgba(255,255,255,.55)",
+
+    fontSize:
+      "11px",
+
+    lineHeight:
+      1.35,
+  },
+
+  textStyleGrid: {
+    display:
+      "grid",
+
+    gridTemplateColumns:
+      "1fr 1fr",
+
+    gap:
+      "8px",
+  },
+
+  textStyleButton: {
+    position:
+      "relative",
+
+    minHeight:
+      "72px",
+
+    display:
+      "flex",
+
+    flexDirection:
+      "column",
+
+    alignItems:
+      "center",
+
+    justifyContent:
+      "center",
+
+    gap:
+      "5px",
+
+    border:
+      "1px solid rgba(255,255,255,.10)",
+
+    borderRadius:
+      "14px",
+
+    background:
+      "rgba(255,255,255,.055)",
+
+    color:
+      "#ffffff",
+
+    cursor:
+      "pointer",
+  },
+
+  textStyleButtonActive: {
+    border:
+      "1px solid rgba(96,165,250,.75)",
+
+    background:
+      "rgba(59,130,246,.18)",
+
+    boxShadow:
+      "0 0 18px rgba(59,130,246,.14)",
+  },
+
+  textStyleCheck: {
+    position:
+      "absolute",
+
+    top:
+      "7px",
+
+    right:
+      "7px",
+
+    width:
+      "19px",
+
+    height:
+      "19px",
+
+    display:
+      "flex",
+
+    alignItems:
+      "center",
+
+    justifyContent:
+      "center",
+
+    borderRadius:
+      "50%",
+
+    background:
+      "#3B82F6",
+
+    color:
+      "#ffffff",
+
+    fontSize:
+      "10px",
+  },
+
+  /* LED */
+
+  ledBox: {
+    marginTop:
+      "2px",
+
+    padding:
+      "14px",
+
+    border:
+      "1px solid rgba(255,255,255,.10)",
+
+    borderRadius:
+      "18px",
+
+    background:
+      "rgba(255,255,255,.065)",
   },
 
   ledHeader: {
@@ -4296,17 +5389,21 @@ const styles = {
     height:
       "26px",
 
+    flexShrink: 0,
+
     padding:
       "3px",
 
-    border:
-      0,
+    border: 0,
 
     borderRadius:
       "999px",
 
     cursor:
       "pointer",
+
+    transition:
+      "background .2s ease,box-shadow .2s ease",
   },
 
   switchDot: {
@@ -4323,10 +5420,10 @@ const styles = {
       "50%",
 
     background:
-      "#fff",
+      "#ffffff",
 
     boxShadow:
-      "0 1px 4px rgba(0,0,0,.25)",
+      "0 1px 5px rgba(0,0,0,.30)",
 
     transition:
       "transform .2s ease",
@@ -4337,7 +5434,7 @@ const styles = {
       "14px",
 
     color:
-      "#667085",
+      "rgba(255,255,255,.60)",
 
     fontSize:
       "12px",
@@ -4367,11 +5464,10 @@ const styles = {
     height:
       "34px",
 
-    padding:
-      0,
+    padding: 0,
 
     border:
-      "2px solid #fff",
+      "2px solid rgba(255,255,255,.65)",
 
     borderRadius:
       "50%",
@@ -4400,7 +5496,7 @@ const styles = {
       "conic-gradient(red,yellow,lime,cyan,blue,magenta,red)",
 
     outline:
-      "2px solid rgba(0,0,0,.08)",
+      "2px solid rgba(255,255,255,.18)",
 
     cursor:
       "pointer",
@@ -4410,8 +5506,7 @@ const styles = {
     position:
       "absolute",
 
-    inset:
-      0,
+    inset: 0,
 
     width:
       "100%",
@@ -4419,11 +5514,81 @@ const styles = {
     height:
       "100%",
 
-    opacity:
-      0,
+    opacity: 0,
 
     cursor:
       "pointer",
+  },
+
+  /* LANGUAGE */
+
+  languageContainer: {
+    display:
+      "flex",
+
+    flexDirection:
+      "column",
+
+    gap:
+      "10px",
+  },
+
+  languageSearch: {
+    minHeight:
+      "50px",
+
+    flexShrink: 0,
+
+    display:
+      "flex",
+
+    alignItems:
+      "center",
+
+    gap:
+      "10px",
+
+    padding:
+      "0 14px",
+
+    border:
+      "1px solid rgba(255,255,255,.11)",
+
+    borderRadius:
+      "15px",
+
+    background:
+      "rgba(255,255,255,.08)",
+
+    color:
+      "rgba(255,255,255,.55)",
+  },
+
+  languageSearchInput: {
+    width:
+      "100%",
+
+    height:
+      "48px",
+
+    padding: 0,
+
+    border: 0,
+
+    outline:
+      "none",
+
+    background:
+      "transparent",
+
+    color:
+      "#ffffff",
+
+    fontSize:
+      "15px",
+
+    fontFamily:
+      "inherit",
   },
 
   languageList: {
@@ -4434,7 +5599,7 @@ const styles = {
       "column",
 
     gap:
-      "8px",
+      "7px",
   },
 
   languageButton: {
@@ -4442,7 +5607,7 @@ const styles = {
       "100%",
 
     minHeight:
-      "54px",
+      "57px",
 
     display:
       "flex",
@@ -4453,37 +5618,108 @@ const styles = {
     justifyContent:
       "space-between",
 
+    gap:
+      "10px",
+
     padding:
-      "0 14px",
+      "8px 13px",
 
     border:
-      "1px solid",
+      "1px solid rgba(255,255,255,.09)",
 
     borderRadius:
       "15px",
 
     background:
-      "#fff",
+      "rgba(255,255,255,.055)",
 
     color:
-      "#111827",
-
-    fontSize:
-      "15px",
-
-    fontWeight:
-      700,
+      "#ffffff",
 
     cursor:
       "pointer",
   },
+
+  languageButtonActive: {
+    border:
+      "1px solid rgba(96,165,250,.70)",
+
+    background:
+      "rgba(59,130,246,.17)",
+  },
+
+  languageNames: {
+    minWidth: 0,
+
+    display:
+      "flex",
+
+    flexDirection:
+      "column",
+
+    alignItems:
+      "flex-start",
+
+    gap:
+      "2px",
+
+    fontSize:
+      "15px",
+  },
+
+  languageCheck: {
+    width:
+      "25px",
+
+    height:
+      "25px",
+
+    flexShrink: 0,
+
+    display:
+      "flex",
+
+    alignItems:
+      "center",
+
+    justifyContent:
+      "center",
+
+    borderRadius:
+      "50%",
+
+    background:
+      "#3B82F6",
+
+    color:
+      "#ffffff",
+
+    fontSize:
+      "12px",
+  },
+
+  noLanguage: {
+    padding:
+      "30px 10px",
+
+    textAlign:
+      "center",
+
+    color:
+      "rgba(255,255,255,.55)",
+
+    fontSize:
+      "14px",
+  },
+
+  /* DELETE */
 
   deleteWarning: {
     margin:
       "5px 2px 18px",
 
     color:
-      "#667085",
+      "rgba(255,255,255,.65)",
 
     fontSize:
       "15px",
@@ -4508,16 +5744,16 @@ const styles = {
       "50px",
 
     border:
-      "1px solid rgba(17,24,39,.1)",
+      "1px solid rgba(255,255,255,.11)",
 
     borderRadius:
       "15px",
 
     background:
-      "#fff",
+      "rgba(255,255,255,.08)",
 
     color:
-      "#111827",
+      "#ffffff",
 
     fontWeight:
       800,
@@ -4531,16 +5767,16 @@ const styles = {
       "50px",
 
     border:
-      0,
+      "1px solid rgba(255,120,120,.18)",
 
     borderRadius:
       "15px",
 
     background:
-      "#DC2626",
+      "rgba(220,38,38,.78)",
 
     color:
-      "#fff",
+      "#ffffff",
 
     fontWeight:
       800,
@@ -4548,6 +5784,8 @@ const styles = {
     cursor:
       "pointer",
   },
+
+  /* QR */
 
   qrContent: {
     display:
@@ -4563,27 +5801,41 @@ const styles = {
       "15px",
   },
 
+  qrGlow: {
+    padding:
+      "8px",
+
+    borderRadius:
+      "29px",
+
+    background:
+      "rgba(255,255,255,.09)",
+
+    boxShadow:
+      "0 0 35px rgba(255,255,255,.10)",
+  },
+
   qrWhiteBox: {
     width:
-      "min(270px,72vw)",
+      "min(260px,68vw)",
 
     aspectRatio:
       "1 / 1",
 
     padding:
-      "14px",
+      "13px",
 
     boxSizing:
       "border-box",
 
     borderRadius:
-      "25px",
+      "22px",
 
     background:
-      "#fff",
+      "#ffffff",
 
     boxShadow:
-      "0 20px 50px rgba(0,0,0,.16)",
+      "0 20px 50px rgba(0,0,0,.20)",
   },
 
   qrImage: {
@@ -4600,8 +5852,10 @@ const styles = {
       "contain",
 
     borderRadius:
-      "10px",
+      "9px",
   },
+
+  /* NOTICE */
 
   notice: {
     position:
@@ -4614,7 +5868,7 @@ const styles = {
       "50%",
 
     bottom:
-      "max(25px,env(safe-area-inset-bottom))",
+      "max(24px,env(safe-area-inset-bottom))",
 
     transform:
       "translateX(-50%)",
@@ -4631,14 +5885,23 @@ const styles = {
     boxSizing:
       "border-box",
 
+    border:
+      "1px solid rgba(255,255,255,.15)",
+
     borderRadius:
       "16px",
 
     background:
-      "rgba(17,24,39,.92)",
+      "rgba(17,24,39,.78)",
+
+    backdropFilter:
+      "blur(20px)",
+
+    WebkitBackdropFilter:
+      "blur(20px)",
 
     color:
-      "#fff",
+      "#ffffff",
 
     fontSize:
       "14px",
@@ -4650,12 +5913,19 @@ const styles = {
       "center",
 
     boxShadow:
-      "0 15px 45px rgba(0,0,0,.3)",
+      "0 15px 45px rgba(0,0,0,.30)",
   },
 
+  /* ERROR */
+
   errorPage: {
+    position:
+      "fixed",
+
+    inset: 0,
+
     minHeight:
-      "100vh",
+      "100dvh",
 
     padding:
       "30px 18px",
@@ -4690,10 +5960,10 @@ const styles = {
       "18px",
 
     background:
-      "rgba(220,38,38,.1)",
+      "rgba(220,38,38,.10)",
 
     border:
-      "1px solid rgba(220,38,38,.2)",
+      "1px solid rgba(220,38,38,.20)",
 
     color:
       "#991b1b",

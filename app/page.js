@@ -280,22 +280,71 @@ export default function Home() {
         tg.ready();
         tg.expand();
 
-        const telegramUser = tg.initDataUnsafe?.user;
+        /*
+         * =====================================================
+         * TELEGRAM SECURITY
+         * =====================================================
+         *
+         * initDataUnsafe.user ga ishonmaymiz.
+         * Telegram bergan initData serverga yuboriladi.
+         * /api/telegram/auth BOT TOKEN orqali uni tekshiradi.
+         */
 
-        if (!telegramUser?.id) {
-          setError("Telegram user could not be identified.");
+        const initData = tg.initData;
+
+        if (!initData) {
+          setError(
+            "Telegram security data could not be identified."
+          );
           return;
         }
 
-        const userId = Number(telegramUser.id);
+        const authResponse = await fetch(
+          "/api/telegram/auth",
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type": "application/json",
+            },
+
+            body: JSON.stringify({
+              initData,
+            }),
+          }
+        );
+
+        const authData = await authResponse.json();
+
+        if (!authResponse.ok || !authData?.ok) {
+          throw new Error(
+            authData?.error ||
+              "Telegram security verification failed."
+          );
+        }
+
+        const userId = Number(authData.telegramId);
+
+        if (!userId) {
+          throw new Error(
+            "Telegram user could not be identified."
+          );
+        }
 
         setTelegramId(userId);
 
-        const { data, error: profileError } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("telegram_id", userId)
-          .maybeSingle();
+        /*
+         * =====================================================
+         * PROFILE
+         * =====================================================
+         */
+
+        const { data, error: profileError } =
+          await supabase
+            .from("profiles")
+            .select("*")
+            .eq("telegram_id", userId)
+            .maybeSingle();
 
         if (profileError) {
           throw profileError;
@@ -324,7 +373,9 @@ export default function Home() {
       } catch (err) {
         console.error(err);
 
-        setError(err?.message || "Something went wrong.");
+        setError(
+          err?.message || "Something went wrong."
+        );
       }
     }
 
@@ -332,7 +383,9 @@ export default function Home() {
   }, []);
 
   const filteredLanguages = useMemo(() => {
-    const value = search.trim().toLocaleLowerCase();
+    const value = search
+      .trim()
+      .toLocaleLowerCase();
 
     if (!value) {
       return LANGUAGES;
@@ -364,34 +417,39 @@ export default function Home() {
       // Profil allaqachon mavjud,
       // faqat language hali tanlanmagan.
       if (profile) {
-        const { error: updateError } = await supabase
-          .from("profiles")
-          .update({
-            language: languageCode,
-          })
-          .eq("id", profile.id);
+        const { error: updateError } =
+          await supabase
+            .from("profiles")
+            .update({
+              language: languageCode,
+            })
+            .eq("id", profile.id);
 
         if (updateError) {
           throw updateError;
         }
 
-        window.location.replace(`/my/${profile.card_id}`);
+        window.location.replace(
+          `/my/${profile.card_id}`
+        );
+
         return;
       }
 
       // Yangi foydalanuvchi uchun profil yaratamiz.
       const cardId = `card-${telegramId}`;
 
-      const { error: insertError } = await supabase
-        .from("profiles")
-        .insert({
-          telegram_id: telegramId,
-          card_id: cardId,
-          full_name: "",
-          bio: "",
-          language: languageCode,
-          is_premium: false,
-        });
+      const { error: insertError } =
+        await supabase
+          .from("profiles")
+          .insert({
+            telegram_id: telegramId,
+            card_id: cardId,
+            full_name: "",
+            bio: "",
+            language: languageCode,
+            is_premium: false,
+          });
 
       if (insertError) {
         throw insertError;
@@ -414,7 +472,9 @@ export default function Home() {
     return (
       <main style={styles.page}>
         <div style={styles.container}>
-          <div style={styles.errorBox}>{error}</div>
+          <div style={styles.errorBox}>
+            {error}
+          </div>
         </div>
       </main>
     );
@@ -423,12 +483,19 @@ export default function Home() {
   if (showLanguages) {
     return (
       <main style={styles.page}>
-        <div style={styles.backgroundGlowOne} />
-        <div style={styles.backgroundGlowTwo} />
+        <div
+          style={styles.backgroundGlowOne}
+        />
+
+        <div
+          style={styles.backgroundGlowTwo}
+        />
 
         <div style={styles.container}>
           <div style={styles.languageCard}>
-            <div style={styles.icon}>🌐</div>
+            <div style={styles.icon}>
+              🌐
+            </div>
 
             <h1 style={styles.title}>
               Choose your language
@@ -439,7 +506,9 @@ export default function Home() {
             </p>
 
             <div style={styles.searchWrapper}>
-              <span style={styles.searchIcon}>⌕</span>
+              <span style={styles.searchIcon}>
+                ⌕
+              </span>
 
               <input
                 type="text"
@@ -455,39 +524,61 @@ export default function Home() {
 
             <div style={styles.languageList}>
               {filteredLanguages.length > 0 ? (
-                filteredLanguages.map((language) => (
-                  <button
-                    key={language.code}
-                    type="button"
-                    style={{
-                      ...styles.languageButton,
-                      opacity: savingLanguage
-                        ? 0.55
-                        : 1,
-                    }}
-                    disabled={savingLanguage}
-                    onClick={() =>
-                      selectLanguage(language.code)
-                    }
-                  >
-                    <div style={styles.languageText}>
-                      <span style={styles.nativeName}>
-                        {language.name}
-                      </span>
+                filteredLanguages.map(
+                  (language) => (
+                    <button
+                      key={language.code}
+                      type="button"
+                      style={{
+                        ...styles.languageButton,
 
-                      {language.name !==
-                        language.english && (
+                        opacity:
+                          savingLanguage
+                            ? 0.55
+                            : 1,
+                      }}
+                      disabled={savingLanguage}
+                      onClick={() =>
+                        selectLanguage(
+                          language.code
+                        )
+                      }
+                    >
+                      <div
+                        style={
+                          styles.languageText
+                        }
+                      >
                         <span
-                          style={styles.englishName}
+                          style={
+                            styles.nativeName
+                          }
                         >
-                          {language.english}
+                          {language.name}
                         </span>
-                      )}
-                    </div>
 
-                    <span style={styles.arrow}>›</span>
-                  </button>
-                ))
+                        {language.name !==
+                          language.english && (
+                          <span
+                            style={
+                              styles.englishName
+                            }
+                          >
+                            {
+                              language.english
+                            }
+                          </span>
+                        )}
+                      </div>
+
+                      <span
+                        style={styles.arrow}
+                      >
+                        ›
+                      </span>
+                    </button>
+                  )
+                )
               ) : (
                 <div style={styles.noResult}>
                   No languages found
@@ -513,55 +604,86 @@ const styles = {
     margin: 0,
     padding: 0,
     overflow: "hidden",
+
     background:
       "linear-gradient(145deg, #06101d 0%, #101827 48%, #07111f 100%)",
+
     color: "#ffffff",
+
     fontFamily:
       '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
   },
 
   backgroundGlowOne: {
     position: "fixed",
+
     width: "280px",
     height: "280px",
+
     top: "-100px",
     right: "-100px",
+
     borderRadius: "50%",
-    background: "rgba(59,130,246,0.16)",
+
+    background:
+      "rgba(59,130,246,0.16)",
+
     filter: "blur(70px)",
+
     pointerEvents: "none",
   },
 
   backgroundGlowTwo: {
     position: "fixed",
+
     width: "260px",
     height: "260px",
+
     left: "-120px",
     bottom: "-80px",
+
     borderRadius: "50%",
-    background: "rgba(14,165,233,0.10)",
+
+    background:
+      "rgba(14,165,233,0.10)",
+
     filter: "blur(70px)",
+
     pointerEvents: "none",
   },
 
   container: {
     position: "relative",
     zIndex: 2,
+
     width: "100%",
     maxWidth: "460px",
+
     margin: "0 auto",
+
     padding: "24px 16px 34px",
+
     boxSizing: "border-box",
   },
 
   languageCard: {
     width: "100%",
+
     padding: "26px 16px 16px",
+
     boxSizing: "border-box",
+
     borderRadius: "30px",
-    background: "rgba(255,255,255,0.075)",
-    border: "1px solid rgba(255,255,255,0.12)",
-    boxShadow: "0 24px 70px rgba(0,0,0,0.28)",
+
+    background:
+      "rgba(255,255,255,0.075)",
+
+    border:
+      "1px solid rgba(255,255,255,0.12)",
+
+    boxShadow:
+      "0 24px 70px rgba(0,0,0,0.28)",
+
     backdropFilter: "blur(24px)",
     WebkitBackdropFilter: "blur(24px)",
   },
@@ -569,139 +691,235 @@ const styles = {
   icon: {
     width: "62px",
     height: "62px",
+
     margin: "0 auto 16px",
+
     display: "flex",
+
     alignItems: "center",
     justifyContent: "center",
+
     borderRadius: "20px",
-    background: "rgba(255,255,255,0.10)",
-    border: "1px solid rgba(255,255,255,0.10)",
+
+    background:
+      "rgba(255,255,255,0.10)",
+
+    border:
+      "1px solid rgba(255,255,255,0.10)",
+
     fontSize: "29px",
   },
 
   title: {
     margin: 0,
+
     textAlign: "center",
+
     fontSize: "27px",
+
     lineHeight: 1.15,
+
     fontWeight: "800",
+
     letterSpacing: "-0.5px",
   },
 
   subtitle: {
     margin: "9px 0 22px",
+
     textAlign: "center",
+
     fontSize: "14px",
+
     lineHeight: 1.5,
-    color: "rgba(255,255,255,0.56)",
+
+    color:
+      "rgba(255,255,255,0.56)",
   },
 
   searchWrapper: {
     width: "100%",
+
     height: "54px",
+
     display: "flex",
+
     alignItems: "center",
+
     gap: "10px",
+
     padding: "0 15px",
+
     marginBottom: "12px",
+
     boxSizing: "border-box",
+
     borderRadius: "17px",
-    background: "rgba(255,255,255,0.085)",
-    border: "1px solid rgba(255,255,255,0.11)",
+
+    background:
+      "rgba(255,255,255,0.085)",
+
+    border:
+      "1px solid rgba(255,255,255,0.11)",
   },
 
   searchIcon: {
     flexShrink: 0,
+
     fontSize: "25px",
+
     lineHeight: 1,
-    color: "rgba(255,255,255,0.55)",
+
+    color:
+      "rgba(255,255,255,0.55)",
+
     transform: "rotate(-20deg)",
   },
 
   searchInput: {
     width: "100%",
+
     height: "100%",
+
     padding: 0,
+
     margin: 0,
+
     outline: "none",
+
     border: "none",
+
     background: "transparent",
+
     color: "#ffffff",
+
     fontSize: "16px",
+
     fontFamily: "inherit",
   },
 
   languageList: {
     width: "100%",
+
     maxHeight: "54vh",
+
     overflowY: "auto",
-    WebkitOverflowScrolling: "touch",
+
+    WebkitOverflowScrolling:
+      "touch",
+
     display: "flex",
+
     flexDirection: "column",
+
     gap: "7px",
+
     paddingRight: "2px",
+
     boxSizing: "border-box",
   },
 
   languageButton: {
     width: "100%",
+
     minHeight: "58px",
+
     display: "flex",
+
     alignItems: "center",
-    justifyContent: "space-between",
+
+    justifyContent:
+      "space-between",
+
     gap: "12px",
+
     padding: "9px 15px",
+
     boxSizing: "border-box",
+
     borderRadius: "17px",
-    border: "1px solid rgba(255,255,255,0.09)",
-    background: "rgba(255,255,255,0.065)",
+
+    border:
+      "1px solid rgba(255,255,255,0.09)",
+
+    background:
+      "rgba(255,255,255,0.065)",
+
     color: "#ffffff",
+
     cursor: "pointer",
+
     textAlign: "left",
+
     fontFamily: "inherit",
   },
 
   languageText: {
     minWidth: 0,
+
     display: "flex",
+
     flexDirection: "column",
+
     gap: "3px",
   },
 
   nativeName: {
     fontSize: "16px",
+
     lineHeight: 1.25,
+
     fontWeight: "650",
+
     color: "#ffffff",
   },
 
   englishName: {
     fontSize: "12px",
+
     lineHeight: 1.2,
-    color: "rgba(255,255,255,0.46)",
+
+    color:
+      "rgba(255,255,255,0.46)",
   },
 
   arrow: {
     flexShrink: 0,
+
     fontSize: "25px",
+
     fontWeight: "300",
-    color: "rgba(255,255,255,0.40)",
+
+    color:
+      "rgba(255,255,255,0.40)",
   },
 
   noResult: {
     padding: "30px 15px",
+
     textAlign: "center",
+
     fontSize: "14px",
-    color: "rgba(255,255,255,0.50)",
+
+    color:
+      "rgba(255,255,255,0.50)",
   },
 
   errorBox: {
     marginTop: "30px",
+
     padding: "18px",
+
     borderRadius: "18px",
-    background: "rgba(220,38,38,0.16)",
-    border: "1px solid rgba(248,113,113,0.35)",
+
+    background:
+      "rgba(220,38,38,0.16)",
+
+    border:
+      "1px solid rgba(248,113,113,0.35)",
+
     fontSize: "15px",
+
     lineHeight: "1.5",
   },
 };

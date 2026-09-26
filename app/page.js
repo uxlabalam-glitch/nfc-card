@@ -181,7 +181,7 @@ const LANGUAGES = [
     code: "ru",
     name: "Русский",
     english: "Russian",
-    search: "russian russian rus русский russkiy",
+    search: "russian rus русский russkiy",
   },
   {
     code: "sr",
@@ -301,25 +301,30 @@ export default function Home() {
           throw profileError;
         }
 
+        // YANGI FOYDALANUVCHI:
+        // faqat birinchi marta til tanlaydi.
         if (!data) {
+          setProfile(null);
           setShowLanguages(true);
           return;
         }
 
         setProfile(data);
 
+        // Eski profil bo‘lsa-yu, hali til tanlanmagan bo‘lsa,
+        // til oynasi bir marta ko‘rsatiladi.
         if (!data.language) {
           setShowLanguages(true);
           return;
         }
 
+        // Til avval tanlangan.
+        // Keyingi kirishlarda til oynasi umuman chiqmaydi.
         window.location.replace(`/my/${data.card_id}`);
       } catch (err) {
         console.error(err);
 
-        setError(
-          err?.message || "Something went wrong."
-        );
+        setError(err?.message || "Something went wrong.");
       }
     }
 
@@ -327,9 +332,7 @@ export default function Home() {
   }, []);
 
   const filteredLanguages = useMemo(() => {
-    const value = search
-      .trim()
-      .toLocaleLowerCase();
+    const value = search.trim().toLocaleLowerCase();
 
     if (!value) {
       return LANGUAGES;
@@ -358,6 +361,8 @@ export default function Home() {
       setSavingLanguage(true);
       setError("");
 
+      // Profil allaqachon mavjud,
+      // faqat language hali tanlanmagan.
       if (profile) {
         const { error: updateError } = await supabase
           .from("profiles")
@@ -370,13 +375,11 @@ export default function Home() {
           throw updateError;
         }
 
-        window.location.replace(
-          `/my/${profile.card_id}`
-        );
-
+        window.location.replace(`/my/${profile.card_id}`);
         return;
       }
 
+      // Yangi foydalanuvchi uchun profil yaratamiz.
       const cardId = `card-${telegramId}`;
 
       const { error: insertError } = await supabase
@@ -411,9 +414,7 @@ export default function Home() {
     return (
       <main style={styles.page}>
         <div style={styles.container}>
-          <div style={styles.errorBox}>
-            {error}
-          </div>
+          <div style={styles.errorBox}>{error}</div>
         </div>
       </main>
     );
@@ -427,9 +428,7 @@ export default function Home() {
 
         <div style={styles.container}>
           <div style={styles.languageCard}>
-            <div style={styles.icon}>
-              🌐
-            </div>
+            <div style={styles.icon}>🌐</div>
 
             <h1 style={styles.title}>
               Choose your language
@@ -440,9 +439,7 @@ export default function Home() {
             </p>
 
             <div style={styles.searchWrapper}>
-              <span style={styles.searchIcon}>
-                ⌕
-              </span>
+              <span style={styles.searchIcon}>⌕</span>
 
               <input
                 type="text"
@@ -458,59 +455,39 @@ export default function Home() {
 
             <div style={styles.languageList}>
               {filteredLanguages.length > 0 ? (
-                filteredLanguages.map(
-                  (language) => (
-                    <button
-                      key={language.code}
-                      type="button"
-                      style={{
-                        ...styles.languageButton,
-                        opacity: savingLanguage
-                          ? 0.55
-                          : 1,
-                      }}
-                      disabled={savingLanguage}
-                      onClick={() =>
-                        selectLanguage(
-                          language.code
-                        )
-                      }
-                    >
-                      <div
-                        style={
-                          styles.languageText
-                        }
-                      >
-                        <span
-                          style={
-                            styles.nativeName
-                          }
-                        >
-                          {language.name}
-                        </span>
-
-                        {language.name !==
-                          language.english && (
-                          <span
-                            style={
-                              styles.englishName
-                            }
-                          >
-                            {
-                              language.english
-                            }
-                          </span>
-                        )}
-                      </div>
-
-                      <span
-                        style={styles.arrow}
-                      >
-                        ›
+                filteredLanguages.map((language) => (
+                  <button
+                    key={language.code}
+                    type="button"
+                    style={{
+                      ...styles.languageButton,
+                      opacity: savingLanguage
+                        ? 0.55
+                        : 1,
+                    }}
+                    disabled={savingLanguage}
+                    onClick={() =>
+                      selectLanguage(language.code)
+                    }
+                  >
+                    <div style={styles.languageText}>
+                      <span style={styles.nativeName}>
+                        {language.name}
                       </span>
-                    </button>
-                  )
-                )
+
+                      {language.name !==
+                        language.english && (
+                        <span
+                          style={styles.englishName}
+                        >
+                          {language.english}
+                        </span>
+                      )}
+                    </div>
+
+                    <span style={styles.arrow}>›</span>
+                  </button>
+                ))
               ) : (
                 <div style={styles.noResult}>
                   No languages found
@@ -523,6 +500,8 @@ export default function Home() {
     );
   }
 
+  // Hech qanday Loading/Yuklanmoqda yozuvi chiqmaydi.
+  // Profil tekshirilayotgan vaqtda ekran bo‘sh turadi.
   return <main style={styles.page} />;
 }
 
@@ -548,8 +527,7 @@ const styles = {
     top: "-100px",
     right: "-100px",
     borderRadius: "50%",
-    background:
-      "rgba(59,130,246,0.16)",
+    background: "rgba(59,130,246,0.16)",
     filter: "blur(70px)",
     pointerEvents: "none",
   },
@@ -561,8 +539,7 @@ const styles = {
     left: "-120px",
     bottom: "-80px",
     borderRadius: "50%",
-    background:
-      "rgba(14,165,233,0.10)",
+    background: "rgba(14,165,233,0.10)",
     filter: "blur(70px)",
     pointerEvents: "none",
   },
@@ -582,12 +559,9 @@ const styles = {
     padding: "26px 16px 16px",
     boxSizing: "border-box",
     borderRadius: "30px",
-    background:
-      "rgba(255,255,255,0.075)",
-    border:
-      "1px solid rgba(255,255,255,0.12)",
-    boxShadow:
-      "0 24px 70px rgba(0,0,0,0.28)",
+    background: "rgba(255,255,255,0.075)",
+    border: "1px solid rgba(255,255,255,0.12)",
+    boxShadow: "0 24px 70px rgba(0,0,0,0.28)",
     backdropFilter: "blur(24px)",
     WebkitBackdropFilter: "blur(24px)",
   },
@@ -600,10 +574,8 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
     borderRadius: "20px",
-    background:
-      "rgba(255,255,255,0.10)",
-    border:
-      "1px solid rgba(255,255,255,0.10)",
+    background: "rgba(255,255,255,0.10)",
+    border: "1px solid rgba(255,255,255,0.10)",
     fontSize: "29px",
   },
 
@@ -634,10 +606,8 @@ const styles = {
     marginBottom: "12px",
     boxSizing: "border-box",
     borderRadius: "17px",
-    background:
-      "rgba(255,255,255,0.085)",
-    border:
-      "1px solid rgba(255,255,255,0.11)",
+    background: "rgba(255,255,255,0.085)",
+    border: "1px solid rgba(255,255,255,0.11)",
   },
 
   searchIcon: {
@@ -683,10 +653,8 @@ const styles = {
     padding: "9px 15px",
     boxSizing: "border-box",
     borderRadius: "17px",
-    border:
-      "1px solid rgba(255,255,255,0.09)",
-    background:
-      "rgba(255,255,255,0.065)",
+    border: "1px solid rgba(255,255,255,0.09)",
+    background: "rgba(255,255,255,0.065)",
     color: "#ffffff",
     cursor: "pointer",
     textAlign: "left",
@@ -731,10 +699,8 @@ const styles = {
     marginTop: "30px",
     padding: "18px",
     borderRadius: "18px",
-    background:
-      "rgba(220,38,38,0.16)",
-    border:
-      "1px solid rgba(248,113,113,0.35)",
+    background: "rgba(220,38,38,0.16)",
+    border: "1px solid rgba(248,113,113,0.35)",
     fontSize: "15px",
     lineHeight: "1.5",
   },

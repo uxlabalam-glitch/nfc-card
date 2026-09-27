@@ -20,10 +20,6 @@ import {
   FaLocationDot,
   FaLink,
   FaLinkedin,
-  FaEllipsisVertical,
-  FaGear,
-  FaQrcode,
-  FaXmark,
   FaXTwitter,
 } from "react-icons/fa6";
 
@@ -83,13 +79,9 @@ export default function MyCardPage() {
   const [profile, setProfile] = useState(null);
   const [links, setLinks] = useState([]);
 
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [modal, setModal] = useState(null);
-
   const [notice, setNotice] = useState("");
   const [error, setError] = useState("");
 
-  const [publicUrl, setPublicUrl] = useState("");
 
   /* =======================================================
      PROFIL + LINKLARNI OLISH
@@ -138,9 +130,6 @@ export default function MyCardPage() {
         setProfile(profileData);
         setLinks(linksData || []);
 
-        setPublicUrl(
-          `${window.location.origin}/c/${profileData.card_id}`
-        );
       } catch (err) {
         console.error(err);
 
@@ -162,16 +151,6 @@ export default function MyCardPage() {
 
   const t =
     TEXTS[languageCode] || TEXTS.en;
-
-  /* =======================================================
-     QR
-  ======================================================= */
-
-  const qrImageUrl = publicUrl
-    ? `https://api.qrserver.com/v1/create-qr-code/?size=700x700&margin=20&data=${encodeURIComponent(
-        publicUrl
-      )}`
-    : "";
 
   /* =======================================================
      BO'SH XABAR
@@ -344,77 +323,7 @@ export default function MyCardPage() {
 
         <div style={styles.centerOverlay} />
 
-        {/* =================================================
-            UCH NUQTA
-        ================================================= */}
-
-        <div style={styles.topMenu}>
-          <div style={styles.menuWrapper}>
-            <button
-              type="button"
-              aria-label="Menu"
-              style={styles.menuButton}
-              onClick={() =>
-                setMenuOpen(
-                  (current) => !current
-                )
-              }
-            >
-              <FaEllipsisVertical />
-            </button>
-
-            {menuOpen && (
-              <>
-                <button
-                  type="button"
-                  aria-label="Close menu"
-                  style={styles.menuBackdrop}
-                  onClick={() =>
-                    setMenuOpen(false)
-                  }
-                />
-
-                <div style={styles.menu}>
-                  <button
-                    type="button"
-                    style={styles.menuItem}
-                    onClick={() => {
-                      setMenuOpen(false);
-                      setModal("settings");
-                    }}
-                  >
-                    <FaGear />
-
-                    <span>
-                      {t.settings}
-                    </span>
-                  </button>
-
-                  <div
-                    style={
-                      styles.menuDivider
-                    }
-                  />
-
-                  <button
-                    type="button"
-                    style={styles.menuItem}
-                    onClick={() => {
-                      setMenuOpen(false);
-                      setModal("qr");
-                    }}
-                  >
-                    <FaQrcode />
-
-                    <span>
-                      {t.qr}
-                    </span>
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
+        
 
         {/* =================================================
             KONTENT
@@ -561,183 +470,7 @@ export default function MyCardPage() {
             </div>
           </div>
         </div>
-
-        {/* =================================================
-            SETTINGS
-            KEYINGI ETAPLARDA ICHI TO'LDIRILADI
-        ================================================= */}
-
-        {modal === "settings" && (
-          <div style={styles.modalLayer}>
-            <button
-              type="button"
-              aria-label="Close"
-              style={
-                styles.modalBackdrop
-              }
-              onClick={() =>
-                setModal(null)
-              }
-            />
-
-            <div style={styles.modalCard}>
-              <div
-                style={
-                  styles.modalHeader
-                }
-              >
-                <div
-                  style={
-                    styles.modalTitleRow
-                  }
-                >
-                  <div
-                    style={
-                      styles.modalIcon
-                    }
-                  >
-                    <FaGear />
-                  </div>
-
-                  <h2
-                    style={
-                      styles.modalTitle
-                    }
-                  >
-                    {t.settings}
-                  </h2>
-                </div>
-
-                <button
-                  type="button"
-                  aria-label={t.close}
-                  style={
-                    styles.closeButton
-                  }
-                  onClick={() =>
-                    setModal(null)
-                  }
-                >
-                  <FaXmark />
-                </button>
-              </div>
-
-              <div
-                style={
-                  styles.settingsPlaceholder
-                }
-              >
-                <FaGear
-                  style={{
-                    fontSize: "30px",
-                  }}
-                />
-
-                <strong>
-                  {t.settings}
-                </strong>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* =================================================
-            QR
-        ================================================= */}
-
-        {modal === "qr" && (
-          <div style={styles.modalLayer}>
-            <button
-              type="button"
-              aria-label="Close"
-              style={
-                styles.modalBackdrop
-              }
-              onClick={() =>
-                setModal(null)
-              }
-            />
-
-            <div
-              style={{
-                ...styles.modalCard,
-                ...styles.qrModal,
-              }}
-            >
-              <div
-                style={
-                  styles.modalHeader
-                }
-              >
-                <div
-                  style={
-                    styles.modalTitleRow
-                  }
-                >
-                  <div
-                    style={
-                      styles.modalIcon
-                    }
-                  >
-                    <FaQrcode />
-                  </div>
-
-                  <h2
-                    style={
-                      styles.modalTitle
-                    }
-                  >
-                    {t.qr}
-                  </h2>
-                </div>
-
-                <button
-                  type="button"
-                  aria-label={t.close}
-                  style={
-                    styles.closeButton
-                  }
-                  onClick={() =>
-                    setModal(null)
-                  }
-                >
-                  <FaXmark />
-                </button>
-              </div>
-
-              <div style={styles.qrContent}>
-                <div
-                  style={
-                    styles.qrWhiteBox
-                  }
-                >
-                  {qrImageUrl && (
-                    <img
-                      src={qrImageUrl}
-                      alt="QR Code"
-                      style={
-                        styles.qrImage
-                      }
-                    />
-                  )}
-                </div>
-
-                {profile.full_name?.trim() && (
-                  <strong
-                    style={styles.qrName}
-                  >
-                    {profile.full_name}
-                  </strong>
-                )}
-
-                <div style={styles.qrUrl}>
-                  {publicUrl}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
+      
         {/* =================================================
             BO'SH XABAR
         ================================================= */}

@@ -2069,68 +2069,70 @@ export default function MyCardPage() {
      OPEN LINK
   ========================================================= */
 
-  function openLink(
-    link
-  ) {
-    const url =
-      (
-        link?.url ||
-        ""
-      ).trim();
+  function openLink(link) {
+  const url = (link?.url || "").trim();
 
-    if (!url) {
-      showNotice(
-        t.empty
-      );
-
-      return;
-    }
-
-    if (
-      typeof window ===
-      "undefined"
-    ) {
-      return;
-    }
-
-    if (
-      link.icon ===
-      "phone"
-    ) {
-      window.location.href =
-        url.startsWith(
-          "tel:"
-        )
-          ? url
-          : `tel:${url}`;
-
-      return;
-    }
-
-    if (
-      link.icon ===
-      "email"
-    ) {
-      window.location.href =
-        url.startsWith(
-          "mailto:"
-        )
-          ? url
-          : `mailto:${url}`;
-
-      return;
-    }
-
-    const finalUrl =
-      /^https?:\/\//i.test(
-        url
-      )
-        ? url
-        : `https://${url}`;
-
-    window.location.href =
-      finalUrl;
+  if (!url) {
+    showNotice(t.empty);
+    return;
   }
+
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  // Telefon
+  if (link.icon === "phone") {
+    window.location.href = url.startsWith("tel:")
+      ? url
+      : `tel:${url}`;
+    return;
+  }
+
+  // Email
+  if (link.icon === "email") {
+    window.location.href = url.startsWith("mailto:")
+      ? url
+      : `mailto:${url}`;
+    return;
+  }
+
+  // Oddiy URL bo'lmasa https qo'shamiz
+  const finalUrl =
+    /^(https?:\/\/)/i.test(url)
+      ? url
+      : `https://${url}`;
+
+  // Telegram Mini App ichida:
+  // linkni Telegram ichki browserida emas,
+  // tashqi ilova/browser orqali ochishga harakat qilamiz.
+  const tg = window.Telegram?.WebApp;
+
+  if (
+    tg &&
+    typeof tg.openLink === "function"
+  ) {
+    try {
+      tg.openLink(finalUrl, {
+        try_instant_view: false,
+      });
+      return;
+    } catch (error) {
+      // Pastdagi fallback ishlaydi
+    }
+  }
+
+  // Telegram Mini App tashqarisida fallback
+  try {
+    window.open(
+      finalUrl,
+      "_blank",
+      "noopener,noreferrer"
+    );
+  } catch (error) {
+    window.location.href = finalUrl;
+  }
+}
 
   /* =========================================================
      QR

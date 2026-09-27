@@ -2358,35 +2358,29 @@ export default function MyCardPage() {
                 styles.avatarOuter
               }
             >
-              {profile.photo_url ? (
-                <img
-                  src={
-                    profile.photo_url
-                  }
-                  alt={
-                    profile.full_name ||
-                    "Profile"
-                  }
-                  draggable={false}
-                  onContextMenu={(event) =>
-                    event.preventDefault()
-                  }
-                  onDragStart={(event) =>
-                    event.preventDefault()
-                  }
-                  style={
-                    styles.avatarImage
-                  }
-                />
-              ) : (
-                <div
-                  style={
-                    styles.avatarPlaceholder
-                  }
-                >
-                  👤
-                </div>
-              )}
+            {profile.photo_url ? (
+  <div
+    aria-label={
+      profile.full_name ||
+      "Profile"
+    }
+    style={{
+      ...styles.avatarImage,
+      backgroundImage: `url("${profile.photo_url}")`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundRepeat: "no-repeat",
+    }}
+  />
+) : (
+  <div
+    style={
+      styles.avatarPlaceholder
+    }
+  >
+    👤
+  </div>
+)}
             </div>
 
             {/* NAME */}

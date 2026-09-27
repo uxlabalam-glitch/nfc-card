@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { createClient } from "@supabase/supabase-js";
 
 import {
   SiTelegram,
@@ -27,12 +26,6 @@ import {
   FaVk,
   FaOdnoklassniki,
 } from "react-icons/fa";
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL ||
-    "https://yzkeabplmbxkvyschlop.supabase.co",
-  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
-);
 
 /* =========================================================
    TILLAR
@@ -89,56 +82,39 @@ const publicSlug = params?.slug;
 
   useEffect(() => {
     if (!publicSlug) return;
-
     async function loadData() {
-      try {
-        setError("");
+  try {
+    setError("");
 
-        const {
-          data: profileData,
-          error: profileError,
-        } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("public_slug", publicSlug)
-          .maybeSingle();
-
-        if (profileError) {
-          throw profileError;
-        }
-
-        if (!profileData) {
-          setError("Profile not found.");
-          return;
-        }
-
-        const {
-          data: linksData,
-          error: linksError,
-        } = await supabase
-          .from("links")
-          .select("*")
-          .eq("profile_id", profileData.id)
-          .order("sort_order", {
-            ascending: true,
-          });
-
-        if (linksError) {
-          throw linksError;
-        }
-
-        setProfile(profileData);
-        setLinks(linksData || []);
-
-      } catch (err) {
-        console.error(err);
-
-        setError(
-          err?.message || "Something went wrong."
-        );
+    const response = await fetch(
+      `/api/public/profile?slug=${encodeURIComponent(
+        publicSlug
+      )}`,
+      {
+        method: "GET",
+        cache: "no-store",
       }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok || !data?.ok) {
+      throw new Error(
+        data?.error || "Profile not found."
+      );
     }
 
+    setProfile(data.profile);
+    setLinks(data.links || []);
+  } catch (err) {
+    console.error(err);
+
+    setError(
+      err?.message || "Something went wrong."
+    );
+  }
+}
+   
     loadData();
  }, [publicSlug]);
   /* =======================================================

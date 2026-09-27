@@ -1447,7 +1447,7 @@ export default function MyCardPage() {
         "undefined"
       ) {
         setPublicUrl(
-          `${window.location.origin}/c/${profileData.card_id}`
+          `${window.location.origin}/p/${profileData.public_slug}`
         );
       }
     } catch (err) {

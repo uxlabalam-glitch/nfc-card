@@ -639,7 +639,9 @@ function getIconColor(icon) {
 
 const styles = {
   page: {
-    minHeight: "100vh",
+  height: "100dvh",
+minHeight: "100dvh",
+overflow: "hidden",
     position: "relative",
     display: "flex",
     justifyContent: "center",

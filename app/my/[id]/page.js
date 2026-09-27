@@ -28,6 +28,7 @@ import {
   FaLink,
   FaLinkedin,
   FaXTwitter,
+  FaThreads,
   FaEllipsisVertical,
   FaGear,
   FaQrcode,
@@ -365,6 +366,7 @@ const SERVICES = [
   { value: "telegram", label: "Telegram" },
   { value: "whatsapp", label: "WhatsApp" },
   { value: "instagram", label: "Instagram" },
+  { value: "threads", label: "Threads" },
   { value: "youtube", label: "YouTube" },
   { value: "tiktok", label: "TikTok" },
   { value: "facebook", label: "Facebook" },
@@ -2840,9 +2842,42 @@ export default function MyCardPage() {
 
                           <input
                             value={
-                              link.url ||
-                              ""
-                            }
+  link.url ||
+  ""
+}
+placeholder={
+  link.icon === "telegram"
+    ? "https://t.me/username"
+    : link.icon === "whatsapp"
+    ? "https://wa.me/998XXXXXXXXX"
+    : link.icon === "instagram"
+    ? "https://instagram.com/username"
+    : link.icon === "threads"
+    ? "https://www.threads.net/@username"
+    : link.icon === "youtube"
+    ? "https://youtube.com/@username"
+    : link.icon === "tiktok"
+    ? "https://tiktok.com/@username"
+    : link.icon === "facebook"
+    ? "https://facebook.com/username"
+    : link.icon === "linkedin"
+    ? "https://linkedin.com/in/username"
+    : link.icon === "x"
+    ? "https://x.com/username"
+    : link.icon === "vk"
+    ? "https://vk.com/username"
+    : link.icon === "ok"
+    ? "https://ok.ru/profile/..."
+    : link.icon === "phone"
+    ? "+998901234567"
+    : link.icon === "email"
+    ? "name@example.com"
+    : link.icon === "website"
+    ? "https://example.com"
+    : link.icon === "location"
+    ? "https://maps.google.com/..."
+    : "https://..."
+}
                             onChange={(
                               event
                             ) =>
@@ -3896,6 +3931,13 @@ function SocialIcon({
         />
       );
 
+      case "threads":
+  return (
+    <FaThreads
+      size={size}
+    />
+  );
+      
     case "youtube":
       return (
         <SiYoutube
@@ -4008,6 +4050,11 @@ function getIconColor(
           "#E1306C",
       };
 
+      case "threads":
+  return {
+    color: "#000000",
+  };
+      
     case "youtube":
       return {
         color:

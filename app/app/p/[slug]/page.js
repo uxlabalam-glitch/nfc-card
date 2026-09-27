@@ -308,13 +308,8 @@ const publicSlug = params?.slug;
           style={{
             ...styles.content,
 
-            filter: modal
-              ? "blur(8px)"
-              : "none",
-
-            transform: modal
-              ? "scale(0.985)"
-              : "scale(1)",
+            filter: "none",
+transform: "scale(1)",
           }}
         >
           {/* ===============================================

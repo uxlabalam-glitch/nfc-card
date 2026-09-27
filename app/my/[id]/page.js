@@ -102,6 +102,8 @@ const TEXTS = {
 
     chooseLanguage: "Tilni tanlang",
     searchLanguage: "Tilni qidirish...",
+    searchTextStyle: "Yozuv stilini qidirish...",
+    noTextStyle: "Yozuv stili topilmadi",
 
     deleteTitle: "Profil o‘chirilsinmi?",
 
@@ -175,6 +177,8 @@ const TEXTS = {
 
     chooseLanguage: "Выберите язык",
     searchLanguage: "Поиск языка...",
+    searchTextStyle: "Поиск стиля текста...",
+    noTextStyle: "Стиль текста не найден",
 
     deleteTitle: "Удалить профиль?",
 
@@ -248,6 +252,8 @@ const TEXTS = {
 
     chooseLanguage: "Choose language",
     searchLanguage: "Search language...",
+    searchTextStyle: "Search text style...",
+    noTextStyle: "No text style found",
 
     deleteTitle: "Delete profile?",
 
@@ -321,6 +327,8 @@ const TEXTS = {
 
     chooseLanguage: "Dil seçin",
     searchLanguage: "Dil ara...",
+    searchTextStyle: "Yazı stili ara...",
+    noTextStyle: "Yazı stili bulunamadı",
 
     deleteTitle: "Profil silinsin mi?",
 
@@ -646,41 +654,383 @@ const LED_COLORS = [
 
 /* =========================================================
    TEXT STYLE PREVIEW
-
-   Hozir UI preview.
-   DB/API bosqichida font_style saqlanadi.
 ========================================================= */
 
 const TEXT_STYLES = [
   {
     id: "standard",
+    name: "Standard",
     fontFamily:
       '-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif',
     fontWeight: 800,
     letterSpacing: "-0.5px",
   },
-
   {
-    id: "elegant",
+    id: "aptos",
+    name: "Aptos",
+    fontFamily:
+      'Aptos,"Segoe UI",Arial,sans-serif',
+    fontWeight: 700,
+    letterSpacing: "0",
+  },
+  {
+    id: "calibri",
+    name: "Calibri",
+    fontFamily:
+      'Calibri,Carlito,Arial,sans-serif',
+    fontWeight: 700,
+    letterSpacing: "0",
+  },
+  {
+    id: "arial",
+    name: "Arial",
+    fontFamily:
+      "Arial,Helvetica,sans-serif",
+    fontWeight: 700,
+    letterSpacing: "0",
+  },
+  {
+    id: "arial-black",
+    name: "Arial Black",
+    fontFamily:
+      '"Arial Black",Arial,sans-serif',
+    fontWeight: 900,
+    letterSpacing: "-0.4px",
+  },
+  {
+    id: "bahnschrift",
+    name: "Bahnschrift",
+    fontFamily:
+      'Bahnschrift,"Segoe UI",sans-serif',
+    fontWeight: 700,
+    letterSpacing: "0",
+  },
+  {
+    id: "book-antiqua",
+    name: "Book Antiqua",
+    fontFamily:
+      '"Book Antiqua",Palatino,serif',
+    fontWeight: 700,
+    letterSpacing: "0",
+  },
+  {
+    id: "bookman",
+    name: "Bookman",
+    fontFamily:
+      '"Bookman Old Style",Bookman,serif',
+    fontWeight: 700,
+    letterSpacing: "0",
+  },
+  {
+    id: "cambria",
+    name: "Cambria",
+    fontFamily:
+      "Cambria,Georgia,serif",
+    fontWeight: 700,
+    letterSpacing: "0",
+  },
+  {
+    id: "candara",
+    name: "Candara",
+    fontFamily:
+      'Candara,"Segoe UI",sans-serif',
+    fontWeight: 700,
+    letterSpacing: "0",
+  },
+  {
+    id: "century",
+    name: "Century",
+    fontFamily:
+      'Century,"Times New Roman",serif',
+    fontWeight: 700,
+    letterSpacing: "0",
+  },
+  {
+    id: "century-gothic",
+    name: "Century Gothic",
+    fontFamily:
+      '"Century Gothic",Futura,sans-serif',
+    fontWeight: 700,
+    letterSpacing: "0",
+  },
+  {
+    id: "comic-sans",
+    name: "Comic Sans MS",
+    fontFamily:
+      '"Comic Sans MS","Comic Sans",cursive',
+    fontWeight: 700,
+    letterSpacing: "0",
+  },
+  {
+    id: "consolas",
+    name: "Consolas",
+    fontFamily:
+      'Consolas,"Courier New",monospace',
+    fontWeight: 700,
+    letterSpacing: "-0.2px",
+  },
+  {
+    id: "constantia",
+    name: "Constantia",
+    fontFamily:
+      "Constantia,Georgia,serif",
+    fontWeight: 700,
+    letterSpacing: "0",
+  },
+  {
+    id: "corbel",
+    name: "Corbel",
+    fontFamily:
+      'Corbel,"Segoe UI",sans-serif',
+    fontWeight: 700,
+    letterSpacing: "0",
+  },
+  {
+    id: "courier-new",
+    name: "Courier New",
+    fontFamily:
+      '"Courier New",Courier,monospace',
+    fontWeight: 700,
+    letterSpacing: "-0.3px",
+  },
+  {
+    id: "didot",
+    name: "Didot",
+    fontFamily:
+      'Didot,"Bodoni MT","Times New Roman",serif',
+    fontWeight: 700,
+    letterSpacing: "0",
+  },
+  {
+    id: "franklin",
+    name: "Franklin Gothic",
+    fontFamily:
+      '"Franklin Gothic Medium","Arial Narrow",Arial,sans-serif',
+    fontWeight: 700,
+    letterSpacing: "0",
+  },
+  {
+    id: "garamond",
+    name: "Garamond",
+    fontFamily:
+      'Garamond,"Times New Roman",serif',
+    fontWeight: 700,
+    letterSpacing: "0",
+  },
+  {
+    id: "georgia",
+    name: "Georgia",
     fontFamily:
       'Georgia,"Times New Roman",serif',
     fontWeight: 700,
     letterSpacing: "0",
   },
-
+  {
+    id: "gill-sans",
+    name: "Gill Sans",
+    fontFamily:
+      '"Gill Sans","Gill Sans MT",Calibri,sans-serif',
+    fontWeight: 700,
+    letterSpacing: "0",
+  },
+  {
+    id: "helvetica",
+    name: "Helvetica",
+    fontFamily:
+      "Helvetica,Arial,sans-serif",
+    fontWeight: 700,
+    letterSpacing: "-0.2px",
+  },
+  {
+    id: "impact",
+    name: "Impact",
+    fontFamily:
+      'Impact,Haettenschweiler,"Arial Narrow Bold",sans-serif',
+    fontWeight: 400,
+    letterSpacing: "0.2px",
+  },
+  {
+    id: "lucida-bright",
+    name: "Lucida Bright",
+    fontFamily:
+      '"Lucida Bright",Georgia,serif',
+    fontWeight: 700,
+    letterSpacing: "0",
+  },
+  {
+    id: "lucida-console",
+    name: "Lucida Console",
+    fontFamily:
+      '"Lucida Console",Monaco,monospace',
+    fontWeight: 700,
+    letterSpacing: "-0.3px",
+  },
+  {
+    id: "lucida-sans",
+    name: "Lucida Sans",
+    fontFamily:
+      '"Lucida Sans Unicode","Lucida Grande",sans-serif',
+    fontWeight: 700,
+    letterSpacing: "0",
+  },
+  {
+    id: "palatino",
+    name: "Palatino",
+    fontFamily:
+      'Palatino,"Palatino Linotype","Book Antiqua",serif',
+    fontWeight: 700,
+    letterSpacing: "0",
+  },
+  {
+    id: "perpetua",
+    name: "Perpetua",
+    fontFamily:
+      "Perpetua,Baskerville,Georgia,serif",
+    fontWeight: 700,
+    letterSpacing: "0",
+  },
+  {
+    id: "rockwell",
+    name: "Rockwell",
+    fontFamily:
+      'Rockwell,"Courier New",serif',
+    fontWeight: 700,
+    letterSpacing: "0",
+  },
+  {
+    id: "segoe-ui",
+    name: "Segoe UI",
+    fontFamily:
+      '"Segoe UI",Arial,sans-serif',
+    fontWeight: 700,
+    letterSpacing: "0",
+  },
+  {
+    id: "segoe-print",
+    name: "Segoe Print",
+    fontFamily:
+      '"Segoe Print","Bradley Hand",cursive',
+    fontWeight: 700,
+    letterSpacing: "0",
+  },
+  {
+    id: "tahoma",
+    name: "Tahoma",
+    fontFamily:
+      "Tahoma,Verdana,sans-serif",
+    fontWeight: 700,
+    letterSpacing: "0",
+  },
+  {
+    id: "times-new-roman",
+    name: "Times New Roman",
+    fontFamily:
+      '"Times New Roman",Times,serif',
+    fontWeight: 700,
+    letterSpacing: "0",
+  },
+  {
+    id: "trebuchet",
+    name: "Trebuchet MS",
+    fontFamily:
+      '"Trebuchet MS","Segoe UI",sans-serif',
+    fontWeight: 700,
+    letterSpacing: "0.2px",
+  },
+  {
+    id: "verdana",
+    name: "Verdana",
+    fontFamily:
+      "Verdana,Geneva,sans-serif",
+    fontWeight: 700,
+    letterSpacing: "0",
+  },
+  {
+    id: "baskerville",
+    name: "Baskerville",
+    fontFamily:
+      'Baskerville,"Times New Roman",serif',
+    fontWeight: 700,
+    letterSpacing: "0",
+  },
+  {
+    id: "bodoni",
+    name: "Bodoni",
+    fontFamily:
+      '"Bodoni MT",Didot,"Times New Roman",serif',
+    fontWeight: 700,
+    letterSpacing: "0",
+  },
+  {
+    id: "copperplate",
+    name: "Copperplate",
+    fontFamily:
+      'Copperplate,"Copperplate Gothic Light",fantasy',
+    fontWeight: 700,
+    letterSpacing: "0.4px",
+  },
+  {
+    id: "futura",
+    name: "Futura",
+    fontFamily:
+      'Futura,"Century Gothic",Arial,sans-serif',
+    fontWeight: 700,
+    letterSpacing: "0",
+  },
+  {
+    id: "optima",
+    name: "Optima",
+    fontFamily:
+      'Optima,Candara,"Segoe UI",sans-serif',
+    fontWeight: 700,
+    letterSpacing: "0",
+  },
   {
     id: "modern",
+    name: "Modern",
     fontFamily:
       '"Trebuchet MS","Segoe UI",sans-serif',
     fontWeight: 700,
     letterSpacing: "0.3px",
   },
-
+  {
+    id: "elegant",
+    name: "Elegant",
+    fontFamily:
+      'Georgia,"Times New Roman",serif',
+    fontWeight: 700,
+    letterSpacing: "0",
+  },
   {
     id: "strong",
+    name: "Bold",
     fontFamily:
       'Arial,"Helvetica Neue",sans-serif',
     fontWeight: 900,
+    letterSpacing: "-0.8px",
+  },
+  {
+    id: "light",
+    name: "Light",
+    fontFamily:
+      '"Segoe UI",Arial,sans-serif',
+    fontWeight: 300,
+    letterSpacing: "0.2px",
+  },
+  {
+    id: "wide",
+    name: "Wide",
+    fontFamily:
+      '"Century Gothic","Segoe UI",sans-serif',
+    fontWeight: 700,
+    letterSpacing: "1.6px",
+  },
+  {
+    id: "compact",
+    name: "Compact",
+    fontFamily:
+      '"Arial Narrow",Arial,sans-serif',
+    fontWeight: 800,
     letterSpacing: "-0.8px",
   },
 ];
@@ -793,6 +1143,11 @@ export default function MyCardPage() {
     setPreviewTextStyle,
   ] = useState("standard");
 
+  const [
+    textStyleSearch,
+    setTextStyleSearch,
+  ] = useState("");
+
   const languageCode =
     profile?.language || "en";
 
@@ -806,6 +1161,25 @@ export default function MyCardPage() {
         item.id ===
         previewTextStyle
     ) || TEXT_STYLES[0];
+
+  const filteredTextStyles =
+    useMemo(() => {
+      const query =
+        textStyleSearch
+          .trim()
+          .toLocaleLowerCase();
+
+      if (!query) {
+        return TEXT_STYLES;
+      }
+
+      return TEXT_STYLES.filter(
+        (item) =>
+          `${item.id} ${item.name} ${item.fontFamily}`
+            .toLocaleLowerCase()
+            .includes(query)
+      );
+    }, [textStyleSearch]);
 
   const filteredLanguages =
     useMemo(() => {
@@ -989,8 +1363,7 @@ export default function MyCardPage() {
 
     return data;
   }
-
-  /* =========================================================
+    /* =========================================================
      LOAD
   ========================================================= */
 
@@ -1059,6 +1432,14 @@ export default function MyCardPage() {
           "#3B82F6"
       );
 
+      setEditLinks(
+        linksData.map(
+          (item) => ({
+            ...item,
+          })
+        )
+      );
+
       if (
         typeof window !==
         "undefined"
@@ -1068,11 +1449,9 @@ export default function MyCardPage() {
         );
       }
     } catch (err) {
-      console.error(err);
-
       setError(
         err?.message ||
-          "Something went wrong."
+          "Server error."
       );
     }
   }
@@ -1084,91 +1463,50 @@ export default function MyCardPage() {
   function showNotice(
     message
   ) {
-    setNotice(message);
-
-    window.setTimeout(
-      () => {
-        setNotice("");
-      },
-      2200
+    setNotice(
+      message
     );
-  }
 
-  function showEmpty() {
-    showNotice(t.empty);
-  }
+    window.clearTimeout(
+      window.__nfcNoticeTimer
+    );
 
-  /* =========================================================
-     OPEN LINK
-  ========================================================= */
-
-  function openLink(link) {
-    let url =
-      String(
-        link?.url || ""
-      ).trim();
-
-    if (!url) {
-      showEmpty();
-      return;
-    }
-
-    const icon =
-      String(
-        link?.icon || ""
-      ).toLowerCase();
-
-    if (icon === "phone") {
-      if (
-        !url.startsWith("tel:")
-      ) {
-        url = `tel:${url}`;
-      }
-
-      window.location.href =
-        url;
-
-      return;
-    }
-
-    if (icon === "email") {
-      if (
-        !url.startsWith(
-          "mailto:"
-        )
-      ) {
-        url =
-          `mailto:${url}`;
-      }
-
-      window.location.href =
-        url;
-
-      return;
-    }
-
-    if (
-      !url.startsWith(
-        "http://"
-      ) &&
-      !url.startsWith(
-        "https://"
-      )
-    ) {
-      url =
-        `https://${url}`;
-    }
-
-    window.location.href =
-      url;
+    window.__nfcNoticeTimer =
+      window.setTimeout(
+        () => {
+          setNotice("");
+        },
+        2200
+      );
   }
 
   /* =========================================================
-     SETTINGS
+     MENU / MODALS
   ========================================================= */
 
   function openSettings() {
     setMenuOpen(false);
+
+    setModal(
+      "settings"
+    );
+  }
+
+  function openQr() {
+    setMenuOpen(false);
+
+    setModal(
+      "qr"
+    );
+  }
+
+  function backToSettings() {
+    setOpenLinkIndex(
+      null
+    );
+
+    setLanguageSearch("");
+    setTextStyleSearch("");
 
     setModal(
       "settings"
@@ -1182,7 +1520,8 @@ export default function MyCardPage() {
     );
 
     setBio(
-      profile?.bio || ""
+      profile?.bio ||
+        ""
     );
 
     setEditLinks(
@@ -1202,33 +1541,20 @@ export default function MyCardPage() {
     );
   }
 
-  function backToSettings() {
-    setOpenLinkIndex(
-      null
-    );
-
-    setLanguageSearch("");
-
-    setModal(
-      "settings"
-    );
-  }
-
   /* =========================================================
-     LINKS
+     EDIT LINKS
   ========================================================= */
 
   function addLink() {
-    const index =
-      editLinks.length;
-
     setEditLinks(
       (current) => [
         ...current,
 
         {
           temp_id:
-            `${Date.now()}-${Math.random()}`,
+            `new-${Date.now()}-${Math.random()}`,
+
+          id: null,
 
           label:
             "Telegram",
@@ -1245,7 +1571,7 @@ export default function MyCardPage() {
     );
 
     setOpenLinkIndex(
-      index
+      editLinks.length
     );
   }
 
@@ -1257,14 +1583,19 @@ export default function MyCardPage() {
     setEditLinks(
       (current) =>
         current.map(
-          (link, i) =>
-            i === index
+          (
+            item,
+            itemIndex
+          ) =>
+            itemIndex ===
+            index
               ? {
-                  ...link,
+                  ...item,
+
                   [field]:
                     value,
                 }
-              : link
+              : item
         )
     );
   }
@@ -1283,24 +1614,23 @@ export default function MyCardPage() {
     setEditLinks(
       (current) =>
         current.map(
-          (link, i) => {
-            if (
-              i !== index
-            ) {
-              return link;
-            }
+          (
+            item,
+            itemIndex
+          ) =>
+            itemIndex ===
+            index
+              ? {
+                  ...item,
 
-            return {
-              ...link,
+                  icon:
+                    value,
 
-              icon: value,
-
-              label:
-                service?.label ||
-                link.label ||
-                "Link",
-            };
-          }
+                  label:
+                    service?.label ||
+                    item.label,
+                }
+              : item
         )
     );
   }
@@ -1312,13 +1642,22 @@ export default function MyCardPage() {
       (current) =>
         current
           .filter(
-            (_, i) =>
-              i !== index
+            (
+              _,
+              itemIndex
+            ) =>
+              itemIndex !==
+              index
           )
           .map(
-            (item, i) => ({
+            (
+              item,
+              itemIndex
+            ) => ({
               ...item,
-              sort_order: i,
+
+              sort_order:
+                itemIndex,
             })
           )
     );
@@ -1334,51 +1673,54 @@ export default function MyCardPage() {
 
   async function saveEdit() {
     if (
-      !profile ||
-      saving
-    ) {
-      return;
-    }
-
-    if (
       !fullName.trim()
     ) {
-      alert(
+      showNotice(
         t.enterName
       );
 
       return;
     }
 
-    setSaving(true);
-
     try {
-      const cleanLinks =
-        editLinks.map(
-          (link, index) => ({
-            label:
-              link.label
-                ?.trim() ||
-              SERVICES.find(
-                (item) =>
-                  item.value ===
-                  link.icon
-              )?.label ||
-              "Link",
+      setSaving(true);
 
-            url:
-              link.url
-                ?.trim() ||
-              "",
+      const cleanedLinks =
+        editLinks
+          .map(
+            (
+              item,
+              index
+            ) => ({
+              id:
+                item.id ||
+                null,
 
-            icon:
-              link.icon ||
-              "website",
+              label:
+                (
+                  item.label ||
+                  ""
+                ).trim(),
 
-            sort_order:
-              index,
-          })
-        );
+              url:
+                (
+                  item.url ||
+                  ""
+                ).trim(),
+
+              icon:
+                item.icon ||
+                "website",
+
+              sort_order:
+                index,
+            })
+          )
+          .filter(
+            (item) =>
+              item.label ||
+              item.url
+          );
 
       const data =
         await apiJson(
@@ -1391,7 +1733,7 @@ export default function MyCardPage() {
               bio.trim(),
 
             links:
-              cleanLinks,
+              cleanedLinks,
           }
         );
 
@@ -1403,14 +1745,15 @@ export default function MyCardPage() {
         data.links || []
       );
 
-      setFullName(
-        data.profile
-          ?.full_name || ""
-      );
-
-      setBio(
-        data.profile
-          ?.bio || ""
+      setEditLinks(
+        (
+          data.links ||
+          []
+        ).map(
+          (item) => ({
+            ...item,
+          })
+        )
       );
 
       setModal(null);
@@ -1419,11 +1762,9 @@ export default function MyCardPage() {
         t.saved
       );
     } catch (err) {
-      console.error(err);
-
-      alert(
+      showNotice(
         err?.message ||
-          "Save error"
+          "Server error."
       );
     } finally {
       setSaving(false);
@@ -1431,7 +1772,7 @@ export default function MyCardPage() {
   }
 
   /* =========================================================
-     AVATAR
+     UPLOAD AVATAR
   ========================================================= */
 
   async function uploadAvatar(
@@ -1441,11 +1782,10 @@ export default function MyCardPage() {
       event.target
         .files?.[0];
 
-    if (
-      !file ||
-      !profile ||
-      uploadingPhoto
-    ) {
+    event.target.value =
+      "";
+
+    if (!file) {
       return;
     }
 
@@ -1454,12 +1794,9 @@ export default function MyCardPage() {
         "image/"
       )
     ) {
-      alert(
+      showNotice(
         t.onlyImage
       );
-
-      event.target.value =
-        "";
 
       return;
     }
@@ -1468,21 +1805,18 @@ export default function MyCardPage() {
       file.size >
       5 * 1024 * 1024
     ) {
-      alert(
+      showNotice(
         t.photoTooBig
       );
-
-      event.target.value =
-        "";
 
       return;
     }
 
-    setUploadingPhoto(
-      true
-    );
-
     try {
+      setUploadingPhoto(
+        true
+      );
+
       const data =
         await apiUpload(
           "uploadAvatar",
@@ -1492,25 +1826,24 @@ export default function MyCardPage() {
       setProfile(
         data.profile
       );
-    } catch (err) {
-      console.error(err);
 
-      alert(
+      showNotice(
+        t.saved
+      );
+    } catch (err) {
+      showNotice(
         err?.message ||
-          "Upload error"
+          "Server error."
       );
     } finally {
       setUploadingPhoto(
         false
       );
-
-      event.target.value =
-        "";
     }
   }
 
   /* =========================================================
-     BACKGROUND
+     UPLOAD BACKGROUND
   ========================================================= */
 
   async function uploadBackground(
@@ -1520,11 +1853,10 @@ export default function MyCardPage() {
       event.target
         .files?.[0];
 
-    if (
-      !file ||
-      !profile ||
-      uploadingBackground
-    ) {
+    event.target.value =
+      "";
+
+    if (!file) {
       return;
     }
 
@@ -1533,12 +1865,9 @@ export default function MyCardPage() {
         "image/"
       )
     ) {
-      alert(
+      showNotice(
         t.onlyImage
       );
-
-      event.target.value =
-        "";
 
       return;
     }
@@ -1547,21 +1876,18 @@ export default function MyCardPage() {
       file.size >
       10 * 1024 * 1024
     ) {
-      alert(
+      showNotice(
         t.backgroundTooBig
       );
-
-      event.target.value =
-        "";
 
       return;
     }
 
-    setUploadingBackground(
-      true
-    );
-
     try {
+      setUploadingBackground(
+        true
+      );
+
       const data =
         await apiUpload(
           "uploadBackground",
@@ -1571,20 +1897,19 @@ export default function MyCardPage() {
       setProfile(
         data.profile
       );
-    } catch (err) {
-      console.error(err);
 
-      alert(
+      showNotice(
+        t.saved
+      );
+    } catch (err) {
+      showNotice(
         err?.message ||
-          "Upload error"
+          "Server error."
       );
     } finally {
       setUploadingBackground(
         false
       );
-
-      event.target.value =
-        "";
     }
   }
 
@@ -1593,16 +1918,9 @@ export default function MyCardPage() {
   ========================================================= */
 
   async function saveDesign() {
-    if (
-      !profile ||
-      saving
-    ) {
-      return;
-    }
-
-    setSaving(true);
-
     try {
+      setSaving(true);
+
       const data =
         await apiJson(
           "saveDesign",
@@ -1624,11 +1942,9 @@ export default function MyCardPage() {
         t.saved
       );
     } catch (err) {
-      console.error(err);
-
-      alert(
+      showNotice(
         err?.message ||
-          "Save error"
+          "Server error."
       );
     } finally {
       setSaving(false);
@@ -1642,10 +1958,6 @@ export default function MyCardPage() {
   async function changeLanguage(
     code
   ) {
-    if (!profile) {
-      return;
-    }
-
     try {
       const data =
         await apiJson(
@@ -1660,90 +1972,164 @@ export default function MyCardPage() {
         data.profile
       );
 
-      setLanguageSearch("");
-
-      setModal(
-        "settings"
+      setLanguageSearch(
+        ""
       );
-    } catch (err) {
-      console.error(err);
 
-      alert(
+      setModal(null);
+    } catch (err) {
+      showNotice(
         err?.message ||
-          "Language error"
+          "Server error."
       );
     }
   }
 
   /* =========================================================
-     DELETE TIMER
+     DELETE
   ========================================================= */
 
   useEffect(() => {
     if (
       modal !== "delete"
     ) {
-      setDeleteSeconds(10);
-
       return;
     }
 
-    if (
-      deleteSeconds <= 0
-    ) {
-      return;
-    }
+    setDeleteSeconds(
+      10
+    );
 
     const timer =
-      window.setTimeout(
+      window.setInterval(
         () => {
           setDeleteSeconds(
-            (current) =>
-              current - 1
+            (value) => {
+              if (
+                value <= 1
+              ) {
+                window.clearInterval(
+                  timer
+                );
+
+                return 0;
+              }
+
+              return (
+                value - 1
+              );
+            }
           );
         },
         1000
       );
 
     return () => {
-      window.clearTimeout(
+      window.clearInterval(
         timer
       );
     };
-  }, [
-    modal,
-    deleteSeconds,
-  ]);
+  }, [modal]);
 
   async function deleteProfile() {
     if (
-      !profile ||
-      deleting ||
-      deleteSeconds > 0
+      deleteSeconds >
+        0 ||
+      deleting
     ) {
       return;
     }
 
-    setDeleting(true);
-
     try {
+      setDeleting(true);
+
       await apiJson(
         "deleteProfile"
       );
 
-      window.location.replace(
-        "/"
-      );
+      if (
+        typeof window !==
+        "undefined"
+      ) {
+        window.location.replace(
+          "/"
+        );
+      }
     } catch (err) {
-      console.error(err);
-
-      alert(
+      showNotice(
         err?.message ||
-          "Delete error"
+          "Server error."
       );
 
       setDeleting(false);
     }
+  }
+
+  /* =========================================================
+     OPEN LINK
+  ========================================================= */
+
+  function openLink(
+    link
+  ) {
+    const url =
+      (
+        link?.url ||
+        ""
+      ).trim();
+
+    if (!url) {
+      showNotice(
+        t.empty
+      );
+
+      return;
+    }
+
+    if (
+      typeof window ===
+      "undefined"
+    ) {
+      return;
+    }
+
+    if (
+      link.icon ===
+      "phone"
+    ) {
+      window.location.href =
+        url.startsWith(
+          "tel:"
+        )
+          ? url
+          : `tel:${url}`;
+
+      return;
+    }
+
+    if (
+      link.icon ===
+      "email"
+    ) {
+      window.location.href =
+        url.startsWith(
+          "mailto:"
+        )
+          ? url
+          : `mailto:${url}`;
+
+      return;
+    }
+
+    const finalUrl =
+      /^https?:\/\//i.test(
+        url
+      )
+        ? url
+        : `https://${url}`;
+
+    window.location.href =
+      finalUrl;
   }
 
   /* =========================================================
@@ -1752,37 +2138,28 @@ export default function MyCardPage() {
 
   const qrImageUrl =
     publicUrl
-      ? `https://api.qrserver.com/v1/create-qr-code/?size=700x700&margin=20&data=${encodeURIComponent(
+      ? `https://api.qrserver.com/v1/create-qr-code/?size=700x700&margin=18&data=${encodeURIComponent(
           publicUrl
         )}`
       : "";
 
   /* =========================================================
-     CARD LED
+     EMPTY
   ========================================================= */
 
-  const cardLedStyle =
-    profile
-      ?.card_led_enabled
-      ? {
-          border:
-            `1px solid ${profile.card_led_color}`,
-
-          boxShadow: `
-            0 0 7px ${profile.card_led_color},
-            0 0 18px ${profile.card_led_color},
-            0 18px 55px rgba(0,0,0,.18)
-          `,
-        }
-      : {};
-
   const profileEmpty =
-    !profile?.full_name?.trim() &&
-    !profile?.bio?.trim() &&
+    !(
+      profile?.full_name ||
+      ""
+    ).trim() &&
+    !(
+      profile?.bio ||
+      ""
+    ).trim() &&
     links.length === 0;
 
   /* =========================================================
-     INITIAL
+     ERROR
   ========================================================= */
 
   if (error) {
@@ -1814,7 +2191,7 @@ export default function MyCardPage() {
   }
 
   /* =========================================================
-     UI
+     PAGE
   ========================================================= */
 
   return (
@@ -1822,200 +2199,160 @@ export default function MyCardPage() {
       style={
         styles.page
       }
+      onClick={() => {
+        if (menuOpen) {
+          setMenuOpen(
+            false
+          );
+        }
+      }}
     >
-      {profile.background_url && (
-        <div
-          style={{
-            ...styles.outerBackground,
+      {/* BLURRED FULL BACKGROUND */}
 
-            backgroundImage:
-              `url("${profile.background_url}")`,
-          }}
-        />
-      )}
+      <div
+        style={{
+          ...styles.backgroundBlur,
+
+          backgroundImage:
+            profile.background_url
+              ? `url("${profile.background_url}")`
+              : "none",
+        }}
+      />
 
       <div
         style={
-          styles.outerOverlay
+          styles.backgroundShade
         }
       />
 
-      {/* ===============================================
-          SCREEN LED
+      {/* SCREEN LED */}
 
-          Endi center card shadow emas.
-          Telefon viewportining 4 chetida.
-      =============================================== */}
-
-      {profile.screen_led_enabled && (
+      {screenLedEnabled && (
         <div
           style={{
             ...styles.screenLed,
 
-            "--led-color":
-              profile.screen_led_color ||
-              "#3B82F6",
-
-            borderColor:
-              profile.screen_led_color ||
-              "#3B82F6",
-
             boxShadow: `
-              inset 0 0 8px ${
-                profile.screen_led_color ||
-                "#3B82F6"
-              },
-              inset 0 0 18px ${
-                profile.screen_led_color ||
-                "#3B82F6"
-              },
-              0 0 8px ${
-                profile.screen_led_color ||
-                "#3B82F6"
-              },
-              0 0 22px ${
-                profile.screen_led_color ||
-                "#3B82F6"
-              }
+              inset 0 0 18px ${screenLedColor},
+              inset 0 0 35px ${screenLedColor},
+              inset 0 0 58px ${screenLedColor}
             `,
           }}
         />
       )}
 
+      {/* CENTER STRIP */}
+
       <section
-        style={
-          styles.centerSection
-        }
+        style={{
+          ...styles.centerStrip,
+
+          backgroundImage:
+            profile.background_url
+              ? `url("${profile.background_url}")`
+              : "linear-gradient(145deg,#dfe7ef,#cbd5e1)",
+        }}
       >
-        {profile.background_url && (
-          <div
-            style={{
-              ...styles.centerBackground,
-
-              backgroundImage:
-                `url("${profile.background_url}")`,
-            }}
-          />
-        )}
-
         <div
           style={
-            styles.centerOverlay
+            styles.centerShade
           }
         />
 
-        {/* MENU */}
+        {/* TOP RIGHT */}
 
         <div
           style={
-            styles.topMenu
+            styles.topRight
+          }
+          onClick={(
+            event
+          ) =>
+            event.stopPropagation()
           }
         >
-          <div
+          <button
+            type="button"
+            aria-label="Menu"
             style={
-              styles.menuWrapper
+              styles.menuButton
+            }
+            onClick={() =>
+              setMenuOpen(
+                (value) =>
+                  !value
+              )
             }
           >
-            <button
-              type="button"
+            <FaEllipsisVertical />
+          </button>
+
+          {menuOpen && (
+            <div
               style={
-                styles.menuButton
-              }
-              onClick={() =>
-                setMenuOpen(
-                  (value) =>
-                    !value
-                )
+                styles.menu
               }
             >
-              <FaEllipsisVertical />
-            </button>
+              <button
+                type="button"
+                style={
+                  styles.menuItem
+                }
+                onClick={
+                  openSettings
+                }
+              >
+                <FaGear />
 
-            {menuOpen && (
-              <>
-                <button
-                  type="button"
-                  aria-label="Close"
-                  style={
-                    styles.menuBackdrop
-                  }
-                  onClick={() =>
-                    setMenuOpen(false)
-                  }
-                />
+                <span>
+                  {t.settings}
+                </span>
+              </button>
 
-                <div
-                  style={
-                    styles.menu
-                  }
-                >
-                  <button
-                    type="button"
-                    style={
-                      styles.menuItem
-                    }
-                    onClick={
-                      openSettings
-                    }
-                  >
-                    <FaGear />
+              <button
+                type="button"
+                style={
+                  styles.menuItem
+                }
+                onClick={
+                  openQr
+                }
+              >
+                <FaQrcode />
 
-                    <span>
-                      {t.settings}
-                    </span>
-                  </button>
-
-                  <div
-                    style={
-                      styles.menuDivider
-                    }
-                  />
-
-                  <button
-                    type="button"
-                    style={
-                      styles.menuItem
-                    }
-                    onClick={() => {
-                      setMenuOpen(false);
-                      setModal("qr");
-                    }}
-                  >
-                    <FaQrcode />
-
-                    <span>
-                      {t.qr}
-                    </span>
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
+                <span>
+                  {t.qr}
+                </span>
+              </button>
+            </div>
+          )}
         </div>
 
-        {/* MAIN CARD */}
+        {/* CARD */}
 
         <div
           style={{
-            ...styles.content,
+            ...styles.cardWrap,
 
-            filter:
-              modal
-                ? "blur(5px)"
-                : "none",
-
-            transform:
-              modal
-                ? "scale(.985)"
-                : "scale(1)",
+            ...(cardLedEnabled
+              ? {
+                  boxShadow: `
+                    0 0 10px ${cardLedColor},
+                    0 0 24px ${cardLedColor},
+                    0 0 45px ${cardLedColor}
+                  `,
+                }
+              : {}),
           }}
         >
           <div
-            style={{
-              ...styles.glassPanel,
-              ...cardLedStyle,
-            }}
+            style={
+              styles.glassPanel
+            }
           >
+            {/* AVATAR */}
+
             <div
               style={
                 styles.avatarOuter
@@ -2029,6 +2366,13 @@ export default function MyCardPage() {
                   alt={
                     profile.full_name ||
                     "Profile"
+                  }
+                  draggable={false}
+                  onContextMenu={(event) =>
+                    event.preventDefault()
+                  }
+                  onDragStart={(event) =>
+                    event.preventDefault()
                   }
                   style={
                     styles.avatarImage
@@ -2045,128 +2389,128 @@ export default function MyCardPage() {
               )}
             </div>
 
-            {profileEmpty ? (
+            {/* NAME */}
+
+            {!!profile.full_name && (
+              <h1
+                style={{
+                  ...styles.name,
+
+                  fontFamily:
+                    selectedTextStyle.fontFamily,
+
+                  fontWeight:
+                    selectedTextStyle.fontWeight,
+
+                  letterSpacing:
+                    selectedTextStyle.letterSpacing,
+                }}
+              >
+                {
+                  profile.full_name
+                }
+              </h1>
+            )}
+
+            {/* BIO */}
+
+            {!!profile.bio && (
+              <p
+                style={{
+                  ...styles.bio,
+
+                  fontFamily:
+                    selectedTextStyle.fontFamily,
+
+                  fontWeight:
+                    Math.min(
+                      selectedTextStyle.fontWeight,
+                      700
+                    ),
+
+                  letterSpacing:
+                    selectedTextStyle.letterSpacing,
+                }}
+              >
+                {profile.bio}
+              </p>
+            )}
+
+            {/* ONE EMPTY MESSAGE ONLY */}
+
+            {profileEmpty && (
               <button
                 type="button"
                 style={
                   styles.singleEmpty
                 }
                 onClick={
-                  showEmpty
+                  openSettings
                 }
               >
                 {t.empty}
               </button>
-            ) : (
-              <>
-                {profile.full_name
-                  ?.trim() && (
-                  <h1
-                    style={{
-                      ...styles.name,
+            )}
 
-                      fontFamily:
-                        selectedTextStyle.fontFamily,
+            {/* LINKS */}
 
-                      fontWeight:
-                        selectedTextStyle.fontWeight,
+            {links.length >
+              0 && (
+              <div
+                style={
+                  styles.linksGrid
+                }
+              >
+                {links.map(
+                  (link) => (
+                    <button
+                      type="button"
+                      key={
+                        link.id
+                      }
+                      style={
+                        styles.linkButton
+                      }
+                      onClick={() =>
+                        openLink(
+                          link
+                        )
+                      }
+                    >
+                      <span
+                        style={{
+                          ...styles.iconBox,
 
-                      letterSpacing:
-                        selectedTextStyle.letterSpacing,
-                    }}
-                  >
-                    {
-                      profile.full_name
-                    }
-                  </h1>
-                )}
-
-                {profile.bio
-                  ?.trim() && (
-                  <p
-                    style={{
-                      ...styles.bio,
-
-                      fontFamily:
-                        selectedTextStyle.fontFamily,
-                    }}
-                  >
-                    {profile.bio}
-                  </p>
-                )}
-
-                {links.length >
-                  0 && (
-                  <div
-                    style={
-                      styles.linksGrid
-                    }
-                  >
-                    {links.map(
-                      (
-                        link,
-                        index
-                      ) => (
-                        <button
-                          key={
-                            link.id ||
-                            `${link.icon}-${index}`
+                          ...getIconColor(
+                            link.icon
+                          ),
+                        }}
+                      >
+                        <SocialIcon
+                          icon={
+                            link.icon
                           }
-                          type="button"
-                          style={
-                            styles.linkButton
-                          }
-                          onClick={() =>
-                            openLink(
-                              link
-                            )
-                          }
-                        >
-                          <span
-                            style={{
-                              ...styles.iconBox,
+                        />
+                      </span>
 
-                              ...getIconColor(
-                                link.icon
-                              ),
-                            }}
-                          >
-                            <SocialIcon
-                              icon={
-                                link.icon
-                              }
-                            />
-                          </span>
-
-                          <span
-                            style={
-                              styles.linkLabel
-                            }
-                          >
-                            {link.label ||
-                              SERVICES.find(
-                                (
-                                  item
-                                ) =>
-                                  item.value ===
-                                  link.icon
-                              )
-                                ?.label ||
-                              ""}
-                          </span>
-                        </button>
-                      )
-                    )}
-                  </div>
+                      <span
+                        style={
+                          styles.linkLabel
+                        }
+                      >
+                        {
+                          link.label
+                        }
+                      </span>
+                    </button>
+                  )
                 )}
-              </>
+              </div>
             )}
           </div>
         </div>
 
-        {/* =============================================
-            SETTINGS
-        ============================================= */}
+        {/* SETTINGS */}
 
         {modal ===
           "settings" && (
@@ -2205,11 +2549,12 @@ export default function MyCardPage() {
                 label={
                   t.design
                 }
-                onClick={() =>
+                onClick={() => {
+                  setTextStyleSearch("");
                   setModal(
                     "design"
-                  )
-                }
+                  );
+                }}
               />
 
               <SettingsButton
@@ -2231,13 +2576,13 @@ export default function MyCardPage() {
               />
 
               <SettingsButton
-                danger
                 icon={
                   <FaTrash />
                 }
                 label={
                   t.deleteProfile
                 }
+                danger
                 onClick={() =>
                   setModal(
                     "delete"
@@ -2248,11 +2593,10 @@ export default function MyCardPage() {
           </ModalShell>
         )}
 
-        {/* =============================================
-            EDIT
-        ============================================= */}
+        {/* EDIT */}
 
-        {modal === "edit" && (
+        {modal ===
+          "edit" && (
           <ModalShell
             title={
               t.edit
@@ -2327,8 +2671,6 @@ export default function MyCardPage() {
                 {t.links}
               </div>
 
-              {/* LINKS FIRST */}
-
               {editLinks.map(
                 (
                   link,
@@ -2340,9 +2682,7 @@ export default function MyCardPage() {
 
                   const service =
                     SERVICES.find(
-                      (
-                        item
-                      ) =>
+                      (item) =>
                         item.value ===
                         link.icon
                     ) ||
@@ -2446,9 +2786,7 @@ export default function MyCardPage() {
                             }
                           >
                             {SERVICES.map(
-                              (
-                                item
-                              ) => (
+                              (item) => (
                                 <option
                                   key={
                                     item.value
@@ -2543,8 +2881,6 @@ export default function MyCardPage() {
                 }
               )}
 
-              {/* ADD BUTTON ALWAYS AFTER LAST LINK */}
-
               <button
                 type="button"
                 style={
@@ -2584,9 +2920,7 @@ export default function MyCardPage() {
           </ModalShell>
         )}
 
-        {/* =============================================
-            DESIGN
-        ============================================= */}
+        {/* DESIGN */}
 
         {modal ===
           "design" && (
@@ -2749,78 +3083,109 @@ export default function MyCardPage() {
 
                 <div
                   style={
-                    styles.textStyleGrid
+                    styles.textStyleSearch
                   }
                 >
-                  {TEXT_STYLES.map(
-                    (item) => {
-                      const active =
-                        previewTextStyle ===
-                        item.id;
+                  <FaMagnifyingGlass />
 
-                      const label =
-                        t[
-                          item.id
-                        ] ||
-                        item.id;
-
-                      return (
-                        <button
-                          type="button"
-                          key={
-                            item.id
-                          }
-                          style={{
-                            ...styles.textStyleButton,
-
-                            ...(active
-                              ? styles.textStyleButtonActive
-                              : {}),
-                          }}
-                          onClick={() =>
-                            setPreviewTextStyle(
-                              item.id
-                            )
-                          }
-                        >
-                          <span
-                            style={{
-                              fontFamily:
-                                item.fontFamily,
-
-                              fontWeight:
-                                item.fontWeight,
-
-                              letterSpacing:
-                                item.letterSpacing,
-
-                              fontSize:
-                                "18px",
-                            }}
-                          >
-                            Aa
-                          </span>
-
-                          <small>
-                            {
-                              label
-                            }
-                          </small>
-
-                          {active && (
-                            <span
-                              style={
-                                styles.textStyleCheck
-                              }
-                            >
-                              <FaCheck />
-                            </span>
-                          )}
-                        </button>
-                      );
+                  <input
+                    value={
+                      textStyleSearch
                     }
-                  )}
+                    onChange={(event) =>
+                      setTextStyleSearch(
+                        event.target.value
+                      )
+                    }
+                    placeholder={
+                      t.searchTextStyle ||
+                      "Search text style..."
+                    }
+                    style={
+                      styles.textStyleSearchInput
+                    }
+                  />
                 </div>
+
+                {filteredTextStyles.length > 0 ? (
+                  <div
+                    style={
+                      styles.textStyleGrid
+                    }
+                  >
+                    {filteredTextStyles.map(
+                      (item) => {
+                        const active =
+                          previewTextStyle ===
+                          item.id;
+
+                        return (
+                          <button
+                            type="button"
+                            key={
+                              item.id
+                            }
+                            style={{
+                              ...styles.textStyleButton,
+
+                              ...(active
+                                ? styles.textStyleButtonActive
+                                : {}),
+                            }}
+                            onClick={() =>
+                              setPreviewTextStyle(
+                                item.id
+                              )
+                            }
+                          >
+                            <span
+                              style={{
+                                fontFamily:
+                                  item.fontFamily,
+
+                                fontWeight:
+                                  item.fontWeight,
+
+                                letterSpacing:
+                                  item.letterSpacing,
+
+                                fontSize:
+                                  "19px",
+                              }}
+                            >
+                              Aa
+                            </span>
+
+                            <small>
+                              {
+                                item.name
+                              }
+                            </small>
+
+                            {active && (
+                              <span
+                                style={
+                                  styles.textStyleCheck
+                                }
+                              >
+                                <FaCheck />
+                              </span>
+                            )}
+                          </button>
+                        );
+                      }
+                    )}
+                  </div>
+                ) : (
+                  <div
+                    style={
+                      styles.noTextStyle
+                    }
+                  >
+                    {t.noTextStyle ||
+                      "No text style found"}
+                  </div>
+                )}
               </div>
 
               <LedEditor
@@ -2896,9 +3261,7 @@ export default function MyCardPage() {
           </ModalShell>
         )}
 
-        {/* =============================================
-            LANGUAGE
-        ============================================= */}
+        {/* LANGUAGE */}
 
         {modal ===
           "language" && (
@@ -3035,9 +3398,7 @@ export default function MyCardPage() {
           </ModalShell>
         )}
 
-        {/* =============================================
-            DELETE
-        ============================================= */}
+        {/* DELETE */}
 
         {modal ===
           "delete" && (
@@ -3112,9 +3473,7 @@ export default function MyCardPage() {
           </ModalShell>
         )}
 
-        {/* =============================================
-            QR
-        ============================================= */}
+        {/* QR */}
 
         {modal === "qr" && (
           <ModalShell
@@ -3454,16 +3813,10 @@ function LedEditor({
                     background:
                       item,
 
-                    outline:
-                      color.toUpperCase() ===
-                      item.toUpperCase()
-                        ? `3px solid ${color}`
-                        : "2px solid rgba(255,255,255,.18)",
-
                     boxShadow:
-                      color.toUpperCase() ===
-                      item.toUpperCase()
-                        ? `0 0 13px ${color}`
+                      color ===
+                      item
+                        ? `0 0 0 3px rgba(255,255,255,.90),0 0 16px ${item}`
                         : "none",
                   }}
                   onClick={() =>
@@ -3479,9 +3832,16 @@ function LedEditor({
               title={
                 customTitle
               }
-              style={
-                styles.customColorCircle
-              }
+              style={{
+                ...styles.customColorCircle,
+
+                boxShadow:
+                  !LED_COLORS.includes(
+                    color
+                  )
+                    ? `0 0 0 3px rgba(255,255,255,.90),0 0 16px ${color}`
+                    : "none",
+              }}
             >
               <input
                 type="color"
@@ -3516,14 +3876,9 @@ function SocialIcon({
   small = false,
 }) {
   const size =
-    small ? 20 : 28;
+    small ? 17 : 25;
 
-  const name =
-    String(
-      icon || ""
-    ).toLowerCase();
-
-  switch (name) {
+  switch (icon) {
     case "telegram":
       return (
         <SiTelegram
@@ -3597,55 +3952,35 @@ function SocialIcon({
     case "phone":
       return (
         <FaPhone
-          size={
-            small
-              ? 18
-              : 25
-          }
+          size={size}
         />
       );
 
     case "email":
       return (
         <FaEnvelope
-          size={
-            small
-              ? 19
-              : 26
-          }
-        />
-      );
-
-    case "website":
-      return (
-        <FaGlobe
-          size={
-            small
-              ? 19
-              : 27
-          }
+          size={size}
         />
       );
 
     case "location":
       return (
         <FaLocationDot
-          size={
-            small
-              ? 19
-              : 27
-          }
+          size={size}
+        />
+      );
+
+    case "website":
+      return (
+        <FaGlobe
+          size={size}
         />
       );
 
     default:
       return (
         <FaLink
-          size={
-            small
-              ? 19
-              : 26
-          }
+          size={size}
         />
       );
   }
@@ -3655,12 +3990,10 @@ function SocialIcon({
    ICON COLORS
 ========================================================= */
 
-function getIconColor(icon) {
-  switch (
-    String(
-      icon || ""
-    ).toLowerCase()
-  ) {
+function getIconColor(
+  icon
+) {
+  switch (icon) {
     case "telegram":
       return {
         color:
@@ -3676,7 +4009,7 @@ function getIconColor(icon) {
     case "instagram":
       return {
         color:
-          "#E4405F",
+          "#E1306C",
       };
 
     case "youtube":
@@ -3703,12 +4036,6 @@ function getIconColor(icon) {
           "#0A66C2",
       };
 
-    case "x":
-      return {
-        color:
-          "#111111",
-      };
-
     case "vk":
       return {
         color:
@@ -3721,34 +4048,10 @@ function getIconColor(icon) {
           "#EE8208",
       };
 
-    case "phone":
-      return {
-        color:
-          "#16A34A",
-      };
-
-    case "email":
-      return {
-        color:
-          "#EA4335",
-      };
-
-    case "website":
-      return {
-        color:
-          "#2563EB",
-      };
-
-    case "location":
-      return {
-        color:
-          "#EF4444",
-      };
-
     default:
       return {
         color:
-          "#475467",
+          "#111827",
       };
   }
 }
@@ -3758,6 +4061,16 @@ function getIconColor(icon) {
 ========================================================= */
 
 const styles = {
+  blankPage: {
+    position:
+      "fixed",
+
+    inset: 0,
+
+    background:
+      "#dfe7ef",
+  },
+
   page: {
     position:
       "fixed",
@@ -3773,12 +4086,6 @@ const styles = {
     overflow:
       "hidden",
 
-    display:
-      "flex",
-
-    justifyContent:
-      "center",
-
     background:
       "#dfe7ef",
 
@@ -3786,83 +4093,59 @@ const styles = {
       '-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif',
   },
 
-  blankPage: {
+  backgroundBlur: {
     position:
-      "fixed",
-
-    inset: 0,
-
-    width:
-      "100%",
-
-    height:
-      "100dvh",
-
-    background:
-      "#dfe7ef",
-  },
-
-  outerBackground: {
-    position:
-      "fixed",
+      "absolute",
 
     inset:
-      "-30px",
-
-    backgroundSize:
-      "cover",
+      "-35px",
 
     backgroundPosition:
       "center",
 
+    backgroundSize:
+      "cover",
+
     filter:
-      "blur(18px)",
+      "blur(28px)",
 
     transform:
-      "scale(1.12)",
+      "scale(1.08)",
 
     opacity:
-      0.8,
+      0.92,
   },
 
-  outerOverlay: {
+  backgroundShade: {
     position:
-      "fixed",
+      "absolute",
 
     inset: 0,
 
     background:
-      "linear-gradient(145deg,rgba(4,10,20,.16),rgba(255,255,255,.06))",
+      "rgba(17,24,39,.15)",
   },
 
   screenLed: {
     position:
       "fixed",
 
-    zIndex:
-      900,
+    zIndex: 30,
 
-    inset:
-      "2px",
-
-    border:
-      "3px solid",
-
-    borderRadius:
-      "20px",
+    inset: 0,
 
     pointerEvents:
       "none",
 
-    boxSizing:
-      "border-box",
+    borderRadius:
+      "1px",
   },
 
-  centerSection: {
+  centerStrip: {
     position:
       "relative",
 
-    zIndex: 1,
+    zIndex: 2,
 
     width:
       "100%",
@@ -3873,72 +4156,46 @@ const styles = {
     height:
       "100dvh",
 
-    minHeight: 0,
+    margin:
+      "0 auto",
 
     overflow:
       "hidden",
 
-    background:
-      "#eef3f7",
-  },
-
-  centerBackground: {
-    position:
-      "absolute",
-
-    inset: 0,
-
-    zIndex: 0,
+    backgroundPosition:
+      "center",
 
     backgroundSize:
       "cover",
 
-    backgroundPosition:
-      "center",
+    boxShadow:
+      "0 0 70px rgba(0,0,0,.20)",
   },
 
-  centerOverlay: {
+  centerShade: {
     position:
       "absolute",
 
     inset: 0,
 
-    zIndex: 1,
-
     background:
-      "linear-gradient(to bottom,rgba(255,255,255,.02),rgba(20,30,45,.09))",
+      "linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,.03) 40%,rgba(0,0,0,.14))",
+
+    pointerEvents:
+      "none",
   },
 
-  topMenu: {
+  topRight: {
     position:
       "absolute",
 
     zIndex: 50,
 
-    top: 0,
+    top:
+      "max(14px,env(safe-area-inset-top))",
 
-    left: 0,
-
-    right: 0,
-
-    display:
-      "flex",
-
-    justifyContent:
-      "flex-end",
-
-    padding:
-      "max(14px,env(safe-area-inset-top)) 15px 0",
-
-    boxSizing:
-      "border-box",
-  },
-
-  menuWrapper: {
-    position:
-      "relative",
-
-    zIndex: 60,
+    right:
+      "14px",
   },
 
   menuButton: {
@@ -3958,51 +4215,36 @@ const styles = {
       "center",
 
     border:
-      "1px solid rgba(255,255,255,.42)",
+      "1px solid rgba(255,255,255,.55)",
 
     borderRadius:
       "15px",
 
     background:
-      "rgba(20,27,38,.24)",
+      "rgba(255,255,255,.52)",
 
     color:
-      "#ffffff",
+      "#111827",
+
+    backdropFilter:
+      "blur(18px)",
+
+    WebkitBackdropFilter:
+      "blur(18px)",
+
+    boxShadow:
+      "0 8px 24px rgba(0,0,0,.12)",
 
     cursor:
       "pointer",
 
-    backdropFilter:
-      "blur(22px) saturate(150%)",
-
-    WebkitBackdropFilter:
-      "blur(22px) saturate(150%)",
-
-    boxShadow:
-      "0 10px 30px rgba(0,0,0,.14)",
-  },
-
-  menuBackdrop: {
-    position:
-      "fixed",
-
-    inset: 0,
-
-    zIndex: 55,
-
-    padding: 0,
-
-    border: 0,
-
-    background:
-      "transparent",
+    fontSize:
+      "18px",
   },
 
   menu: {
     position:
       "absolute",
-
-    zIndex: 70,
 
     top:
       "52px",
@@ -4010,31 +4252,31 @@ const styles = {
     right: 0,
 
     width:
-      "190px",
+      "175px",
+
+    overflow:
+      "hidden",
 
     padding:
-      "7px",
+      "6px",
 
     border:
-      "1px solid rgba(255,255,255,.35)",
+      "1px solid rgba(255,255,255,.45)",
 
     borderRadius:
       "18px",
 
     background:
-      "rgba(25,32,44,.56)",
-
-    color:
-      "#fff",
+      "rgba(255,255,255,.78)",
 
     backdropFilter:
-      "blur(26px) saturate(170%)",
+      "blur(22px)",
 
     WebkitBackdropFilter:
-      "blur(26px) saturate(170%)",
+      "blur(22px)",
 
     boxShadow:
-      "0 20px 60px rgba(0,0,0,.28)",
+      "0 16px 45px rgba(0,0,0,.18)",
   },
 
   menuItem: {
@@ -4042,7 +4284,7 @@ const styles = {
       "100%",
 
     minHeight:
-      "46px",
+      "45px",
 
     display:
       "flex",
@@ -4054,18 +4296,18 @@ const styles = {
       "10px",
 
     padding:
-      "0 11px",
+      "0 12px",
 
     border: 0,
 
     borderRadius:
-      "12px",
+      "13px",
 
     background:
       "transparent",
 
     color:
-      "#ffffff",
+      "#111827",
 
     fontSize:
       "14px",
@@ -4077,51 +4319,29 @@ const styles = {
       "pointer",
   },
 
-  menuDivider: {
-    height:
-      "1px",
-
-    margin:
-      "4px 7px",
-
-    background:
-      "rgba(255,255,255,.13)",
-  },
-
-  content: {
+  cardWrap: {
     position:
-      "relative",
+      "absolute",
 
-    zIndex: 3,
+    zIndex: 10,
 
-    width:
-      "100%",
+    left:
+      "18px",
 
-    height:
-      "100dvh",
+    right:
+      "18px",
 
-    minHeight: 0,
+    top:
+      "50%",
 
-    display:
-      "flex",
+    transform:
+      "translateY(-46%)",
 
-    alignItems:
-      "center",
-
-    justifyContent:
-      "center",
-
-    padding:
-      "82px 16px max(20px,env(safe-area-inset-bottom))",
-
-    boxSizing:
-      "border-box",
-
-    overflow:
-      "hidden",
+    borderRadius:
+      "32px",
 
     transition:
-      "filter .24s ease,transform .24s ease",
+      "box-shadow .25s ease",
   },
 
   glassPanel: {
@@ -4131,14 +4351,14 @@ const styles = {
     width:
       "100%",
 
-    maxHeight:
-      "calc(100dvh - 115px)",
-
     minHeight:
       "330px",
 
+    maxHeight:
+      "calc(100dvh - 115px)",
+
     padding:
-      "72px 18px 22px",
+      "72px 22px 24px",
 
     boxSizing:
       "border-box",
@@ -4150,27 +4370,29 @@ const styles = {
       "32px",
 
     background:
-      "rgba(255,255,255,.42)",
-
-    boxShadow:
-      "0 24px 70px rgba(0,0,0,.15)",
+      "rgba(255,255,255,.48)",
 
     backdropFilter:
-      "blur(24px) saturate(135%)",
+      "blur(25px) saturate(145%)",
 
     WebkitBackdropFilter:
-      "blur(24px) saturate(135%)",
+      "blur(25px) saturate(145%)",
+
+    boxShadow:
+      "0 25px 70px rgba(0,0,0,.18)",
 
     textAlign:
       "center",
 
     overflow:
-      "hidden",
+      "visible",
   },
 
   avatarOuter: {
     position:
       "absolute",
+
+    zIndex: 5,
 
     top:
       "-51px",
@@ -4182,10 +4404,10 @@ const styles = {
       "translateX(-50%)",
 
     width:
-      "104px",
+      "102px",
 
     height:
-      "104px",
+      "102px",
 
     padding:
       "4px",
@@ -4224,6 +4446,15 @@ const styles = {
 
     borderRadius:
       "50%",
+
+    userSelect:
+      "none",
+
+    WebkitUserSelect:
+      "none",
+
+    WebkitTouchCallout:
+      "none",
   },
 
   avatarPlaceholder: {
@@ -4436,8 +4667,6 @@ const styles = {
     fontWeight:
       700,
   },
-
-  /* MODAL */
 
   modalLayer: {
     position:
@@ -5182,8 +5411,6 @@ const styles = {
       "pointer",
   },
 
-  /* TEXT STYLE */
-
   textStyleBox: {
     padding:
       "14px",
@@ -5251,6 +5478,65 @@ const styles = {
       1.35,
   },
 
+  textStyleSearch: {
+    minHeight:
+      "48px",
+
+    display:
+      "flex",
+
+    alignItems:
+      "center",
+
+    gap:
+      "10px",
+
+    marginBottom:
+      "10px",
+
+    padding:
+      "0 13px",
+
+    border:
+      "1px solid rgba(255,255,255,.11)",
+
+    borderRadius:
+      "14px",
+
+    background:
+      "rgba(255,255,255,.08)",
+
+    color:
+      "rgba(255,255,255,.55)",
+  },
+
+  textStyleSearchInput: {
+    width:
+      "100%",
+
+    height:
+      "46px",
+
+    padding: 0,
+
+    border: 0,
+
+    outline:
+      "none",
+
+    background:
+      "transparent",
+
+    color:
+      "#ffffff",
+
+    fontSize:
+      "14px",
+
+    fontFamily:
+      "inherit",
+  },
+
   textStyleGrid: {
     display:
       "grid",
@@ -5260,6 +5546,32 @@ const styles = {
 
     gap:
       "8px",
+
+    maxHeight:
+      "320px",
+
+    overflowY:
+      "auto",
+
+    overscrollBehavior:
+      "contain",
+
+    paddingRight:
+      "2px",
+  },
+
+  noTextStyle: {
+    padding:
+      "24px 8px",
+
+    textAlign:
+      "center",
+
+    color:
+      "rgba(255,255,255,.55)",
+
+    fontSize:
+      "13px",
   },
 
   textStyleButton: {
@@ -5348,8 +5660,6 @@ const styles = {
     fontSize:
       "10px",
   },
-
-  /* LED */
 
   ledBox: {
     marginTop:
@@ -5519,8 +5829,6 @@ const styles = {
     cursor:
       "pointer",
   },
-
-  /* LANGUAGE */
 
   languageContainer: {
     display:
@@ -5712,8 +6020,6 @@ const styles = {
       "14px",
   },
 
-  /* DELETE */
-
   deleteWarning: {
     margin:
       "5px 2px 18px",
@@ -5785,8 +6091,6 @@ const styles = {
       "pointer",
   },
 
-  /* QR */
-
   qrContent: {
     display:
       "flex",
@@ -5855,8 +6159,6 @@ const styles = {
       "9px",
   },
 
-  /* NOTICE */
-
   notice: {
     position:
       "fixed",
@@ -5915,8 +6217,6 @@ const styles = {
     boxShadow:
       "0 15px 45px rgba(0,0,0,.30)",
   },
-
-  /* ERROR */
 
   errorPage: {
     position:

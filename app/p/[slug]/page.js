@@ -865,8 +865,8 @@ overflow: "hidden",
 
     minHeight: "100vh",
 
-    padding: "280px 20px 50px",
-
+    padding: "180px 20px 40px",
+    
     boxSizing: "border-box",
 
     transition:

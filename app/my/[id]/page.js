@@ -1078,7 +1078,9 @@ export default function MyCardPage() {
 
   const [bio, setBio] =
     useState("");
-
+  const [aboutText, setAboutText] =
+  useState("");
+  
   const [editLinks, setEditLinks] =
     useState([]);
 
@@ -1407,7 +1409,11 @@ export default function MyCardPage() {
         profileData?.bio ||
           ""
       );
-
+setAboutText(
+  profileData?.about_text ||
+    ""
+);
+      
       setScreenLedEnabled(
         Boolean(
           profileData
@@ -1526,6 +1532,11 @@ export default function MyCardPage() {
         ""
     );
 
+    setAboutText(
+  profile?.about_text ||
+    ""
+);
+    
     setEditLinks(
       links.map(
         (item) => ({
@@ -1733,6 +1744,9 @@ export default function MyCardPage() {
 
             bio:
               bio.trim(),
+
+            aboutText:
+  aboutText.trim(),
 
             links:
               cleanedLinks,
@@ -2661,6 +2675,28 @@ export default function MyCardPage() {
                 }
               />
 
+                <label
+  style={
+    styles.label
+  }
+>
+  About me
+</label>
+
+<textarea
+  value={aboutText}
+  onChange={(
+    event
+  ) =>
+    setAboutText(
+      event.target.value
+    )
+  }
+  style={
+    styles.textarea
+  }
+/>
+  
               <div
                 style={
                   styles.sectionTitle

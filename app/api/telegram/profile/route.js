@@ -921,6 +921,12 @@ async function saveEditAction(
       ? body.bio.trim()
       : "";
 
+  const aboutText =
+  typeof body?.aboutText ===
+  "string"
+    ? body.aboutText.trim()
+    : "";
+  
   const links =
     Array.isArray(
       body?.links
@@ -940,6 +946,8 @@ async function saveEditAction(
         fullName,
 
       bio,
+        about_text:
+    aboutText,
     })
     .eq(
       "id",

@@ -1080,10 +1080,211 @@ export default function MyCardPage() {
     useState("");
   const [aboutText, setAboutText] =
   useState("");
+
+  const [cardRotation, setCardRotation] =
+  useState(0);
+
+const cardRotationRef =
+  useRef(0);
+
+const dragStartXRef =
+  useRef(0);
+
+const dragStartRotationRef =
+  useRef(0);
+
+const lastPointerXRef =
+  useRef(0);
+
+const lastPointerTimeRef =
+  useRef(0);
+
+const velocityRef =
+  useRef(0);
+
+const draggingRef =
+  useRef(false);
+
+const animationRef =
+  useRef(null);
   
   const [editLinks, setEditLinks] =
     useState([]);
 
+  function updateCardRotation(value) {
+  cardRotationRef.current = value;
+  setCardRotation(value);
+}
+
+function handleCardPointerDown(event) {
+  draggingRef.current = true;
+
+  dragStartXRef.current =
+    event.clientX;
+
+  dragStartRotationRef.current =
+    cardRotationRef.current;
+
+  lastPointerXRef.current =
+    event.clientX;
+
+  lastPointerTimeRef.current =
+    performance.now();
+
+  velocityRef.current = 0;
+
+  if (animationRef.current) {
+    cancelAnimationFrame(
+      animationRef.current
+    );
+
+    animationRef.current = null;
+  }
+
+  try {
+    event.currentTarget.setPointerCapture(
+      event.pointerId
+    );
+  } catch {}
+}
+
+function handleCardPointerMove(event) {
+  if (!draggingRef.current) {
+    return;
+  }
+
+  const deltaX =
+    event.clientX -
+    dragStartXRef.current;
+
+  const nextRotation =
+    dragStartRotationRef.current +
+    deltaX * 0.7;
+
+  const now =
+    performance.now();
+
+  const deltaTime =
+    Math.max(
+      1,
+      now -
+        lastPointerTimeRef.current
+    );
+
+  velocityRef.current =
+    ((event.clientX -
+      lastPointerXRef.current) /
+      deltaTime) *
+    16 *
+    0.7;
+
+  lastPointerXRef.current =
+    event.clientX;
+
+  lastPointerTimeRef.current =
+    now;
+
+  updateCardRotation(
+    nextRotation
+  );
+}
+
+function handleCardPointerUp() {
+  if (!draggingRef.current) {
+    return;
+  }
+
+  draggingRef.current = false;
+
+  let rotation =
+    cardRotationRef.current;
+
+  let velocity =
+    velocityRef.current;
+
+  function animate() {
+    rotation += velocity;
+
+    velocity *= 0.94;
+
+    updateCardRotation(
+      rotation
+    );
+
+    if (
+      Math.abs(velocity) >
+      0.15
+    ) {
+      animationRef.current =
+        requestAnimationFrame(
+          animate
+        );
+
+      return;
+    }
+
+    const snapped =
+      Math.round(
+        rotation / 180
+      ) * 180;
+
+    const start =
+      rotation;
+
+    const distance =
+      snapped - start;
+
+    const startedAt =
+      performance.now();
+
+    const duration = 220;
+
+    function snapFrame(now) {
+      const progress =
+        Math.min(
+          1,
+          (now - startedAt) /
+            duration
+        );
+
+      const eased =
+        1 -
+        Math.pow(
+          1 - progress,
+          3
+        );
+
+      updateCardRotation(
+        start +
+          distance * eased
+      );
+
+      if (progress < 1) {
+        animationRef.current =
+          requestAnimationFrame(
+            snapFrame
+          );
+      } else {
+        updateCardRotation(
+          snapped
+        );
+
+        animationRef.current =
+          null;
+      }
+    }
+
+    animationRef.current =
+      requestAnimationFrame(
+        snapFrame
+      );
+  }
+
+  animationRef.current =
+    requestAnimationFrame(
+      animate
+    );
+}
   const [
     openLinkIndex,
     setOpenLinkIndex,
@@ -2365,10 +2566,37 @@ setAboutText(
           }}
         >
           <div
-            style={
-              styles.glassPanel
-            }
-          >
+  style={{
+    ...styles.glassPanel,
+
+    transform:
+      `perspective(1200px) rotateY(${cardRotation}deg)`,
+
+    transformStyle:
+      "preserve-3d",
+
+    touchAction:
+      "pan-y",
+
+    cursor:
+      "grab",
+
+    userSelect:
+      "none",
+  }}
+  onPointerDown={
+    handleCardPointerDown
+  }
+  onPointerMove={
+    handleCardPointerMove
+  }
+  onPointerUp={
+    handleCardPointerUp
+  }
+  onPointerCancel={
+    handleCardPointerUp
+  }
+>
             {/* AVATAR */}
 
             <div

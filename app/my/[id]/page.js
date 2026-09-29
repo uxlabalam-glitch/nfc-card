@@ -2568,7 +2568,8 @@ setAboutText(
           <div
   style={{
     ...styles.glassPanel,
-
+    ...cardLedStyle,
+    
     transform:
       `perspective(1200px) rotateY(${cardRotation}deg)`,
 
@@ -2597,6 +2598,13 @@ setAboutText(
     handleCardPointerUp
   }
 >
+      <div
+    style={{
+      backfaceVisibility: "hidden",
+      WebkitBackfaceVisibility: "hidden",
+      transform: "translateZ(1px)",
+    }}
+  >
             {/* AVATAR */}
 
             <div
@@ -2749,6 +2757,7 @@ setAboutText(
             )}
           </div>
         </div>
+</div>
 
         {/* SETTINGS */}
 

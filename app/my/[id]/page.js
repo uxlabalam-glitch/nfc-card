@@ -2674,28 +2674,6 @@ setAboutText(
                   styles.textarea
                 }
               />
-
-                <label
-  style={
-    styles.label
-  }
->
-  About me
-</label>
-
-<textarea
-  value={aboutText}
-  onChange={(
-    event
-  ) =>
-    setAboutText(
-      event.target.value
-    )
-  }
-  style={
-    styles.textarea
-  }
-/>
   
               <div
                 style={

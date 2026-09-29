@@ -2568,7 +2568,7 @@ setAboutText(
           <div
   style={{
     ...styles.glassPanel,
-    ...cardLedStyle,
+    
     
     transform:
       `perspective(1200px) rotateY(${cardRotation}deg)`,

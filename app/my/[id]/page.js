@@ -1259,7 +1259,7 @@ function handleCardPointerMove(event) {
 
   const nextRotation =
     dragStartRotationRef.current +
-  deltaX * 0.32;
+  deltaX * 0.55;
 
   const now =
     performance.now();
@@ -1275,7 +1275,7 @@ function handleCardPointerMove(event) {
     ((event.clientX -
       lastPointerXRef.current) /
       deltaTime) *
-16 * 0.32;
+16 * 0.55;
 
   lastPointerXRef.current =
     event.clientX;
@@ -1304,7 +1304,7 @@ function handleCardPointerUp() {
   function animate() {
     rotation += velocity;
 
- velocity *= 0.88;
+ velocity *= 0.90;
 
     updateCardRotation(
       rotation
@@ -2888,12 +2888,12 @@ setAboutText(
               flexDirection: "column",
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "flex-start",
-                alignItems: "center",
-              }}
+           <div
+  style={{
+    position: "relative",
+    width: "100%",
+    minHeight: "32px",
+  }}
             >
               <div
                 style={{
@@ -2913,6 +2913,9 @@ setAboutText(
     setModal("about")
   }
   style={{
+    position: "absolute",
+top: "0",
+right: "0",
     border: "none",
     background: "rgba(255,255,255,.45)",
     borderRadius: "10px",
@@ -2950,8 +2953,8 @@ setAboutText(
     aria-hidden="true"
     style={{
       position: "absolute",
-      left: "-6px",
-      bottom: "54px",
+      right: "-6px",
+bottom: "54px",
       zIndex: 29,
       pointerEvents: "none",
     }}
@@ -2980,32 +2983,77 @@ setAboutText(
       `}
     </style>
 
-    <svg
-      width="42"
-      height="92"
-      viewBox="0 0 42 92"
-      style={{
-        animation:
-          "nfcqrCardTutorialArrow .7s ease-in-out 2",
-      }}
+   <svg
+  width="62"
+  height="62"
+  viewBox="0 0 62 62"
+  style={{
+    animation:
+      "nfcqrCardTutorialArrow .7s ease-in-out 2",
+
+    filter:
+      "drop-shadow(0 3px 3px rgba(0,0,0,.35))",
+  }}
+>
+  <defs>
+    <linearGradient
+      id="tutorialArrowMetal"
+      x1="0"
+      y1="0"
+      x2="1"
+      y2="1"
     >
-      <path
-        d="M10 78 C10 42 14 24 31 14"
-        fill="none"
-        stroke="rgba(17,24,39,.72)"
-        strokeWidth="2"
-        strokeLinecap="round"
+      <stop
+        offset="0%"
+        stopColor="#ffffff"
       />
 
-      <path
-        d="M24 14 L31 14 L29 21"
-        fill="none"
-        stroke="rgba(17,24,39,.72)"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
+      <stop
+        offset="28%"
+        stopColor="#8f99a6"
       />
-    </svg>
+
+      <stop
+        offset="52%"
+        stopColor="#f8fafc"
+      />
+
+      <stop
+        offset="75%"
+        stopColor="#6b7280"
+      />
+
+      <stop
+        offset="100%"
+        stopColor="#e5e7eb"
+      />
+    </linearGradient>
+  </defs>
+
+  <path
+    d="M51 45 C47 23 26 16 11 30"
+    fill="none"
+    stroke="url(#tutorialArrowMetal)"
+    strokeWidth="5"
+    strokeLinecap="round"
+  />
+
+  <path
+    d="M11 30 L20 21"
+    fill="none"
+    stroke="url(#tutorialArrowMetal)"
+    strokeWidth="5"
+    strokeLinecap="round"
+  />
+
+  <path
+    d="M11 30 L21 36"
+    fill="none"
+    stroke="url(#tutorialArrowMetal)"
+    strokeWidth="5"
+    strokeLinecap="round"
+  />
+</svg>
   </div>
 )}
   
@@ -3021,8 +3069,8 @@ setAboutText(
           }
           style={{
             position: "absolute",
-            left: "12px",
-            bottom: "12px",
+           right: "12px",
+bottom: "12px",
 
             zIndex: 30,
 
@@ -3058,11 +3106,168 @@ setAboutText(
             cursor: "pointer",
           }}
         >
-          {!cardTutorialSeen
-            ? "↻"
-            : cardUnlocked
-              ? "🔓"
-              : "🔒"}
+          {!cardTutorialSeen ? (
+  <svg
+    width="27"
+    height="27"
+    viewBox="0 0 64 64"
+    style={{
+      filter:
+        "drop-shadow(0 3px 3px rgba(0,0,0,.35))",
+    }}
+  >
+    <defs>
+      <linearGradient
+        id="mainArrowMetal"
+        x1="0"
+        y1="0"
+        x2="1"
+        y2="1"
+      >
+        <stop offset="0%" stopColor="#ffffff" />
+        <stop offset="32%" stopColor="#8b95a1" />
+        <stop offset="55%" stopColor="#f8fafc" />
+        <stop offset="78%" stopColor="#5f6874" />
+        <stop offset="100%" stopColor="#d9dee5" />
+      </linearGradient>
+    </defs>
+
+    <path
+      d="M7 24 H38 V13 L57 32 L38 51 V40 H7 Z"
+      fill="url(#mainArrowMetal)"
+      stroke="#4b5563"
+      strokeWidth="2"
+      strokeLinejoin="round"
+    />
+  </svg>
+) : cardUnlocked ? (
+  <svg
+    width="27"
+    height="27"
+    viewBox="0 0 64 64"
+    style={{
+      filter:
+        "drop-shadow(0 3px 3px rgba(0,0,0,.35))",
+    }}
+  >
+    <defs>
+      <linearGradient
+        id="openLockMetal"
+        x1="0"
+        y1="0"
+        x2="1"
+        y2="1"
+      >
+        <stop offset="0%" stopColor="#ffffff" />
+        <stop offset="30%" stopColor="#8f98a3" />
+        <stop offset="55%" stopColor="#f8fafc" />
+        <stop offset="80%" stopColor="#59616c" />
+        <stop offset="100%" stopColor="#d7dce2" />
+      </linearGradient>
+    </defs>
+
+    <path
+      d="M22 28 V20
+         C22 10 29 6 37 7
+         C44 8 48 13 48 20"
+      fill="none"
+      stroke="url(#openLockMetal)"
+      strokeWidth="7"
+      strokeLinecap="round"
+    />
+
+    <rect
+      x="14"
+      y="27"
+      width="36"
+      height="28"
+      rx="7"
+      fill="url(#openLockMetal)"
+      stroke="#4b5563"
+      strokeWidth="2"
+    />
+
+    <circle
+      cx="32"
+      cy="40"
+      r="4"
+      fill="#374151"
+    />
+
+    <rect
+      x="30"
+      y="40"
+      width="4"
+      height="8"
+      rx="2"
+      fill="#374151"
+    />
+  </svg>
+) : (
+  <svg
+    width="27"
+    height="27"
+    viewBox="0 0 64 64"
+    style={{
+      filter:
+        "drop-shadow(0 3px 3px rgba(0,0,0,.35))",
+    }}
+  >
+    <defs>
+      <linearGradient
+        id="closedLockMetal"
+        x1="0"
+        y1="0"
+        x2="1"
+        y2="1"
+      >
+        <stop offset="0%" stopColor="#ffffff" />
+        <stop offset="30%" stopColor="#8f98a3" />
+        <stop offset="55%" stopColor="#f8fafc" />
+        <stop offset="80%" stopColor="#59616c" />
+        <stop offset="100%" stopColor="#d7dce2" />
+      </linearGradient>
+    </defs>
+
+    <path
+      d="M20 28 V20
+         C20 10 25 6 32 6
+         C39 6 44 10 44 20
+         V28"
+      fill="none"
+      stroke="url(#closedLockMetal)"
+      strokeWidth="7"
+      strokeLinecap="round"
+    />
+
+    <rect
+      x="14"
+      y="27"
+      width="36"
+      height="28"
+      rx="7"
+      fill="url(#closedLockMetal)"
+      stroke="#4b5563"
+      strokeWidth="2"
+    />
+
+    <circle
+      cx="32"
+      cy="40"
+      r="4"
+      fill="#374151"
+    />
+
+    <rect
+      x="30"
+      y="40"
+      width="4"
+      height="8"
+      rx="2"
+      fill="#374151"
+    />
+  </svg>
+)}
 
         </button>
 

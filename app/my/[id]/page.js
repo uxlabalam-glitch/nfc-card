@@ -1084,6 +1084,19 @@ export default function MyCardPage() {
   const [cardRotation, setCardRotation] =
   useState(0);
 
+  const [cardUnlocked, setCardUnlocked] =
+  useState(false);
+
+const [
+  cardTutorialSeen,
+  setCardTutorialSeen,
+] = useState(false);
+
+const [
+  cardTutorialPlaying,
+  setCardTutorialPlaying,
+] = useState(false);
+  
 const cardRotationRef =
   useRef(0);
 
@@ -1107,6 +1120,90 @@ const draggingRef =
 
 const animationRef =
   useRef(null);
+
+  useEffect(() => {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  const tutorialSeen =
+    localStorage.getItem(
+      "nfcqr_owner_card_tutorial_seen"
+    ) === "1";
+
+  const unlocked =
+    localStorage.getItem(
+      "nfcqr_owner_card_unlocked"
+    ) === "1";
+
+  setCardTutorialSeen(
+    tutorialSeen
+  );
+
+  setCardUnlocked(
+    tutorialSeen
+      ? unlocked
+      : false
+  );
+}, []);
+
+function startCardTutorial(
+  event
+) {
+  event?.stopPropagation?.();
+
+  setCardTutorialSeen(true);
+  setCardTutorialPlaying(true);
+  setCardUnlocked(true);
+
+  if (
+    typeof window !==
+    "undefined"
+  ) {
+    localStorage.setItem(
+      "nfcqr_owner_card_tutorial_seen",
+      "1"
+    );
+
+    localStorage.setItem(
+      "nfcqr_owner_card_unlocked",
+      "1"
+    );
+  }
+
+  window.setTimeout(() => {
+    setCardTutorialPlaying(
+      false
+    );
+  }, 1400);
+}
+
+function toggleCardLock(
+  event
+) {
+  event?.stopPropagation?.();
+
+  setCardUnlocked(
+    (current) => {
+      const next =
+        !current;
+
+      if (
+        typeof window !==
+        "undefined"
+      ) {
+        localStorage.setItem(
+          "nfcqr_owner_card_unlocked",
+          next
+            ? "1"
+            : "0"
+        );
+      }
+
+      return next;
+    }
+  );
+}
   
   const [editLinks, setEditLinks] =
     useState([]);
@@ -1117,6 +1214,9 @@ const animationRef =
 }
 
 function handleCardPointerDown(event) {
+  if (!cardUnlocked) {
+  return;
+}
   draggingRef.current = true;
 
   dragStartXRef.current =
@@ -1159,7 +1259,7 @@ function handleCardPointerMove(event) {
 
   const nextRotation =
     dragStartRotationRef.current +
-    deltaX * 0.7;
+  deltaX * 0.32;
 
   const now =
     performance.now();
@@ -1175,8 +1275,7 @@ function handleCardPointerMove(event) {
     ((event.clientX -
       lastPointerXRef.current) /
       deltaTime) *
-    16 *
-    0.7;
+  * 16 * 0.32;
 
   lastPointerXRef.current =
     event.clientX;
@@ -1205,7 +1304,7 @@ function handleCardPointerUp() {
   function animate() {
     rotation += velocity;
 
-    velocity *= 0.94;
+ velocity *= 0.88;
 
     updateCardRotation(
       rotation
@@ -2805,6 +2904,27 @@ setAboutText(
               >
                 About me
               </div>
+                  <button
+  type="button"
+  onPointerDown={(event) =>
+    event.stopPropagation()
+  }
+  onClick={() =>
+    setModal("about")
+  }
+  style={{
+    border: "none",
+    background: "rgba(255,255,255,.45)",
+    borderRadius: "10px",
+    padding: "6px 10px",
+    fontSize: "13px",
+    fontWeight: 700,
+    color: "#111827",
+    cursor: "pointer",
+  }}
+>
+  {t.edit}
+</button>
             </div>
 
             <div
@@ -2821,7 +2941,131 @@ setAboutText(
             </div>
           </div>
 
-        </div>
+              </div>
+
+        {/* CARD TUTORIAL / LOCK */}
+
+{cardTutorialPlaying && (
+  <div
+    aria-hidden="true"
+    style={{
+      position: "absolute",
+      left: "-6px",
+      bottom: "54px",
+      zIndex: 29,
+      pointerEvents: "none",
+    }}
+  >
+    <style>
+      {`
+        @keyframes nfcqrCardTutorialArrow {
+          0% {
+            transform: translateY(18px);
+            opacity: 0;
+          }
+
+          20% {
+            opacity: 1;
+          }
+
+          70% {
+            opacity: 1;
+          }
+
+          100% {
+            transform: translateY(-72px);
+            opacity: 0;
+          }
+        }
+      `}
+    </style>
+
+    <svg
+      width="42"
+      height="92"
+      viewBox="0 0 42 92"
+      style={{
+        animation:
+          "nfcqrCardTutorialArrow .7s ease-in-out 2",
+      }}
+    >
+      <path
+        d="M10 78 C10 42 14 24 31 14"
+        fill="none"
+        stroke="rgba(17,24,39,.72)"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+
+      <path
+        d="M24 14 L31 14 L29 21"
+        fill="none"
+        stroke="rgba(17,24,39,.72)"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  </div>
+)}
+  
+        <button
+          type="button"
+          onPointerDown={(event) =>
+            event.stopPropagation()
+          }
+          onClick={
+            cardTutorialSeen
+              ? toggleCardLock
+              : startCardTutorial
+          }
+          style={{
+            position: "absolute",
+            left: "12px",
+            bottom: "12px",
+
+            zIndex: 30,
+
+            width: "38px",
+            height: "38px",
+
+            border:
+              "1px solid rgba(255,255,255,.65)",
+
+            borderRadius: "50%",
+
+            background:
+              "rgba(255,255,255,.48)",
+
+            backdropFilter:
+              "blur(14px)",
+
+            WebkitBackdropFilter:
+              "blur(14px)",
+
+            boxShadow:
+              "0 6px 20px rgba(0,0,0,.16)",
+
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+
+            padding: 0,
+
+            fontSize: "18px",
+            lineHeight: 1,
+
+            cursor: "pointer",
+          }}
+        >
+          {!cardTutorialSeen
+            ? "↻"
+            : cardUnlocked
+              ? "🔓"
+              : "🔒"}
+
+        </button>
+
       </div>
 
         {/* SETTINGS */}
@@ -2906,7 +3150,59 @@ setAboutText(
             </div>
           </ModalShell>
         )}
+{/* ABOUT */}
+{modal ===
+  "about" && (
+  <ModalShell
+    title="About me"
+    icon={<FaPen />}
+    onClose={() =>
+      setModal(null)
+    }
+    large
+  >
+    <div
+      style={
+        styles.form
+      }
+    >
+      <textarea
+        value={aboutText}
+        onChange={(
+          event
+        ) =>
+          setAboutText(
+            event.target.value
+          )
+        }
+        style={{
+          ...styles.textarea,
+          minHeight: "180px",
+        }}
+        placeholder="About me"
+      />
 
+      <button
+        type="button"
+        disabled={saving}
+        style={{
+          ...styles.primaryButton,
+          opacity:
+            saving
+              ? 0.55
+              : 1,
+        }}
+        onClick={
+          saveEdit
+        }
+      >
+        <FaCheck />
+
+        {t.save}
+      </button>
+    </div>
+  </ModalShell>
+)}
         {/* EDIT */}
 
         {modal ===

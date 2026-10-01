@@ -1275,8 +1275,7 @@ function handleCardPointerMove(event) {
     ((event.clientX -
       lastPointerXRef.current) /
       deltaTime) *
-  * 16 
-    0.32;
+16 * 0.32;
 
   lastPointerXRef.current =
     event.clientX;

@@ -2792,7 +2792,7 @@ setAboutText(
             <div
               style={{
                 display: "flex",
-                justifyContent: "flex-end",
+                justifyContent: "flex-start",
                 alignItems: "center",
               }}
             >

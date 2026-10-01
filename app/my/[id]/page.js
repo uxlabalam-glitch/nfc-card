@@ -2565,11 +2565,11 @@ setAboutText(
               : {}),
           }}
         >
-          <div
+         <div
   style={{
-    ...styles.glassPanel,
-    
-    
+    position: "relative",
+    width: "100%",
+
     transform:
       `perspective(1200px) rotateY(${cardRotation}deg)`,
 
@@ -2598,11 +2598,20 @@ setAboutText(
     handleCardPointerUp
   }
 >
-      <div
+  {/* FRONT FACE */}
+
+  <div
     style={{
-      backfaceVisibility: "hidden",
-      WebkitBackfaceVisibility: "hidden",
-      transform: "translateZ(1px)",
+      ...styles.glassPanel,
+
+      backfaceVisibility:
+        "hidden",
+
+      WebkitBackfaceVisibility:
+        "hidden",
+
+      transform:
+        "rotateY(0deg)",
     }}
   >
             {/* AVATAR */}
@@ -2755,9 +2764,65 @@ setAboutText(
                 )}
               </div>
             )}
+                  </div>
+
+          {/* BACK FACE */}
+
+          <div
+            style={{
+              ...styles.glassPanel,
+
+              position: "absolute",
+              inset: 0,
+
+              padding: "22px",
+
+              backfaceVisibility: "hidden",
+              WebkitBackfaceVisibility: "hidden",
+
+              transform: "rotateY(180deg)",
+
+              textAlign: "left",
+              overflow: "hidden",
+
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                alignItems: "center",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "16px",
+                  fontWeight: 800,
+                  color: "#111827",
+                }}
+              >
+                About me
+              </div>
+            </div>
+
+            <div
+              style={{
+                marginTop: "18px",
+                color: "#374151",
+                fontSize: "15px",
+                lineHeight: 1.55,
+                whiteSpace: "pre-wrap",
+                overflowWrap: "anywhere",
+              }}
+            >
+              {aboutText || ""}
+            </div>
           </div>
+
         </div>
-</div>
+      </div>
 
         {/* SETTINGS */}
 

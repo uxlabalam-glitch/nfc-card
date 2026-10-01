@@ -2962,22 +2962,22 @@ bottom: "54px",
     <style>
       {`
         @keyframes nfcqrCardTutorialArrow {
-          0% {
-            transform: translateY(18px);
-            opacity: 0;
-          }
+         0% {
+  transform: translateX(0);
+  opacity: 0;
+}
 
-          20% {
-            opacity: 1;
-          }
+20% {
+  opacity: 1;
+}
 
-          70% {
-            opacity: 1;
-          }
+70% {
+  opacity: 1;
+}
 
-          100% {
-            transform: translateY(-72px);
-            opacity: 0;
+100% {
+  transform: translateX(-82px);
+  opacity: 0;
           }
         }
       `}
@@ -3005,27 +3005,27 @@ bottom: "54px",
     >
       <stop
         offset="0%"
-        stopColor="#ffffff"
-      />
+        stopColor="#dcfce7" 
+          />
 
       <stop
         offset="28%"
-        stopColor="#8f99a6"
-      />
+        stopColor="#22c55e" 
+          />
 
       <stop
         offset="52%"
-        stopColor="#f8fafc"
+        stopColor="#86efac"
       />
 
       <stop
         offset="75%"
-        stopColor="#6b7280"
+         stopColor="#15803d"
       />
 
       <stop
         offset="100%"
-        stopColor="#e5e7eb"
+        stopColor="#4ade80"
       />
     </linearGradient>
   </defs>
@@ -3158,11 +3158,11 @@ bottom: "12px",
         x2="1"
         y2="1"
       >
-        <stop offset="0%" stopColor="#ffffff" />
-        <stop offset="30%" stopColor="#8f98a3" />
-        <stop offset="55%" stopColor="#f8fafc" />
-        <stop offset="80%" stopColor="#59616c" />
-        <stop offset="100%" stopColor="#d7dce2" />
+        <stop offset="0%" stopColor="#dcfce7" />
+<stop offset="30%" stopColor="#22c55e" />
+<stop offset="55%" stopColor="#86efac" />
+<stop offset="80%" stopColor="#15803d" />
+<stop offset="100%" stopColor="#4ade80" />
       </linearGradient>
     </defs>
 
@@ -3221,11 +3221,11 @@ bottom: "12px",
         x2="1"
         y2="1"
       >
-        <stop offset="0%" stopColor="#ffffff" />
-        <stop offset="30%" stopColor="#8f98a3" />
-        <stop offset="55%" stopColor="#f8fafc" />
-        <stop offset="80%" stopColor="#59616c" />
-        <stop offset="100%" stopColor="#d7dce2" />
+      <stop offset="0%" stopColor="#fee2e2" />
+<stop offset="30%" stopColor="#ef4444" />
+<stop offset="55%" stopColor="#fca5a5" />
+<stop offset="80%" stopColor="#b91c1c" />
+<stop offset="100%" stopColor="#f87171" />
       </linearGradient>
     </defs>
 

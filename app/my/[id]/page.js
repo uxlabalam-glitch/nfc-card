@@ -1128,7 +1128,7 @@ const animationRef =
 
   const tutorialSeen =
     localStorage.getItem(
-      "nfcqr_owner_card_tutorial_seen"
+      "nfcqr_owner_card_tutorial_seen_v2"
     ) === "1";
 
   const unlocked =
@@ -1161,7 +1161,7 @@ function startCardTutorial(
     "undefined"
   ) {
     localStorage.setItem(
-      "nfcqr_owner_card_tutorial_seen",
+      "nfcqr_owner_card_tutorial_seen_v2",
       "1"
     );
 

@@ -1217,6 +1217,15 @@ function handleCardPointerDown(event) {
   if (!cardUnlocked) {
   return;
 }
+    const interactive =
+    event.target?.closest?.(
+      "button, a, input, textarea, select, [role='button']"
+    );
+
+  if (interactive) {
+    return;
+  }
+  
   draggingRef.current = true;
 
   dragStartXRef.current =
@@ -2652,8 +2661,13 @@ setAboutText(
         <div
           style={{
             ...styles.cardWrap,
-
-            ...(cardLedEnabled
+ }}
+        >
+         <div
+  style={{
+    position: "relative",
+    width: "100%",
+  ...(cardLedEnabled
               ? {
                   boxShadow: `
                     0 0 10px ${cardLedColor},
@@ -2662,13 +2676,6 @@ setAboutText(
                   `,
                 }
               : {}),
-          }}
-        >
-         <div
-  style={{
-    position: "relative",
-    width: "100%",
-
     transform:
       `perspective(1200px) rotateY(${cardRotation}deg)`,
 
@@ -2703,6 +2710,10 @@ setAboutText(
     style={{
       ...styles.glassPanel,
 
+      border: "1px solid rgba(255,255,255,.55)",
+boxShadow:
+  "inset 0 1px 0 rgba(255,255,255,.7), inset 0 -2px 4px rgba(0,0,0,.08), 0 18px 38px rgba(0,0,0,.20)",
+      
       backfaceVisibility:
         "hidden",
 
@@ -2871,6 +2882,10 @@ setAboutText(
             style={{
               ...styles.glassPanel,
 
+              border: "1px solid rgba(255,255,255,.55)",
+boxShadow:
+  "inset 0 1px 0 rgba(255,255,255,.7), inset 0 -2px 4px rgba(0,0,0,.08), 0 18px 38px rgba(0,0,0,.20)",
+              
               position: "absolute",
               inset: 0,
 

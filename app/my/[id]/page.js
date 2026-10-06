@@ -2667,36 +2667,19 @@ setAboutText(
   style={{
     position: "relative",
     width: "100%",
-  ...(cardLedEnabled
-              ? {
-                 
+
     transform:
       `perspective(1200px) rotateY(${cardRotation}deg)`,
 
-    transformStyle:
-      "preserve-3d",
-
-    touchAction:
-      "pan-y",
-
-    cursor:
-      "grab",
-
-    userSelect:
-      "none",
+    transformStyle: "preserve-3d",
+    touchAction: "pan-y",
+    cursor: "grab",
+    userSelect: "none",
   }}
-  onPointerDown={
-    handleCardPointerDown
-  }
-  onPointerMove={
-    handleCardPointerMove
-  }
-  onPointerUp={
-    handleCardPointerUp
-  }
-  onPointerCancel={
-    handleCardPointerUp
-  }
+  onPointerDown={handleCardPointerDown}
+  onPointerMove={handleCardPointerMove}
+  onPointerUp={handleCardPointerUp}
+  onPointerCancel={handleCardPointerUp}
 >
   {/* FRONT FACE */}
 
@@ -2705,7 +2688,6 @@ setAboutText(
       ...styles.glassPanel,
 
       border: "1px solid rgba(255,255,255,.55)",
-boxShadow:
   boxShadow: cardLedEnabled
   ? `
       inset 0 1px 0 rgba(255,255,255,.7),

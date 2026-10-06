@@ -1154,6 +1154,95 @@ async function saveDesignAction(
 }
 
 /* =========================================================
+   SAVE BACKGROUND TEMPLATE
+========================================================= */
+
+async function saveBackgroundTemplateAction(
+  body
+) {
+  const initData =
+    typeof body?.initData === "string"
+      ? body.initData
+      : "";
+
+  const cardId =
+    typeof body?.cardId === "string"
+      ? body.cardId.trim()
+      : "";
+
+  const templateNumber =
+    Number(body?.templateNumber);
+
+  if (
+    !Number.isInteger(templateNumber) ||
+    templateNumber < 1 ||
+    templateNumber > 10
+  ) {
+    return badRequest(
+      "Invalid background template."
+    );
+  }
+
+  const owner =
+    await getVerifiedOwner(
+      initData,
+      cardId
+    );
+
+  if (!owner.ok) {
+    return owner.response;
+  }
+
+  if (
+    templateNumber > 1 &&
+    owner.profile.is_premium !== true
+  ) {
+    return Response.json(
+      {
+        ok: false,
+        error: "Premium required.",
+      },
+      {
+        status: 403,
+      }
+    );
+  }
+
+  const fileName =
+    `nature-${String(
+      templateNumber
+    ).padStart(2, "0")}.webp`;
+
+  const backgroundUrl =
+    `https://yzkeabplmbxkvyschlop.supabase.co/storage/v1/object/public/backgrounds/templates/${fileName}`;
+
+  const {
+    data: profile,
+    error,
+  } = await owner.supabase
+    .from("profiles")
+    .update({
+      background_url:
+        backgroundUrl,
+    })
+    .eq(
+      "id",
+      owner.profile.id
+    )
+    .select("*")
+    .single();
+
+  if (error) {
+    throw error;
+  }
+
+  return Response.json({
+    ok: true,
+    profile,
+  });
+}
+
+/* =========================================================
    CHANGE LANGUAGE
 ========================================================= */
 
@@ -1698,6 +1787,15 @@ export async function POST(
       );
     }
 
+    if (
+  action ===
+  "saveBackgroundTemplate"
+) {
+  return await saveBackgroundTemplateAction(
+    body
+  );
+}
+    
     return badRequest(
       "Unknown action."
     );

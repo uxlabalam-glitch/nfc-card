@@ -3946,13 +3946,24 @@ placeholder={
      <button
         key={number}
     type="button"
-onClick={() => {
-  if (number !== 1) return;
+onClick={async () => {
+  try {
+    const data = await apiJson(
+      "saveBackgroundTemplate",
+      {
+        templateNumber: number,
+      }
+    );
 
-  setProfile((current) => ({
-    ...current,
-    background_url: imageUrl,
-  }));
+    setProfile(data.profile);
+
+    showNotice(t.saved);
+  } catch (err) {
+    showNotice(
+      err?.message ||
+        "Server error."
+    );
+  }
 }}
         style={{
           position: "relative",

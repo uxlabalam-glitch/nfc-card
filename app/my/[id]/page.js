@@ -2669,13 +2669,7 @@ setAboutText(
     width: "100%",
   ...(cardLedEnabled
               ? {
-                  boxShadow: `
-                    0 0 10px ${cardLedColor},
-                    0 0 24px ${cardLedColor},
-                    0 0 45px ${cardLedColor}
-                  `,
-                }
-              : {}),
+                 
     transform:
       `perspective(1200px) rotateY(${cardRotation}deg)`,
 
@@ -2712,7 +2706,20 @@ setAboutText(
 
       border: "1px solid rgba(255,255,255,.55)",
 boxShadow:
-  "inset 0 1px 0 rgba(255,255,255,.7), inset 0 -2px 4px rgba(0,0,0,.08), 0 18px 38px rgba(0,0,0,.20)",
+  boxShadow: cardLedEnabled
+  ? `
+      inset 0 1px 0 rgba(255,255,255,.7),
+      inset 0 -2px 4px rgba(0,0,0,.08),
+      0 18px 38px rgba(0,0,0,.20),
+      0 0 10px ${cardLedColor},
+      0 0 24px ${cardLedColor},
+      0 0 45px ${cardLedColor}
+    `
+  : `
+      inset 0 1px 0 rgba(255,255,255,.7),
+      inset 0 -2px 4px rgba(0,0,0,.08),
+      0 18px 38px rgba(0,0,0,.20)
+    `,
       
       backfaceVisibility:
         "hidden",
@@ -2884,7 +2891,20 @@ boxShadow:
 
               border: "1px solid rgba(255,255,255,.55)",
 boxShadow:
-  "inset 0 1px 0 rgba(255,255,255,.7), inset 0 -2px 4px rgba(0,0,0,.08), 0 18px 38px rgba(0,0,0,.20)",
+  boxShadow: cardLedEnabled
+  ? `
+      inset 0 1px 0 rgba(255,255,255,.7),
+      inset 0 -2px 4px rgba(0,0,0,.08),
+      0 18px 38px rgba(0,0,0,.20),
+      0 0 10px ${cardLedColor},
+      0 0 24px ${cardLedColor},
+      0 0 45px ${cardLedColor}
+    `
+  : `
+      inset 0 1px 0 rgba(255,255,255,.7),
+      inset 0 -2px 4px rgba(0,0,0,.08),
+      0 18px 38px rgba(0,0,0,.20)
+    `,
               
               position: "absolute",
               inset: 0,
@@ -3903,6 +3923,79 @@ placeholder={
                     t.changeBackground
                   }
                 </button>
+
+                  <div
+  style={{
+    marginTop: "14px",
+    display: "flex",
+    gap: "10px",
+    overflowX: "auto",
+    paddingBottom: "8px",
+    WebkitOverflowScrolling: "touch",
+  }}
+>
+  {Array.from({ length: 10 }, (_, index) => {
+    const number = index + 1;
+
+    const imageUrl =
+      `https://yzkeabplmbxkvyschlop.supabase.co/storage/v1/object/public/backgrounds/templates/nature-${String(
+        number
+      ).padStart(2, "0")}.webp`;
+
+    return (
+     <button
+        key={number}
+    type="button"
+onClick={() => {
+  if (number !== 1) return;
+
+  setProfile((current) => ({
+    ...current,
+    background_url: imageUrl,
+  }));
+}}
+        style={{
+          position: "relative",
+          flex: "0 0 90px",
+          height: "120px",
+          borderRadius: "14px",
+          overflow: "hidden",
+        }}
+      >
+        <img
+          src={imageUrl}
+          alt=""
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+          }}
+        />
+
+        {number > 1 && (
+          <div
+            style={{
+              position: "absolute",
+              top: "6px",
+              right: "6px",
+              background: "rgba(0,0,0,.65)",
+              color: "#fff",
+              borderRadius: "50%",
+              width: "24px",
+              height: "24px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "12px",
+            }}
+          >
+            🔒
+          </div>
+        )}
+      </div>
+    );
+  })}
+</button>
               </div>
 
               {/* TEXT STYLE */}

@@ -2873,6 +2873,7 @@ setAboutText(
               ...styles.glassPanel,
 
               border: "1px solid rgba(255,255,255,.55)",
+              
   boxShadow: cardLedEnabled
   ? `
       inset 0 1px 0 rgba(255,255,255,.7),
@@ -3985,10 +3986,10 @@ onClick={async () => {
             🔒
           </div>
         )}
-      </div>
+      </button>
     );
   })}
-</button>
+</div>
               </div>
 
               {/* TEXT STYLE */}

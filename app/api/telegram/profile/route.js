@@ -934,6 +934,22 @@ async function saveEditAction(
       ? body.links
       : [];
 
+  if (
+  links.length > 1 &&
+  owner.profile.is_premium !== true
+) {
+  return Response.json(
+    {
+      ok: false,
+      errorCode: "PREMIUM_REQUIRED",
+      error: "Premium required.",
+    },
+    {
+      status: 403,
+    }
+  );
+}
+  
   const {
     data:
       updatedProfile,
@@ -1087,6 +1103,21 @@ async function saveDesignAction(
     return owner.response;
   }
 
+  if (
+  owner.profile.is_premium !== true
+) {
+  return Response.json(
+    {
+      ok: false,
+      errorCode: "PREMIUM_REQUIRED",
+      error: "Premium required.",
+    },
+    {
+      status: 403,
+    }
+  );
+}
+  
   const screenLedEnabled =
     body?.screenLedEnabled ===
     true;
@@ -1199,9 +1230,10 @@ async function saveBackgroundTemplateAction(
   ) {
     return Response.json(
       {
-        ok: false,
-        error: "Premium required.",
-      },
+  ok: false,
+  errorCode: "PREMIUM_REQUIRED",
+  error: "Premium required.",
+},
       {
         status: 403,
       }

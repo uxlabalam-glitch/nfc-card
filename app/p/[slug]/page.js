@@ -1,5 +1,17 @@
 "use client";
 
+import {
+  Caveat,
+  Great_Vibes,
+  Playfair_Display,
+  Space_Mono,
+  Bebas_Neue,
+  Orbitron,
+  Lobster,
+  Cinzel,
+  Permanent_Marker,
+} from "next/font/google";
+
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
@@ -26,6 +38,51 @@ import {
   FaVk,
   FaOdnoklassniki,
 } from "react-icons/fa";
+
+const fontHandwriting = Caveat({
+  subsets: ["latin"],
+  weight: ["600", "700"],
+});
+
+const fontSignature = Great_Vibes({
+  subsets: ["latin"],
+  weight: "400",
+});
+
+const fontLuxury = Playfair_Display({
+  subsets: ["latin"],
+  weight: ["600", "700"],
+});
+
+const fontMono = Space_Mono({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+});
+
+const fontPoster = Bebas_Neue({
+  subsets: ["latin"],
+  weight: "400",
+});
+
+const fontTech = Orbitron({
+  subsets: ["latin"],
+  weight: ["600", "700"],
+});
+
+const fontRounded = Lobster({
+  subsets: ["latin"],
+  weight: "400",
+});
+
+const fontClassic = Cinzel({
+  subsets: ["latin"],
+  weight: ["600", "700"],
+});
+
+const fontMarker = Permanent_Marker({
+  subsets: ["latin"],
+  weight: "400",
+});
 
 /* =========================================================
    TILLAR
@@ -60,6 +117,70 @@ const TEXTS = {
     close: "Kapat",
   },
 };
+
+const TEXT_STYLES = [
+  {
+    id: "standard",
+    fontFamily:
+      '-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif',
+    fontWeight: 800,
+    letterSpacing: "-0.5px",
+  },
+  {
+    id: "handwriting",
+    fontFamily: fontHandwriting.style.fontFamily,
+    fontWeight: 700,
+    letterSpacing: "0.3px",
+  },
+  {
+    id: "signature",
+    fontFamily: fontSignature.style.fontFamily,
+    fontWeight: 400,
+    letterSpacing: "0.4px",
+  },
+  {
+    id: "luxury",
+    fontFamily: fontLuxury.style.fontFamily,
+    fontWeight: 700,
+    letterSpacing: "0.4px",
+  },
+  {
+    id: "mono",
+    fontFamily: fontMono.style.fontFamily,
+    fontWeight: 700,
+    letterSpacing: "0.8px",
+  },
+  {
+    id: "poster",
+    fontFamily: fontPoster.style.fontFamily,
+    fontWeight: 400,
+    letterSpacing: "1.8px",
+  },
+  {
+    id: "tech",
+    fontFamily: fontTech.style.fontFamily,
+    fontWeight: 700,
+    letterSpacing: "1px",
+  },
+  {
+    id: "retro",
+    fontFamily: fontRounded.style.fontFamily,
+    fontWeight: 400,
+    letterSpacing: "0.2px",
+  },
+  {
+    id: "classic",
+    fontFamily: fontClassic.style.fontFamily,
+    fontWeight: 700,
+    letterSpacing: "1px",
+  },
+  {
+    id: "marker",
+    fontFamily: fontMarker.style.fontFamily,
+    fontWeight: 400,
+    letterSpacing: "0.3px",
+  },
+];
 
 /* =========================================================
    PAGE
@@ -127,6 +248,13 @@ const publicSlug = params?.slug;
   const t =
     TEXTS[languageCode] || TEXTS.en;
 
+  const selectedTextStyle =
+  TEXT_STYLES.find(
+    (item) =>
+      item.id ===
+      (profile?.text_style || "standard")
+  ) || TEXT_STYLES[0];
+  
   /* =======================================================
      BO'SH XABAR
   ======================================================= */
@@ -143,46 +271,174 @@ const publicSlug = params?.slug;
      LINK OCHISH
   ======================================================= */
 
-  function openLink(link) {
-    let url = link?.url?.trim();
+ function openLink(link) {
+  let url = String(
+    link?.url || ""
+  ).trim();
 
-    if (!url) {
-      showEmptyMessage();
-      return;
-    }
-
-    const icon = String(
-      link.icon || ""
-    ).toLowerCase();
-
-    if (icon === "phone") {
-      if (!url.startsWith("tel:")) {
-        url = `tel:${url}`;
-      }
-
-      window.location.href = url;
-      return;
-    }
-
-    if (icon === "email") {
-      if (!url.startsWith("mailto:")) {
-        url = `mailto:${url}`;
-      }
-
-      window.location.href = url;
-      return;
-    }
-
-    if (
-      !url.startsWith("http://") &&
-      !url.startsWith("https://")
-    ) {
-      url = `https://${url}`;
-    }
-
-    window.location.href = url;
+  if (!url) {
+    showEmptyMessage();
+    return;
   }
 
+  const icon = String(
+    link?.icon || ""
+  ).toLowerCase();
+
+  // Telefon
+  if (icon === "phone") {
+    window.location.href =
+      url.startsWith("tel:")
+        ? url
+        : `tel:${url}`;
+
+    return;
+  }
+
+  // Email
+  if (icon === "email") {
+    window.location.href =
+      url.startsWith("mailto:")
+        ? url
+        : `mailto:${url}`;
+
+    return;
+  }
+
+  function openApp(
+    appUrl,
+    webUrl
+  ) {
+    let finished = false;
+
+    const timer =
+      window.setTimeout(() => {
+        if (
+          !finished &&
+          document.visibilityState ===
+            "visible"
+        ) {
+          window.location.href =
+            webUrl;
+        }
+      }, 1400);
+
+    const visibilityHandler =
+      () => {
+        if (
+          document.visibilityState ===
+          "hidden"
+        ) {
+          finished = true;
+
+          window.clearTimeout(
+            timer
+          );
+
+          document.removeEventListener(
+            "visibilitychange",
+            visibilityHandler
+          );
+        }
+      };
+
+    document.addEventListener(
+      "visibilitychange",
+      visibilityHandler
+    );
+
+    window.location.href =
+      appUrl;
+  }
+
+  // TELEGRAM
+  if (icon === "telegram") {
+    const username =
+      url
+        .replace(
+          /^https?:\/\/(www\.)?(t\.me|telegram\.me)\//i,
+          ""
+        )
+        .replace(/^@/, "")
+        .split(/[/?#]/)[0];
+
+    if (username) {
+      const webUrl =
+        `https://t.me/${username}`;
+
+      const tg =
+        window.Telegram?.WebApp;
+
+      if (
+        tg &&
+        typeof tg.openTelegramLink ===
+          "function"
+      ) {
+        tg.openTelegramLink(
+          webUrl
+        );
+
+        return;
+      }
+
+      openApp(
+        `tg://resolve?domain=${encodeURIComponent(
+          username
+        )}`,
+        webUrl
+      );
+
+      return;
+    }
+  }
+
+  // WHATSAPP
+  if (icon === "whatsapp") {
+    const phone =
+      url.replace(/\D/g, "");
+
+    if (phone) {
+      openApp(
+        `whatsapp://send?phone=${phone}`,
+        `https://wa.me/${phone}`
+      );
+
+      return;
+    }
+  }
+
+  // INSTAGRAM
+  if (icon === "instagram") {
+    const username =
+      url
+        .replace(
+          /^https?:\/\/(www\.)?instagram\.com\//i,
+          ""
+        )
+        .replace(/^@/, "")
+        .split(/[/?#]/)[0];
+
+    if (username) {
+      openApp(
+        `instagram://user?username=${encodeURIComponent(
+          username
+        )}`,
+        `https://www.instagram.com/${username}/`
+      );
+
+      return;
+    }
+  }
+
+  // Oddiy linklar
+  const finalUrl =
+    /^(https?:\/\/)/i.test(url)
+      ? url
+      : `https://${url}`;
+
+  window.location.href =
+    finalUrl;
+}
   /* =======================================================
      ERROR
   ======================================================= */
@@ -352,9 +608,19 @@ transform: "scale(1)",
             ============================================= */}
 
             {profile.full_name?.trim() ? (
-              <h1 style={styles.name}>
-                {profile.full_name}
-              </h1>
+              <h1
+  style={{
+    ...styles.name,
+    fontFamily:
+      selectedTextStyle.fontFamily,
+    fontWeight:
+      selectedTextStyle.fontWeight,
+    letterSpacing:
+      selectedTextStyle.letterSpacing,
+  }}
+>
+  {profile.full_name}
+</h1>
             ) : (
               <button
                 type="button"
@@ -372,9 +638,19 @@ transform: "scale(1)",
             ============================================= */}
 
             {profile.bio?.trim() ? (
-              <p style={styles.bio}>
-                {profile.bio}
-              </p>
+              <p
+  style={{
+    ...styles.bio,
+    fontFamily:
+      selectedTextStyle.fontFamily,
+    fontWeight:
+      selectedTextStyle.fontWeight,
+    letterSpacing:
+      selectedTextStyle.letterSpacing,
+  }}
+>
+  {profile.bio}
+</p>
             ) : (
               <button
                 type="button"

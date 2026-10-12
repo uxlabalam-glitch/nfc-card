@@ -1112,8 +1112,38 @@ async function saveDesignAction(
     body?.cardLedEnabled ===
     true;
 
-  if (
-  (screenLedEnabled || cardLedEnabled) &&
+  const textStyle =
+  typeof body?.textStyle === "string"
+    ? body.textStyle.trim()
+    : "standard";
+
+const allowedTextStyles = [
+  "standard",
+  "handwriting",
+  "signature",
+  "luxury",
+  "mono",
+  "poster",
+  "tech",
+  "retro",
+  "classic",
+  "marker",
+];
+
+const safeTextStyle =
+  allowedTextStyles.includes(textStyle)
+    ? textStyle
+    : "standard";
+
+const premiumTextStyle =
+  safeTextStyle !== "standard";
+  
+if (
+  (
+    screenLedEnabled ||
+    cardLedEnabled ||
+    premiumTextStyle
+  ) &&
   owner.profile.is_premium !== true
 ) {
   return Response.json(
@@ -1168,6 +1198,8 @@ async function saveDesignAction(
         )
           ? cardLedColor
           : "#3B82F6",
+      text_style:
+  safeTextStyle,
     })
     .eq(
       "id",

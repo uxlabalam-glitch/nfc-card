@@ -55,6 +55,20 @@ import {
 /* =========================================================
    TEXT
 ========================================================= */
+const PREMIUM_REQUIRED_TEXT = {
+  uz: "Bu funksiyani saqlash uchun Premium kerak.",
+  ru: "Для сохранения этой функции нужен Premium.",
+  en: "Premium is required to save this feature.",
+  tr: "Bu özelliği kaydetmek için Premium gereklidir.",
+  kk: "Бұл функцияны сақтау үшін Premium қажет.",
+  ar: "يلزم Premium لحفظ هذه الميزة.",
+  zh: "保存此功能需要 Premium。",
+  ja: "この機能を保存するには Premium が必要です。",
+  ko: "이 기능을 저장하려면 Premium이 필요합니다.",
+  de: "Zum Speichern dieser Funktion ist Premium erforderlich.",
+  fr: "Premium est requis pour enregistrer cette fonctionnalité.",
+  es: "Se requiere Premium para guardar esta función.",
+};
 
 const TEXTS = {
   uz: {
@@ -1591,15 +1605,29 @@ function handleCardPointerUp() {
       );
     }
 
-    if (
-      !response.ok ||
-      !data?.ok
-    ) {
-      throw new Error(
-        data?.error ||
-          "Server error."
-      );
-    }
+   if (
+  !response.ok ||
+  !data?.ok
+) {
+  if (
+    data?.errorCode ===
+      "PREMIUM_REQUIRED" ||
+    data?.error ===
+      "Premium required."
+  ) {
+    throw new Error(
+      PREMIUM_REQUIRED_TEXT[
+        languageCode
+      ] ||
+        PREMIUM_REQUIRED_TEXT.en
+    );
+  }
+
+  throw new Error(
+    data?.error ||
+      "Server error."
+  );
+}
 
     return data;
   }

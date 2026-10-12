@@ -1103,7 +1103,17 @@ async function saveDesignAction(
     return owner.response;
   }
 
+  
+  const screenLedEnabled =
+    body?.screenLedEnabled ===
+    true;
+
+  const cardLedEnabled =
+    body?.cardLedEnabled ===
+    true;
+
   if (
+  (screenLedEnabled || cardLedEnabled) &&
   owner.profile.is_premium !== true
 ) {
   return Response.json(
@@ -1118,14 +1128,6 @@ async function saveDesignAction(
   );
 }
   
-  const screenLedEnabled =
-    body?.screenLedEnabled ===
-    true;
-
-  const cardLedEnabled =
-    body?.cardLedEnabled ===
-    true;
-
   const screenLedColor =
     typeof body?.screenLedColor ===
     "string"

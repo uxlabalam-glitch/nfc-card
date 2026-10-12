@@ -1,6 +1,18 @@
 "use client";
 
 import {
+  Caveat,
+  Great_Vibes,
+  Playfair_Display,
+  Space_Mono,
+  Bebas_Neue,
+  Orbitron,
+  Lobster,
+  Cinzel,
+  Permanent_Marker,
+} from "next/font/google";
+
+import {
   useEffect,
   useMemo,
   useRef,
@@ -69,6 +81,51 @@ const PREMIUM_REQUIRED_TEXT = {
   fr: "Premium est requis pour enregistrer cette fonctionnalité.",
   es: "Se requiere Premium para guardar esta función.",
 };
+
+const fontHandwriting = Caveat({
+  subsets: ["latin"],
+  weight: ["600", "700"],
+});
+
+const fontSignature = Great_Vibes({
+  subsets: ["latin"],
+  weight: "400",
+});
+
+const fontLuxury = Playfair_Display({
+  subsets: ["latin"],
+  weight: ["600", "700"],
+});
+
+const fontMono = Space_Mono({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+});
+
+const fontPoster = Bebas_Neue({
+  subsets: ["latin"],
+  weight: "400",
+});
+
+const fontTech = Orbitron({
+  subsets: ["latin"],
+  weight: ["600", "700"],
+});
+
+const fontRounded = Lobster({
+  subsets: ["latin"],
+  weight: "400",
+});
+
+const fontClassic = Cinzel({
+  subsets: ["latin"],
+  weight: ["600", "700"],
+});
+
+const fontMarker = Permanent_Marker({
+  subsets: ["latin"],
+  weight: "400",
+});
 
 const TEXTS = {
   uz: {
@@ -680,374 +737,88 @@ const TEXT_STYLES = [
       '-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif',
     fontWeight: 800,
     letterSpacing: "-0.5px",
+    premium: false,
   },
   {
-    id: "aptos",
-    name: "Aptos",
+    id: "handwriting",
+    name: "Handwriting",
     fontFamily:
-      'Aptos,"Segoe UI",Arial,sans-serif',
-    fontWeight: 700,
-    letterSpacing: "0",
-  },
-  {
-    id: "calibri",
-    name: "Calibri",
-    fontFamily:
-      'Calibri,Carlito,Arial,sans-serif',
-    fontWeight: 700,
-    letterSpacing: "0",
-  },
-  {
-    id: "arial",
-    name: "Arial",
-    fontFamily:
-      "Arial,Helvetica,sans-serif",
-    fontWeight: 700,
-    letterSpacing: "0",
-  },
-  {
-    id: "arial-black",
-    name: "Arial Black",
-    fontFamily:
-      '"Arial Black",Arial,sans-serif',
-    fontWeight: 900,
-    letterSpacing: "-0.4px",
-  },
-  {
-    id: "bahnschrift",
-    name: "Bahnschrift",
-    fontFamily:
-      'Bahnschrift,"Segoe UI",sans-serif',
-    fontWeight: 700,
-    letterSpacing: "0",
-  },
-  {
-    id: "book-antiqua",
-    name: "Book Antiqua",
-    fontFamily:
-      '"Book Antiqua",Palatino,serif',
-    fontWeight: 700,
-    letterSpacing: "0",
-  },
-  {
-    id: "bookman",
-    name: "Bookman",
-    fontFamily:
-      '"Bookman Old Style",Bookman,serif',
-    fontWeight: 700,
-    letterSpacing: "0",
-  },
-  {
-    id: "cambria",
-    name: "Cambria",
-    fontFamily:
-      "Cambria,Georgia,serif",
-    fontWeight: 700,
-    letterSpacing: "0",
-  },
-  {
-    id: "candara",
-    name: "Candara",
-    fontFamily:
-      'Candara,"Segoe UI",sans-serif',
-    fontWeight: 700,
-    letterSpacing: "0",
-  },
-  {
-    id: "century",
-    name: "Century",
-    fontFamily:
-      'Century,"Times New Roman",serif',
-    fontWeight: 700,
-    letterSpacing: "0",
-  },
-  {
-    id: "century-gothic",
-    name: "Century Gothic",
-    fontFamily:
-      '"Century Gothic",Futura,sans-serif',
-    fontWeight: 700,
-    letterSpacing: "0",
-  },
-  {
-    id: "comic-sans",
-    name: "Comic Sans MS",
-    fontFamily:
-      '"Comic Sans MS","Comic Sans",cursive',
-    fontWeight: 700,
-    letterSpacing: "0",
-  },
-  {
-    id: "consolas",
-    name: "Consolas",
-    fontFamily:
-      'Consolas,"Courier New",monospace',
-    fontWeight: 700,
-    letterSpacing: "-0.2px",
-  },
-  {
-    id: "constantia",
-    name: "Constantia",
-    fontFamily:
-      "Constantia,Georgia,serif",
-    fontWeight: 700,
-    letterSpacing: "0",
-  },
-  {
-    id: "corbel",
-    name: "Corbel",
-    fontFamily:
-      'Corbel,"Segoe UI",sans-serif',
-    fontWeight: 700,
-    letterSpacing: "0",
-  },
-  {
-    id: "courier-new",
-    name: "Courier New",
-    fontFamily:
-      '"Courier New",Courier,monospace',
-    fontWeight: 700,
-    letterSpacing: "-0.3px",
-  },
-  {
-    id: "didot",
-    name: "Didot",
-    fontFamily:
-      'Didot,"Bodoni MT","Times New Roman",serif',
-    fontWeight: 700,
-    letterSpacing: "0",
-  },
-  {
-    id: "franklin",
-    name: "Franklin Gothic",
-    fontFamily:
-      '"Franklin Gothic Medium","Arial Narrow",Arial,sans-serif',
-    fontWeight: 700,
-    letterSpacing: "0",
-  },
-  {
-    id: "garamond",
-    name: "Garamond",
-    fontFamily:
-      'Garamond,"Times New Roman",serif',
-    fontWeight: 700,
-    letterSpacing: "0",
-  },
-  {
-    id: "georgia",
-    name: "Georgia",
-    fontFamily:
-      'Georgia,"Times New Roman",serif',
-    fontWeight: 700,
-    letterSpacing: "0",
-  },
-  {
-    id: "gill-sans",
-    name: "Gill Sans",
-    fontFamily:
-      '"Gill Sans","Gill Sans MT",Calibri,sans-serif',
-    fontWeight: 700,
-    letterSpacing: "0",
-  },
-  {
-    id: "helvetica",
-    name: "Helvetica",
-    fontFamily:
-      "Helvetica,Arial,sans-serif",
-    fontWeight: 700,
-    letterSpacing: "-0.2px",
-  },
-  {
-    id: "impact",
-    name: "Impact",
-    fontFamily:
-      'Impact,Haettenschweiler,"Arial Narrow Bold",sans-serif',
-    fontWeight: 400,
-    letterSpacing: "0.2px",
-  },
-  {
-    id: "lucida-bright",
-    name: "Lucida Bright",
-    fontFamily:
-      '"Lucida Bright",Georgia,serif',
-    fontWeight: 700,
-    letterSpacing: "0",
-  },
-  {
-    id: "lucida-console",
-    name: "Lucida Console",
-    fontFamily:
-      '"Lucida Console",Monaco,monospace',
-    fontWeight: 700,
-    letterSpacing: "-0.3px",
-  },
-  {
-    id: "lucida-sans",
-    name: "Lucida Sans",
-    fontFamily:
-      '"Lucida Sans Unicode","Lucida Grande",sans-serif',
-    fontWeight: 700,
-    letterSpacing: "0",
-  },
-  {
-    id: "palatino",
-    name: "Palatino",
-    fontFamily:
-      'Palatino,"Palatino Linotype","Book Antiqua",serif',
-    fontWeight: 700,
-    letterSpacing: "0",
-  },
-  {
-    id: "perpetua",
-    name: "Perpetua",
-    fontFamily:
-      "Perpetua,Baskerville,Georgia,serif",
-    fontWeight: 700,
-    letterSpacing: "0",
-  },
-  {
-    id: "rockwell",
-    name: "Rockwell",
-    fontFamily:
-      'Rockwell,"Courier New",serif',
-    fontWeight: 700,
-    letterSpacing: "0",
-  },
-  {
-    id: "segoe-ui",
-    name: "Segoe UI",
-    fontFamily:
-      '"Segoe UI",Arial,sans-serif',
-    fontWeight: 700,
-    letterSpacing: "0",
-  },
-  {
-    id: "segoe-print",
-    name: "Segoe Print",
-    fontFamily:
-      '"Segoe Print","Bradley Hand",cursive',
-    fontWeight: 700,
-    letterSpacing: "0",
-  },
-  {
-    id: "tahoma",
-    name: "Tahoma",
-    fontFamily:
-      "Tahoma,Verdana,sans-serif",
-    fontWeight: 700,
-    letterSpacing: "0",
-  },
-  {
-    id: "times-new-roman",
-    name: "Times New Roman",
-    fontFamily:
-      '"Times New Roman",Times,serif',
-    fontWeight: 700,
-    letterSpacing: "0",
-  },
-  {
-    id: "trebuchet",
-    name: "Trebuchet MS",
-    fontFamily:
-      '"Trebuchet MS","Segoe UI",sans-serif',
-    fontWeight: 700,
-    letterSpacing: "0.2px",
-  },
-  {
-    id: "verdana",
-    name: "Verdana",
-    fontFamily:
-      "Verdana,Geneva,sans-serif",
-    fontWeight: 700,
-    letterSpacing: "0",
-  },
-  {
-    id: "baskerville",
-    name: "Baskerville",
-    fontFamily:
-      'Baskerville,"Times New Roman",serif',
-    fontWeight: 700,
-    letterSpacing: "0",
-  },
-  {
-    id: "bodoni",
-    name: "Bodoni",
-    fontFamily:
-      '"Bodoni MT",Didot,"Times New Roman",serif',
-    fontWeight: 700,
-    letterSpacing: "0",
-  },
-  {
-    id: "copperplate",
-    name: "Copperplate",
-    fontFamily:
-      'Copperplate,"Copperplate Gothic Light",fantasy',
-    fontWeight: 700,
-    letterSpacing: "0.4px",
-  },
-  {
-    id: "futura",
-    name: "Futura",
-    fontFamily:
-      'Futura,"Century Gothic",Arial,sans-serif',
-    fontWeight: 700,
-    letterSpacing: "0",
-  },
-  {
-    id: "optima",
-    name: "Optima",
-    fontFamily:
-      'Optima,Candara,"Segoe UI",sans-serif',
-    fontWeight: 700,
-    letterSpacing: "0",
-  },
-  {
-    id: "modern",
-    name: "Modern",
-    fontFamily:
-      '"Trebuchet MS","Segoe UI",sans-serif',
+      fontHandwriting.style.fontFamily,
     fontWeight: 700,
     letterSpacing: "0.3px",
+    premium: true,
   },
   {
-    id: "elegant",
-    name: "Elegant",
+    id: "signature",
+    name: "Signature",
     fontFamily:
-      'Georgia,"Times New Roman",serif',
+      fontSignature.style.fontFamily,
+    fontWeight: 400,
+    letterSpacing: "0.4px",
+    premium: true,
+  },
+  {
+    id: "luxury",
+    name: "Luxury",
+    fontFamily:
+      fontLuxury.style.fontFamily,
     fontWeight: 700,
-    letterSpacing: "0",
+    letterSpacing: "0.4px",
+    premium: true,
   },
   {
-    id: "strong",
-    name: "Bold",
+    id: "mono",
+    name: "Mono",
     fontFamily:
-      'Arial,"Helvetica Neue",sans-serif',
-    fontWeight: 900,
-    letterSpacing: "-0.8px",
+      fontMono.style.fontFamily,
+    fontWeight: 700,
+    letterSpacing: "0.8px",
+    premium: true,
   },
   {
-    id: "light",
-    name: "Light",
+    id: "poster",
+    name: "Poster",
     fontFamily:
-      '"Segoe UI",Arial,sans-serif',
-    fontWeight: 300,
+      fontPoster.style.fontFamily,
+    fontWeight: 400,
+    letterSpacing: "1.8px",
+    premium: true,
+  },
+  {
+    id: "tech",
+    name: "Tech",
+    fontFamily:
+      fontTech.style.fontFamily,
+    fontWeight: 700,
+    letterSpacing: "1px",
+    premium: true,
+  },
+  {
+    id: "retro",
+    name: "Retro",
+    fontFamily:
+      fontRounded.style.fontFamily,
+    fontWeight: 400,
     letterSpacing: "0.2px",
+    premium: true,
   },
   {
-    id: "wide",
-    name: "Wide",
+    id: "classic",
+    name: "Classic",
     fontFamily:
-      '"Century Gothic","Segoe UI",sans-serif',
+      fontClassic.style.fontFamily,
     fontWeight: 700,
-    letterSpacing: "1.6px",
+    letterSpacing: "1px",
+    premium: true,
   },
   {
-    id: "compact",
-    name: "Compact",
+    id: "marker",
+    name: "Marker",
     fontFamily:
-      '"Arial Narrow",Arial,sans-serif',
-    fontWeight: 800,
-    letterSpacing: "-0.8px",
+      fontMarker.style.fontFamily,
+    fontWeight: 400,
+    letterSpacing: "0.3px",
+    premium: true,
   },
 ];
 
@@ -1746,6 +1517,10 @@ function handleCardPointerUp() {
         profileData?.bio ||
           ""
       );
+      setPreviewTextStyle(
+  profileData?.text_style ||
+    "standard"
+);
 setAboutText(
   profileData?.about_text ||
     ""
@@ -2282,6 +2057,7 @@ setAboutText(
             screenLedColor,
             cardLedEnabled,
             cardLedColor,
+             textStyle: previewTextStyle,
           }
         );
 

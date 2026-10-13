@@ -3285,13 +3285,12 @@ bottom: "12px",
             width: "38px",
             height: "38px",
 
-            border:
-              "1px solid rgba(255,255,255,.65)",
+           border:
+  "1px solid rgba(255,255,255,0.85)",
 
             borderRadius: "50%",
 
-            background:
-              "rgba(255,255,255,.48)",
+            background: "#B9C6BE",
 
             backdropFilter:
               "blur(14px)",

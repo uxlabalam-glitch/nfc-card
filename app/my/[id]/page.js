@@ -2097,6 +2097,83 @@ setAboutText(
      SAVE DESIGN
   ========================================================= */
 
+  function resetDesignPreview() {
+  setScreenLedEnabled(
+    Boolean(
+      profile?.screen_led_enabled
+    )
+  );
+
+  setScreenLedColor(
+    profile?.screen_led_color ||
+      "#3B82F6"
+  );
+
+  setCardLedEnabled(
+    Boolean(
+      profile?.card_led_enabled
+    )
+  );
+
+  setCardLedColor(
+    profile?.card_led_color ||
+      "#3B82F6"
+  );
+
+  setPreviewTextStyle(
+    profile?.text_style ||
+      "standard"
+  );
+
+  if (
+    pendingAvatarUrl &&
+    pendingAvatarUrl.startsWith(
+      "blob:"
+    )
+  ) {
+    URL.revokeObjectURL(
+      pendingAvatarUrl
+    );
+  }
+
+  if (
+    pendingBackgroundUrl &&
+    pendingBackgroundUrl.startsWith(
+      "blob:"
+    )
+  ) {
+    URL.revokeObjectURL(
+      pendingBackgroundUrl
+    );
+  }
+
+  setPendingAvatarFile(null);
+  setPendingAvatarUrl("");
+
+  setPendingBackgroundFile(null);
+  setPendingBackgroundUrl("");
+
+  setPendingBackgroundTemplate(null);
+}
+
+function openDesign() {
+  resetDesignPreview();
+  setTextStyleSearch("");
+  setModal("design");
+}
+
+function closeDesign() {
+  resetDesignPreview();
+  setTextStyleSearch("");
+  setModal(null);
+}
+
+function backFromDesign() {
+  resetDesignPreview();
+  setTextStyleSearch("");
+  setModal("settings");
+}
+  
 async function saveDesign() {
   if (
     !profile ||

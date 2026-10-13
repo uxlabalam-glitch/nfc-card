@@ -2570,19 +2570,40 @@ if (
      PAGE
   ========================================================= */
 
-  return (
-    <main
-      style={
-        styles.page
+return (
+  <main
+    style={{
+      ...styles.page,
+
+      fontFamily:
+        selectedTextStyle.fontFamily,
+
+      fontWeight:
+        selectedTextStyle.fontWeight,
+
+      letterSpacing:
+        selectedTextStyle.letterSpacing,
+    }}
+    onClick={() => {
+      if (menuOpen) {
+        setMenuOpen(
+          false
+        );
       }
-      onClick={() => {
-        if (menuOpen) {
-          setMenuOpen(
-            false
-          );
-        }
-      }}
-    >
+    }}
+  >
+    <style jsx global>{`
+      button,
+      input,
+      textarea,
+      select {
+        font-family: inherit !important;
+        font-weight: inherit;
+        letter-spacing: inherit;
+      }
+    `}</style>
+
+    {/* BLURRED FULL BACKGROUND */}
       {/* BLURRED FULL BACKGROUND */}
 
       <div

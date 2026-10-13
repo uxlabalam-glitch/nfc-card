@@ -1446,7 +1446,23 @@ async function uploadImageAction(
 
   const isAvatar =
     type === "avatar";
-
+if (
+  !isAvatar &&
+  owner.profile.is_premium !== true
+) {
+  return Response.json(
+    {
+      ok: false,
+      errorCode:
+        "PREMIUM_REQUIRED",
+      error:
+        "Premium required.",
+    },
+    {
+      status: 403,
+    }
+  );
+}
   const bucket =
     isAvatar
       ? "avatars"
@@ -1568,11 +1584,13 @@ async function uploadImageAction(
       bucket
     );
 
-  if (
-    oldPath &&
-    oldPath !==
-      filePath
-  ) {
+ if (
+  oldPath &&
+  oldPath !== filePath &&
+  !oldPath.startsWith(
+    "templates/"
+  )
+) {
     const {
       error:
         removeOldError,
@@ -1694,9 +1712,12 @@ async function deleteProfileAction(
     }
   }
 
-  if (
-    backgroundPath
-  ) {
+if (
+  backgroundPath &&
+  !backgroundPath.startsWith(
+    "templates/"
+  )
+) {
     const {
       error,
     } = await owner.supabase

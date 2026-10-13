@@ -67,34 +67,93 @@ import {
 /* =========================================================
    TEXT
 ========================================================= */
+
 const PREMIUM_REQUIRED_TEXT = {
-  uz: "Bu funksiyani saqlash uchun Premium kerak.",
-  ru: "Для сохранения этой функции нужен Premium.",
-  en: "Premium is required to save this feature.",
-  tr: "Bu özelliği kaydetmek için Premium gereklidir.",
-  kk: "Бұл функцияны сақтау үшін Premium қажет.",
-  ar: "يلزم Premium لحفظ هذه الميزة.",
-  zh: "保存此功能需要 Premium。",
-  ja: "この機能を保存するには Premium が必要です。",
-  ko: "이 기능을 저장하려면 Premium이 필요합니다.",
-  de: "Zum Speichern dieser Funktion ist Premium erforderlich.",
-  fr: "Premium est requis pour enregistrer cette fonctionnalité.",
-  es: "Se requiere Premium para guardar esta función.",
+  ar: "اشترك في Premium.",
+  az: "Premium-a abunə olun.",
+  bn: "Premium-এ সাবস্ক্রাইব করুন।",
+  bg: "Абонирайте се за Premium.",
+  zh: "订阅 Premium。",
+  cs: "Předplaťte si Premium.",
+  da: "Abonnér på Premium.",
+  nl: "Abonneer op Premium.",
+  en: "Subscribe to Premium.",
+  fi: "Tilaa Premium.",
+  fr: "Abonnez-vous à Premium.",
+  de: "Premium abonnieren.",
+  el: "Κάντε συνδρομή στο Premium.",
+  he: "הירשמו ל-Premium.",
+  hi: "Premium की सदस्यता लें।",
+  hu: "Fizess elő a Premiumra.",
+  id: "Berlangganan Premium.",
+  it: "Abbonati a Premium.",
+  ja: "Premiumに登録してください。",
+  kk: "Premium-ға жазылыңыз.",
+  ko: "Premium을 구독하세요.",
+  ky: "Premium'га жазылыңыз.",
+  ms: "Langgan Premium.",
+  no: "Abonner på Premium.",
+  fa: "در Premium مشترک شوید.",
+  pl: "Subskrybuj Premium.",
+  pt: "Assine o Premium.",
+  ro: "Abonează-te la Premium.",
+  ru: "Оформите Premium.",
+  sr: "Претплатите се на Premium.",
+  sk: "Predplaťte si Premium.",
+  es: "Suscríbete a Premium.",
+  sv: "Prenumerera på Premium.",
+  tg: "Ба Premium обуна шавед.",
+  th: "สมัคร Premium",
+  tr: "Premium’a abone olun.",
+  tk: "Premium-a ýazylyň.",
+  uk: "Підпишіться на Premium.",
+  ur: "Premium سبسکرائب کریں۔",
+  uz: "Premiumga obuna bo‘ling.",
+  vi: "Đăng ký Premium.",
 };
 
 const UPLOADED_TEXT = {
-  uz: "Yuklandi.",
-  ru: "Загружено.",
-  en: "Loaded.",
-  tr: "Yüklendi.",
-  kk: "Жүктелді.",
-  ar: "تم التحميل.",
-  zh: "已加载。",
-  ja: "読み込みました。",
-  ko: "불러왔습니다.",
-  de: "Geladen.",
+  ar: "تم الرفع.",
+  az: "Yükləndi.",
+  bn: "আপলোড হয়েছে।",
+  bg: "Качено.",
+  zh: "已上传。",
+  cs: "Nahráno.",
+  da: "Uploadet.",
+  nl: "Geüpload.",
+  en: "Uploaded.",
+  fi: "Ladattu.",
   fr: "Chargé.",
+  de: "Hochgeladen.",
+  el: "Μεταφορτώθηκε.",
+  he: "הועלה.",
+  hi: "अपलोड हो गया।",
+  hu: "Feltöltve.",
+  id: "Diunggah.",
+  it: "Caricato.",
+  ja: "アップロードされました。",
+  kk: "Жүктелді.",
+  ko: "업로드되었습니다.",
+  ky: "Жүктөлдү.",
+  ms: "Dimuat naik.",
+  no: "Lastet opp.",
+  fa: "بارگذاری شد.",
+  pl: "Przesłano.",
+  pt: "Carregado.",
+  ro: "Încărcat.",
+  ru: "Загружено.",
+  sr: "Отпремљено.",
+  sk: "Nahrané.",
   es: "Cargado.",
+  sv: "Uppladdat.",
+  tg: "Боргузорӣ шуд.",
+  th: "อัปโหลดแล้ว",
+  tr: "Yüklendi.",
+  tk: "Ýüklendi.",
+  uk: "Завантажено.",
+  ur: "اپ لوڈ ہو گیا۔",
+  uz: "Yuklandi.",
+  vi: "Đã tải lên.",
 };
 
 const fontHandwriting = Caveat({
@@ -2405,6 +2464,30 @@ if (
     };
   }, [modal]);
 
+  useEffect(() => {
+  const preventZoom = (event) => {
+    if (
+      event.ctrlKey ||
+      event.metaKey
+    ) {
+      event.preventDefault();
+    }
+  };
+
+  window.addEventListener(
+    "wheel",
+    preventZoom,
+    { passive: false }
+  );
+
+  return () => {
+    window.removeEventListener(
+      "wheel",
+      preventZoom
+    );
+  };
+}, []);
+
   async function deleteProfile() {
     if (
       deleteSeconds >
@@ -2592,16 +2675,23 @@ return (
       }
     }}
   >
-    <style jsx global>{`
-      button,
-      input,
-      textarea,
-      select {
-        font-family: inherit !important;
-        font-weight: inherit;
-        letter-spacing: inherit;
-      }
-    `}</style>
+   <style jsx global>{`
+  button,
+  input,
+  textarea,
+  select {
+    font-family: inherit !important;
+    font-weight: inherit;
+    letter-spacing: inherit;
+  }
+
+  img {
+    -webkit-touch-callout: none !important;
+    -webkit-user-select: none !important;
+    user-select: none !important;
+    -webkit-user-drag: none !important;
+  }
+`}</style>
 
     {/* BLURRED FULL BACKGROUND */}
       {/* BLURRED FULL BACKGROUND */}
@@ -2991,8 +3081,17 @@ letterSpacing:
               transform: "rotateY(180deg)",
 
               textAlign: "left",
-              overflow: "hidden",
+             overflowY: "auto",
+overflowX: "hidden",
 
+overscrollBehavior:
+  "contain",
+
+WebkitOverflowScrolling:
+  "touch",
+
+touchAction:
+  "pan-y",
               display: "flex",
               flexDirection: "column",
             }}

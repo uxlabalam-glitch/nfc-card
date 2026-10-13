@@ -82,6 +82,21 @@ const PREMIUM_REQUIRED_TEXT = {
   es: "Se requiere Premium para guardar esta función.",
 };
 
+const UPLOADED_TEXT = {
+  uz: "Yuklandi.",
+  ru: "Загружено.",
+  en: "Loaded.",
+  tr: "Yüklendi.",
+  kk: "Жүктелді.",
+  ar: "تم التحميل.",
+  zh: "已加载。",
+  ja: "読み込みました。",
+  ko: "불러왔습니다.",
+  de: "Geladen.",
+  fr: "Chargé.",
+  es: "Cargado.",
+};
+
 const fontHandwriting = Caveat({
   subsets: ["latin"],
   weight: ["600", "700"],
@@ -1245,7 +1260,32 @@ function handleCardPointerUp() {
     textStyleSearch,
     setTextStyleSearch,
   ] = useState("");
+  
+const [
+  pendingAvatarFile,
+  setPendingAvatarFile,
+] = useState(null);
 
+const [
+  pendingAvatarUrl,
+  setPendingAvatarUrl,
+] = useState("");
+
+const [
+  pendingBackgroundFile,
+  setPendingBackgroundFile,
+] = useState(null);
+
+const [
+  pendingBackgroundUrl,
+  setPendingBackgroundUrl,
+] = useState("");
+
+const [
+  pendingBackgroundTemplate,
+  setPendingBackgroundTemplate,
+] = useState(null);
+  
   const languageCode =
     profile?.language || "en";
 
@@ -1670,10 +1710,49 @@ setAboutText(
      EDIT LINKS
   ========================================================= */
 
-  function addLink() {
-    setEditLinks(
-      (current) => [
-        ...current,
+ function addLink() {
+  if (
+    editLinks.length >= 1 &&
+    profile?.is_premium !== true
+  ) {
+    showNotice(
+      PREMIUM_REQUIRED_TEXT[
+        languageCode
+      ] ||
+        PREMIUM_REQUIRED_TEXT.en
+    );
+
+    return;
+  }
+
+  setEditLinks(
+    (current) => [
+      ...current,
+
+      {
+        temp_id:
+          `new-${Date.now()}-${Math.random()}`,
+
+        id: null,
+
+        label:
+          "Telegram",
+
+        url: "",
+
+        icon:
+          "telegram",
+
+        sort_order:
+          current.length,
+      },
+    ]
+  );
+
+  setOpenLinkIndex(
+    editLinks.length
+  );
+}
 
         {
           temp_id:
@@ -1903,182 +1982,296 @@ setAboutText(
      UPLOAD AVATAR
   ========================================================= */
 
-  async function uploadAvatar(
-    event
-  ) {
-    const file =
-      event.target
-        .files?.[0];
+  function uploadAvatar(event) {
+  const file =
+    event.target.files?.[0];
 
-    event.target.value =
-      "";
-
-    if (!file) {
-      return;
-    }
-
-    if (
-      !file.type.startsWith(
-        "image/"
-      )
-    ) {
-      showNotice(
-        t.onlyImage
-      );
-
-      return;
-    }
-
-    if (
-      file.size >
-      5 * 1024 * 1024
-    ) {
-      showNotice(
-        t.photoTooBig
-      );
-
-      return;
-    }
-
-    try {
-      setUploadingPhoto(
-        true
-      );
-
-      const data =
-        await apiUpload(
-          "uploadAvatar",
-          file
-        );
-
-      setProfile(
-        data.profile
-      );
-
-      showNotice(
-        t.saved
-      );
-    } catch (err) {
-      showNotice(
-        err?.message ||
-          "Server error."
-      );
-    } finally {
-      setUploadingPhoto(
-        false
-      );
-    }
+  if (!file || !profile) {
+    return;
   }
+
+  if (
+    !file.type.startsWith(
+      "image/"
+    )
+  ) {
+    showNotice(t.onlyImage);
+    event.target.value = "";
+    return;
+  }
+
+  if (
+    file.size >
+    5 * 1024 * 1024
+  ) {
+    showNotice(t.photoTooBig);
+    event.target.value = "";
+    return;
+  }
+
+  if (pendingAvatarUrl) {
+    URL.revokeObjectURL(
+      pendingAvatarUrl
+    );
+  }
+
+  const previewUrl =
+    URL.createObjectURL(file);
+
+  setPendingAvatarFile(file);
+
+  setPendingAvatarUrl(
+    previewUrl
+  );
+
+  showNotice(
+    UPLOADED_TEXT[
+      languageCode
+    ] ||
+      UPLOADED_TEXT.en
+  );
+
+  event.target.value = "";
+}
 
   /* =========================================================
      UPLOAD BACKGROUND
   ========================================================= */
 
-  async function uploadBackground(
-    event
-  ) {
-    const file =
-      event.target
-        .files?.[0];
+  function uploadBackground(event) {
+  const file =
+    event.target.files?.[0];
 
-    event.target.value =
-      "";
-
-    if (!file) {
-      return;
-    }
-
-    if (
-      !file.type.startsWith(
-        "image/"
-      )
-    ) {
-      showNotice(
-        t.onlyImage
-      );
-
-      return;
-    }
-
-    if (
-      file.size >
-      10 * 1024 * 1024
-    ) {
-      showNotice(
-        t.backgroundTooBig
-      );
-
-      return;
-    }
-
-    try {
-      setUploadingBackground(
-        true
-      );
-
-      const data =
-        await apiUpload(
-          "uploadBackground",
-          file
-        );
-
-      setProfile(
-        data.profile
-      );
-
-      showNotice(
-        t.saved
-      );
-    } catch (err) {
-      showNotice(
-        err?.message ||
-          "Server error."
-      );
-    } finally {
-      setUploadingBackground(
-        false
-      );
-    }
+  if (!file || !profile) {
+    return;
   }
 
+  if (
+    profile?.is_premium !== true
+  ) {
+    showNotice(
+      PREMIUM_REQUIRED_TEXT[
+        languageCode
+      ] ||
+        PREMIUM_REQUIRED_TEXT.en
+    );
+
+    event.target.value = "";
+    return;
+  }
+
+  if (
+    !file.type.startsWith(
+      "image/"
+    )
+  ) {
+    showNotice(
+      t.onlyImage
+    );
+
+    event.target.value = "";
+    return;
+  }
+
+  if (
+    file.size >
+    10 * 1024 * 1024
+  ) {
+    showNotice(
+      t.backgroundTooBig
+    );
+
+    event.target.value = "";
+    return;
+  }
+
+  if (
+    pendingBackgroundUrl
+  ) {
+    URL.revokeObjectURL(
+      pendingBackgroundUrl
+    );
+  }
+
+  const previewUrl =
+    URL.createObjectURL(file);
+
+  setPendingBackgroundFile(
+    file
+  );
+
+  setPendingBackgroundUrl(
+    previewUrl
+  );
+
+  setPendingBackgroundTemplate(
+    null
+  );
+
+  showNotice(
+    UPLOADED_TEXT[
+      languageCode
+    ] ||
+      UPLOADED_TEXT.en
+  );
+
+  event.target.value = "";
+}
+ 
   /* =========================================================
      SAVE DESIGN
   ========================================================= */
 
-  async function saveDesign() {
-    try {
-      setSaving(true);
+async function saveDesign() {
+  if (
+    !profile ||
+    saving
+  ) {
+    return;
+  }
 
-      const data =
-        await apiJson(
-          "saveDesign",
-          {
-            screenLedEnabled,
-            screenLedColor,
-            cardLedEnabled,
-            cardLedColor,
-             textStyle: previewTextStyle,
-          }
+  const premiumDesignSelected =
+    previewTextStyle !== "standard" ||
+    screenLedEnabled ||
+    cardLedEnabled ||
+    Boolean(
+      pendingBackgroundFile
+    );
+
+  if (
+    profile?.is_premium !== true &&
+    premiumDesignSelected
+  ) {
+    showNotice(
+      PREMIUM_REQUIRED_TEXT[
+        languageCode
+      ] ||
+        PREMIUM_REQUIRED_TEXT.en
+    );
+
+    return;
+  }
+
+  try {
+    setSaving(true);
+
+    let latestProfile =
+      profile;
+
+    // AVATAR:
+    // faqat Save bosilganda upload
+    if (pendingAvatarFile) {
+      const avatarData =
+        await apiUpload(
+          "uploadAvatar",
+          pendingAvatarFile
         );
 
-      setProfile(
-        data.profile
-      );
-
-      setModal(null);
-
-      showNotice(
-        t.saved
-      );
-    } catch (err) {
-      showNotice(
-        err?.message ||
-          "Server error."
-      );
-    } finally {
-      setSaving(false);
+      latestProfile =
+        avatarData.profile ||
+        latestProfile;
     }
+
+    // CUSTOM BACKGROUND:
+    // faqat Premium va Save bosilganda upload
+    if (
+      pendingBackgroundFile
+    ) {
+      const backgroundData =
+        await apiUpload(
+          "uploadBackground",
+          pendingBackgroundFile
+        );
+
+      latestProfile =
+        backgroundData.profile ||
+        latestProfile;
+    }
+    // BACKGROUND TEMPLATE:
+// faqat Save bosilganda saqlanadi
+if (
+  pendingBackgroundTemplate
+) {
+  const templateData =
+    await apiJson(
+      "saveBackgroundTemplate",
+      {
+        templateNumber:
+          pendingBackgroundTemplate,
+      }
+    );
+
+  latestProfile =
+    templateData.profile ||
+    latestProfile;
+}
+
+    // FONT + LED
+    const data =
+      await apiJson(
+        "saveDesign",
+        {
+          screenLedEnabled,
+          screenLedColor,
+          cardLedEnabled,
+          cardLedColor,
+          textStyle:
+            previewTextStyle,
+        }
+      );
+
+    latestProfile =
+      data.profile ||
+      latestProfile;
+
+    setProfile(
+      latestProfile
+    );
+
+    if (pendingAvatarUrl) {
+      URL.revokeObjectURL(
+        pendingAvatarUrl
+      );
+    }
+
+    if (
+      pendingBackgroundUrl
+    ) {
+      URL.revokeObjectURL(
+        pendingBackgroundUrl
+      );
+    }
+
+    setPendingAvatarFile(
+      null
+    );
+    setPendingAvatarUrl("");
+
+    setPendingBackgroundFile(
+      null
+    );
+    setPendingBackgroundUrl("");
+
+    setPendingBackgroundTemplate(
+      null
+    );
+
+    setModal(null);
+
+    showNotice(
+      t.saved
+    );
+  } catch (err) {
+    console.error(err);
+
+    showNotice(
+      err?.message ||
+        "Server error."
+    );
+  } finally {
+    setSaving(false);
   }
+}
 
   /* =========================================================
      LANGUAGE
@@ -2344,10 +2537,14 @@ setAboutText(
         style={{
           ...styles.backgroundBlur,
 
-          backgroundImage:
-            profile.background_url
-              ? `url("${profile.background_url}")`
-              : "none",
+       backgroundImage:
+  pendingBackgroundUrl ||
+  profile.background_url
+    ? `url("${
+        pendingBackgroundUrl ||
+        profile.background_url
+      }")`
+    : "none",
         }}
       />
 
@@ -2379,10 +2576,14 @@ setAboutText(
         style={{
           ...styles.centerStrip,
 
-          backgroundImage:
-            profile.background_url
-              ? `url("${profile.background_url}")`
-              : "linear-gradient(145deg,#dfe7ef,#cbd5e1)",
+        backgroundImage:
+  pendingBackgroundUrl ||
+  profile.background_url
+    ? `url("${
+        pendingBackgroundUrl ||
+        profile.background_url
+      }")`
+    : "linear-gradient(145deg,#dfe7ef,#cbd5e1)",
         }}
       >
         <div
@@ -2472,6 +2673,15 @@ setAboutText(
     position: "relative",
     width: "100%",
 
+    fontFamily:
+  selectedTextStyle.fontFamily,
+
+fontWeight:
+  selectedTextStyle.fontWeight,
+
+letterSpacing:
+  selectedTextStyle.letterSpacing,
+    
     transform:
       `perspective(1200px) rotateY(${cardRotation}deg)`,
 
@@ -2525,7 +2735,8 @@ setAboutText(
                 styles.avatarOuter
               }
             >
-            {profile.photo_url ? (
+            {(pendingAvatarUrl ||
+  profile.photo_url) ? (
   <div
     aria-label={
       profile.full_name ||
@@ -2533,7 +2744,10 @@ setAboutText(
     }
     style={{
       ...styles.avatarImage,
-      backgroundImage: `url("${profile.photo_url}")`,
+     backgroundImage: `url("${
+  pendingAvatarUrl ||
+  profile.photo_url
+}")`,
       backgroundSize: "cover",
       backgroundPosition: "center",
       backgroundRepeat: "no-repeat",
@@ -3134,12 +3348,7 @@ bottom: "12px",
                 label={
                   t.design
                 }
-                onClick={() => {
-                  setTextStyleSearch("");
-                  setModal(
-                    "design"
-                  );
-                }}
+              onClick={openDesign}
               />
 
               <SettingsButton
@@ -3601,12 +3810,12 @@ placeholder={
             icon={
               <FaPalette />
             }
-            onBack={
-              backToSettings
-            }
-            onClose={() =>
-              setModal(null)
-            }
+         onBack={
+  backFromDesign
+}
+onClose={
+  closeDesign
+}
             large
           >
             <div
@@ -3660,11 +3869,9 @@ placeholder={
                         ? 0.55
                         : 1,
                   }}
-                  onClick={() =>
-                    avatarInputRef
-                      .current
-                      ?.click()
-                  }
+                 onClick={() => {
+  avatarInputRef.current?.click();
+}}
                 >
                   <FaCamera />
 
@@ -3698,11 +3905,22 @@ placeholder={
                         ? 0.55
                         : 1,
                   }}
-                  onClick={() =>
-                    backgroundInputRef
-                      .current
-                      ?.click()
-                  }
+                  onClick={() => {
+  if (
+    profile?.is_premium !== true
+  ) {
+    showNotice(
+      PREMIUM_REQUIRED_TEXT[
+        languageCode
+      ] ||
+        PREMIUM_REQUIRED_TEXT.en
+    );
+
+    return;
+  }
+
+  backgroundInputRef.current?.click();
+}}
                 >
                   <FaImage />
 
@@ -3733,24 +3951,48 @@ placeholder={
      <button
         key={number}
     type="button"
-onClick={async () => {
-  try {
-    const data = await apiJson(
-      "saveBackgroundTemplate",
-      {
-        templateNumber: number,
-      }
+onClick={() => {
+  if (
+    number > 1 &&
+    profile?.is_premium !== true
+  ) {
+    showNotice(
+      PREMIUM_REQUIRED_TEXT[
+        languageCode
+      ] ||
+        PREMIUM_REQUIRED_TEXT.en
     );
 
-    setProfile(data.profile);
+    return;
+  }
 
-    showNotice(t.saved);
-  } catch (err) {
-    showNotice(
-      err?.message ||
-        "Server error."
+  if (
+    pendingBackgroundUrl &&
+    pendingBackgroundUrl.startsWith(
+      "blob:"
+    )
+  ) {
+    URL.revokeObjectURL(
+      pendingBackgroundUrl
     );
   }
+
+  setPendingBackgroundFile(null);
+
+  setPendingBackgroundUrl(
+    imageUrl
+  );
+
+  setPendingBackgroundTemplate(
+    number
+  );
+
+  showNotice(
+    UPLOADED_TEXT[
+      languageCode
+    ] ||
+      UPLOADED_TEXT.en
+  );
 }}
         style={{
           position: "relative",
@@ -3886,11 +4128,18 @@ onClick={async () => {
                                 ? styles.textStyleButtonActive
                                 : {}),
                             }}
-                            onClick={() =>
-                              setPreviewTextStyle(
-                                item.id
-                              )
-                            }
+                          onClick={() => {
+  setPreviewTextStyle(
+    item.id
+  );
+
+  showNotice(
+    UPLOADED_TEXT[
+      languageCode
+    ] ||
+      UPLOADED_TEXT.en
+  );
+}}
                           >
                             <span
                               style={{
@@ -3910,11 +4159,14 @@ onClick={async () => {
                               Aa
                             </span>
 
-                            <small>
-                              {
-                                item.name
-                              }
-                            </small>
+                     <small>
+  {
+    item.premium &&
+    profile?.is_premium !== true
+      ? `🔒 ${item.name}`
+      : item.name
+  }
+</small>
 
                             {active && (
                               <span

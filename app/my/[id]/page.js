@@ -3365,11 +3365,11 @@ bottom: "12px",
         x2="1"
         y2="1"
       >
-        <stop offset="0%" stopColor="#dcfce7" />
-<stop offset="30%" stopColor="#22c55e" />
-<stop offset="55%" stopColor="#86efac" />
-<stop offset="80%" stopColor="#15803d" />
-<stop offset="100%" stopColor="#4ade80" />
+        <stop offset="0%" stopColor="#FFFFFF" />
+<stop offset="30%" stopColor="#E5E7EB" />
+<stop offset="55%" stopColor="#F8FAFC" />
+<stop offset="80%" stopColor="#94A3B8" />
+<stop offset="100%" stopColor="#D1D5DB" />
       </linearGradient>
     </defs>
 

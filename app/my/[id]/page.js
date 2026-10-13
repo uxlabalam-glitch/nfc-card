@@ -1754,31 +1754,6 @@ setAboutText(
   );
 }
 
-        {
-          temp_id:
-            `new-${Date.now()}-${Math.random()}`,
-
-          id: null,
-
-          label:
-            "Telegram",
-
-          url: "",
-
-          icon:
-            "telegram",
-
-          sort_order:
-            current.length,
-        },
-      ]
-    );
-
-    setOpenLinkIndex(
-      editLinks.length
-    );
-  }
-
   function updateEditLink(
     index,
     field,

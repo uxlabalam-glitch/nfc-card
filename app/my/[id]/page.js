@@ -2755,139 +2755,95 @@ return (
           }
         />
 
-        {/* TOP RIGHT */}
-
-        <div
-          style={
-            styles.topRight
-          }
-          onClick={(
-            event
-          ) =>
-            event.stopPropagation()
-          }
-        >
-
-            <style>{`
+        {/* TOP RIGHT — Premium / QR / Settings */}
+<style>{`
   @keyframes premiumStarSpin {
-    0% {
-      transform: rotateY(0deg);
-    }
-    100% {
-      transform: rotateY(360deg);
-    }
+    from { transform: rotateY(0deg); }
+    to { transform: rotateY(360deg); }
   }
 `}</style>
-            
-            <button
-  type="button"
-  aria-label="Premium sotib olish"
-  onClick={() => {
-    setMenuOpen(false);
-    showNotice("Premium tez orada ulanadi.");
-  }}
+
+<div
   style={{
-    ...styles.menuButton,
-    width: "105px",
-    borderRadius: "24px",
+    ...styles.topRight,
     display: "flex",
+    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    gap: "7px",
-    background: "linear-gradient(145deg, #252B36, #111827)",
-    color: "#FFFFFF",
-    fontSize: "12px",
-    fontWeight: 700,
+    justifyContent: "flex-end",
+    gap: "8px",
+    flexWrap: "nowrap",
   }}
+  onClick={(event) => event.stopPropagation()}
 >
-  <span
+  <button
+    type="button"
+    aria-label="Premium sotib olish"
+    onClick={() => {
+      // Telegram Stars to'lovi keyin ulanadi.
+      // To'lov tasdiqlanmaguncha muvaffaqiyat xabari ko'rsatilmaydi.
+    }}
     style={{
-      display: "inline-block",
-      fontSize: "23px",
-      color: "#FFD700",
-      textShadow: "0 1px 2px #A66A00, 0 0 6px #FFD700",
-      animation: "premiumStarSpin 4s linear infinite",
+      ...styles.menuButton,
+      width: "44px",
+      minWidth: "44px",
+      height: "44px",
+      borderRadius: "50%",
+      flexShrink: 0,
+      padding: 0,
+      background: "linear-gradient(145deg,#303948,#111827)",
+      perspective: "140px",
     }}
   >
-    ★
-  </span>
-  Premium
-</button>
-    
-            <button
-  type="button"
-  aria-label="QR kod"
-  onClick={() => {
-    setMenuOpen(false);
-    openQr();
-  }}
-  style={{
-    ...styles.menuButton,
-    borderRadius: "50%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  }}
->
-  <FaQrcode />
-</button>
-  
-          <button
-            type="button"
-            aria-label="Menu"
-            style={
-              styles.menuButton
-            }
-            onClick={() =>
-              setMenuOpen(
-                (value) =>
-                  !value
-              )
-            }
-          >
-           <FaGear />
-          </button>
+    <span
+      aria-hidden="true"
+      style={{
+        display: "inline-block",
+        fontSize: "26px",
+        lineHeight: 1,
+        color: "#FFD700",
+        textShadow: "1px 2px 0 #956400, 0 0 7px rgba(255,210,30,.55)",
+        transformStyle: "preserve-3d",
+        animation: "premiumStarSpin 4s linear infinite",
+      }}
+    >
+      ★
+    </span>
+  </button>
 
-          {menuOpen && (
-            <div
-              style={
-                styles.menu
-              }
-            >
-              <button
-                type="button"
-                style={
-                  styles.menuItem
-                }
-                onClick={
-                  openSettings
-                }
-              >
-                <FaGear />
+  <button
+    type="button"
+    aria-label="QR kod"
+    onClick={openQr}
+    style={{
+      ...styles.menuButton,
+      width: "44px",
+      minWidth: "44px",
+      height: "44px",
+      borderRadius: "50%",
+      flexShrink: 0,
+      padding: 0,
+    }}
+  >
+    <FaQrcode />
+  </button>
 
-                <span>
-                  {t.settings}
-                </span>
-              </button>
-
-              <button
-                type="button"
-                style={
-                  styles.menuItem
-                }
-                onClick={
-                  openQr
-                }
-              >
-                <FaQrcode />
-
-                <span>
-                  {t.qr}
-                </span>
-              </button>
-            </div>
-          )}
-        </div>
+  <button
+    type="button"
+    aria-label="Sozlamalar"
+    onClick={openSettings}
+    style={{
+      ...styles.menuButton,
+      width: "44px",
+      minWidth: "44px",
+      height: "44px",
+      borderRadius: "50%",
+      flexShrink: 0,
+      padding: 0,
+    }}
+  >
+    <FaGear />
+  </button>
+</div>
 
         {/* CARD */}
 

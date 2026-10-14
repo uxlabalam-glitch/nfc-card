@@ -12,7 +12,7 @@ import {
   Permanent_Marker,
 } from "next/font/google";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams } from "next/navigation";
 
 import {
@@ -192,6 +192,52 @@ const publicSlug = params?.slug;
 
   const [profile, setProfile] = useState(null);
   const [links, setLinks] = useState([]);
+
+  const [cardRotation, setCardRotation] = useState(0);
+
+const dragStartX = useRef(0);
+const startRotation = useRef(0);
+const isDragging = useRef(false);
+const cardRotationRef = useRef(0);
+const movedRef = useRef(false);
+
+function handlePointerDown(event) {
+  if (event.target.closest("button, a")) return;
+
+  isDragging.current = true;
+  movedRef.current = false;
+  dragStartX.current = event.clientX;
+  startRotation.current = cardRotationRef.current;
+
+  event.currentTarget.setPointerCapture(event.pointerId);
+}
+
+function handlePointerMove(event) {
+  if (!isDragging.current) return;
+
+  const delta = event.clientX - dragStartX.current;
+
+  if (Math.abs(delta) > 5) {
+    movedRef.current = true;
+  }
+
+  const rotation = startRotation.current + delta * 0.55;
+
+  cardRotationRef.current = rotation;
+  setCardRotation(rotation);
+}
+
+function handlePointerUp() {
+  if (!isDragging.current) return;
+
+  isDragging.current = false;
+
+  const snapped =
+    Math.round(cardRotationRef.current / 180) * 180;
+
+  cardRotationRef.current = snapped;
+  setCardRotation(snapped);
+}
 
   const [notice, setNotice] = useState("");
   const [error, setError] = useState("");
@@ -571,13 +617,52 @@ transform: "scale(1)",
           {/* ===============================================
               GLASS PANEL
           =============================================== */}
+<div
+  style={{
+    position: "relative",
+    width: "100%",
+    height: "min(440px, calc(100dvh - 115px))",
+    minHeight: "330px",
 
-          <div
-            style={{
-              ...styles.glassPanel,
-              ...cardLedStyle,
-            }}
-          >
+    perspective: "1200px",
+  }}
+>
+  <div
+    onPointerDown={handlePointerDown}
+    onPointerMove={handlePointerMove}
+    onPointerUp={handlePointerUp}
+    onPointerCancel={handlePointerUp}
+    style={{
+      position: "relative",
+      width: "100%",
+      height: "100%",
+
+      transform: `rotateY(${cardRotation}deg)`,
+      transformStyle: "preserve-3d",
+
+      transition: isDragging.current
+        ? "none"
+        : "transform 350ms ease-out",
+
+      touchAction: "pan-y",
+      cursor: "grab",
+      userSelect: "none",
+    }}
+  >
+    {/* OLD TOMON */}
+
+    <div
+      style={{
+        ...styles.glassPanel,
+        ...cardLedStyle,
+
+        height: "100%",
+        backfaceVisibility: "hidden",
+        WebkitBackfaceVisibility: "hidden",
+
+        transform: "rotateY(0deg)",
+      }}
+    >
             {/* =============================================
                 PROFIL RASMI
             ============================================= */}
@@ -714,8 +799,56 @@ transform: "scale(1)",
                 </button>
               )}
             </div>
+                   </div>
+
+          {/* ORQA TOMON */}
+          <div
+            style={{
+              ...styles.glassPanel,
+              ...cardLedStyle,
+
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+
+              padding: "22px",
+              textAlign: "left",
+
+              backfaceVisibility: "hidden",
+              WebkitBackfaceVisibility: "hidden",
+              transform: "rotateY(180deg)",
+
+              overflowY: "auto",
+              overflowX: "hidden",
+              overscrollBehavior: "contain",
+            }}
+          >
+            <div
+              style={{
+                fontSize: "16px",
+                fontWeight: 800,
+                color: "#111827",
+              }}
+            >
+              About me
+            </div>
+
+            <div
+              style={{
+                marginTop: "18px",
+                color: "#374151",
+                fontSize: "15px",
+                lineHeight: 1.55,
+                whiteSpace: "pre-wrap",
+                overflowWrap: "anywhere",
+              }}
+            >
+              {profile?.about_text || ""}
+            </div>
           </div>
         </div>
+      </div>
       
         {/* =================================================
             BO'SH XABAR
@@ -1134,59 +1267,57 @@ overflow: "hidden",
      CONTENT
   ======================================================= */
 
-  content: {
-    position: "relative",
+content: {
+  position: "relative",
+  zIndex: 2,
+  minHeight: "100dvh",
+  padding: "0 18px",
+  boxSizing: "border-box",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+},
 
-    zIndex: 2,
+glassPanel: {
+  position: "relative",
+  width: "100%",
 
-    minHeight: "100vh",
+  minHeight: "330px",
+  maxHeight: "calc(100dvh - 115px)",
 
-    padding: "180px 20px 40px",
-    
-    boxSizing: "border-box",
+  padding: "72px 22px 24px",
+  boxSizing: "border-box",
 
-    transition:
-      "filter 220ms ease, transform 220ms ease",
-  },
+  borderRadius: "32px",
 
-  glassPanel: {
-    position: "relative",
+  background: "rgba(255,255,255,.48)",
 
-    padding: "78px 20px 30px",
+  backdropFilter: "blur(25px) saturate(145%)",
+  WebkitBackdropFilter: "blur(25px) saturate(145%)",
 
-    borderRadius: "32px",
+  border: "1px solid rgba(255,255,255,.55)",
 
-    background:
-      "rgba(255,255,255,0.68)",
+  boxShadow: "0 25px 70px rgba(0,0,0,.18)",
 
-    backdropFilter: "blur(18px)",
-    WebkitBackdropFilter:
-      "blur(18px)",
-
-    border:
-      "1px solid rgba(255,255,255,0.65)",
-
-    boxShadow:
-      "0 12px 40px rgba(0,0,0,0.14)",
-
-    textAlign: "center",
-  },
+  textAlign: "center",
+  overflow: "visible",
+},
 
   avatarOuter: {
     position: "absolute",
 
-    top: "-72px",
+   top: "-51px",
     left: "50%",
 
     transform:
       "translateX(-50%)",
 
-    width: "142px",
-    height: "142px",
+  width: "102px",
+height: "102px",
 
     borderRadius: "50%",
 
-    padding: "6px",
+  padding: "4px",
 
     background:
       "rgba(255,255,255,0.95)",

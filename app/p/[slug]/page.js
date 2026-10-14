@@ -621,7 +621,7 @@ transform: "scale(1)",
   style={{
     position: "relative",
     width: "100%",
-    height: "min(440px, calc(100dvh - 115px))",
+height: "330px",
     minHeight: "330px",
 
     perspective: "1200px",
@@ -1106,15 +1106,16 @@ overflow: "hidden",
     zIndex: 0,
   },
 
-  centerOverlay: {
-    position: "absolute",
-    inset: 0,
+ centerOverlay: {
+  position: "absolute",
+  inset: 0,
+  zIndex: 1,
 
-    zIndex: 1,
+  background:
+    "linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,.03) 40%,rgba(0,0,0,.14))",
 
-    background:
-      "linear-gradient(to bottom, rgba(255,255,255,0.02), rgba(220,240,250,0.18))",
-  },
+  pointerEvents: "none",
+},
 
   /* =======================================================
      MENU

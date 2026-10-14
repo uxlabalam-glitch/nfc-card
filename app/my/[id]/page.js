@@ -2767,6 +2767,71 @@ return (
             event.stopPropagation()
           }
         >
+
+            <style>{`
+  @keyframes premiumStarSpin {
+    0% {
+      transform: rotateY(0deg);
+    }
+    100% {
+      transform: rotateY(360deg);
+    }
+  }
+`}</style>
+            
+            <button
+  type="button"
+  aria-label="Premium sotib olish"
+  onClick={() => {
+    setMenuOpen(false);
+    showNotice("Premium tez orada ulanadi.");
+  }}
+  style={{
+    ...styles.menuButton,
+    width: "105px",
+    borderRadius: "24px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "7px",
+    background: "linear-gradient(145deg, #252B36, #111827)",
+    color: "#FFFFFF",
+    fontSize: "12px",
+    fontWeight: 700,
+  }}
+>
+  <span
+    style={{
+      display: "inline-block",
+      fontSize: "23px",
+      color: "#FFD700",
+      textShadow: "0 1px 2px #A66A00, 0 0 6px #FFD700",
+      animation: "premiumStarSpin 4s linear infinite",
+    }}
+  >
+    ★
+  </span>
+  Premium
+</button>
+    
+            <button
+  type="button"
+  aria-label="QR kod"
+  onClick={() => {
+    setMenuOpen(false);
+    openQr();
+  }}
+  style={{
+    ...styles.menuButton,
+    borderRadius: "50%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  }}
+>
+  <FaQrcode />
+</button>
+  
           <button
             type="button"
             aria-label="Menu"
@@ -2780,7 +2845,7 @@ return (
               )
             }
           >
-            <FaEllipsisVertical />
+           <FaGear />
           </button>
 
           {menuOpen && (

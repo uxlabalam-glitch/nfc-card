@@ -783,10 +783,8 @@ boxShadow: profile.card_led_enabled
                         link.icon ||
                         ""}
                     </span>
-                  </button>
-                ))
-                       ))
-          )}
+                           </button>
+          ))}
             </div>
                    </div>
 

@@ -8,16 +8,17 @@ const botToken = process.env.TELEGRAM_BOT_TOKEN;
 const webhookSecret = process.env.TELEGRAM_WEBHOOK_SECRET;
 
 function parsePremiumPayload(payload) {
-  const match = /^premium30:(\d+):(\d+):([a-f0-9]{24})$/.exec(
-    String(payload || "")
-  );
+ const match = /^premium(30|365):(\d+):(\d+):([a-f0-9]{24})$/.exec(
+  String(payload || "")
+);
 
   if (!match) return null;
 
-  return {
-    telegramId: match[1],
-    profileId: match[2],
-  };
+return {
+  days: Number(match[1]),
+  telegramId: match[2],
+  profileId: match[3],
+};
 }
 
 function getSupabase() {
@@ -172,15 +173,22 @@ export async function POST(request) {
         );
       }
 
-      const { error } = await supabase.rpc(
-        "activate_premium_payment",
-        {
-          p_charge_id: payment.telegram_payment_charge_id,
-          p_telegram_id: Number(update.message.from.id),
-          p_profile_id: profile.id,
-          p_stars: 1,
-        }
-      );
+   const parsed = parsePremiumPayload(payment.invoice_payload);
+
+if (!parsed) {
+  throw new Error("Invalid payment payload.");
+}
+
+const { error } = await supabase.rpc(
+  "activate_premium_payment",
+  {
+    p_charge_id: payment.telegram_payment_charge_id,
+    p_telegram_id: Number(update.message.from.id),
+    p_profile_id: profile.id,
+    p_stars: 1,
+    p_days: parsed.days,
+  }
+);
 
       if (error) throw error;
 

@@ -301,6 +301,11 @@ function handlePointerUp() {
       (profile?.text_style || "standard")
   ) || TEXT_STYLES[0];
   
+  const profileEmpty =
+  !String(profile?.full_name || "").trim() &&
+  !String(profile?.bio || "").trim() &&
+  links.length === 0;
+  
   /* =======================================================
      BO'SH XABAR
   ======================================================= */
@@ -575,12 +580,6 @@ function handlePointerUp() {
           ASOSIY MARKAZIY QISM
       =================================================== */}
 
-      <section
-        style={{
-          ...styles.centerSection,
-          ...screenLedStyle,
-        }}
-      >
         {/* =================================================
             MARKAZDAGI TINIQ FON
         ================================================= */}
@@ -653,8 +652,22 @@ height: "330px",
 
     <div
       style={{
-        ...styles.glassPanel,
-        ...cardLedStyle,
+       ...styles.glassPanel,
+
+boxShadow: profile.card_led_enabled
+  ? `
+      inset 0 1px 0 rgba(255,255,255,.7),
+      inset 0 -2px 4px rgba(0,0,0,.08),
+      0 18px 38px rgba(0,0,0,.20),
+      0 0 10px ${profile.card_led_color || "#3B82F6"},
+      0 0 24px ${profile.card_led_color || "#3B82F6"},
+      0 0 45px ${profile.card_led_color || "#3B82F6"}
+    `
+  : `
+      inset 0 1px 0 rgba(255,255,255,.7),
+      inset 0 -2px 4px rgba(0,0,0,.08),
+      0 18px 38px rgba(0,0,0,.20)
+    `,
 
         height: "100%",
         backfaceVisibility: "hidden",
@@ -692,68 +705,53 @@ height: "330px",
                 ISM
             ============================================= */}
 
-            {profile.full_name?.trim() ? (
-              <h1
-  style={{
-    ...styles.name,
-    fontFamily:
-      selectedTextStyle.fontFamily,
-    fontWeight:
-      selectedTextStyle.fontWeight,
-    letterSpacing:
-      selectedTextStyle.letterSpacing,
-  }}
->
-  {profile.full_name}
-</h1>
-            ) : (
-              <button
-                type="button"
-                style={styles.emptyName}
-                onClick={
-                  showEmptyMessage
-                }
-              >
-                {t.empty}
-              </button>
-            )}
+           {profile.full_name?.trim() && (
+  <h1
+    style={{
+      ...styles.name,
+      fontFamily: selectedTextStyle.fontFamily,
+      fontWeight: selectedTextStyle.fontWeight,
+      letterSpacing: selectedTextStyle.letterSpacing,
+    }}
+  >
+    {profile.full_name}
+  </h1>
+)}
 
             {/* =============================================
                 BIO
             ============================================= */}
 
-            {profile.bio?.trim() ? (
-              <p
-  style={{
-    ...styles.bio,
-    fontFamily:
-      selectedTextStyle.fontFamily,
-    fontWeight:
-      selectedTextStyle.fontWeight,
-    letterSpacing:
-      selectedTextStyle.letterSpacing,
-  }}
->
-  {profile.bio}
-</p>
-            ) : (
-              <button
-                type="button"
-                style={styles.emptyBio}
-                onClick={
-                  showEmptyMessage
-                }
-              >
-                {t.empty}
-              </button>
-            )}
+           {profile.bio?.trim() && (
+  <p
+    style={{
+      ...styles.bio,
+      fontFamily: selectedTextStyle.fontFamily,
+      fontWeight: selectedTextStyle.fontWeight,
+      letterSpacing: selectedTextStyle.letterSpacing,
+    }}
+  >
+    {profile.bio}
+  </p>
+)}
+{/* BITTA BO'SH XABAR */}
+{profileEmpty && (
+  <button
+    type="button"
+    style={styles.singleEmpty}
+    onClick={showEmptyMessage}
+  >
+    {t.empty}
+  </button>
+)}
+
 
             {/* =============================================
                 LINKLAR
             ============================================= */}
 
             <div style={styles.linksGrid}>
-              {links.length > 0 ? (
+             {links.length > 0 && (
                 links.map((link) => (
                   <button
                     key={link.id}
@@ -787,25 +785,30 @@ height: "330px",
                     </span>
                   </button>
                 ))
-              ) : (
-                <button
-                  type="button"
-                  style={styles.emptyLinks}
-                  onClick={
-                    showEmptyMessage
-                  }
-                >
-                  {t.empty}
-                </button>
-              )}
+                       ))
+          )}
             </div>
                    </div>
 
           {/* ORQA TOMON */}
           <div
             style={{
-              ...styles.glassPanel,
-              ...cardLedStyle,
+            ...styles.glassPanel,
+
+boxShadow: profile.card_led_enabled
+  ? `
+      inset 0 1px 0 rgba(255,255,255,.7),
+      inset 0 -2px 4px rgba(0,0,0,.08),
+      0 18px 38px rgba(0,0,0,.20),
+      0 0 10px ${profile.card_led_color || "#3B82F6"},
+      0 0 24px ${profile.card_led_color || "#3B82F6"},
+      0 0 45px ${profile.card_led_color || "#3B82F6"}
+    `
+  : `
+      inset 0 1px 0 rgba(255,255,255,.7),
+      inset 0 -2px 4px rgba(0,0,0,.08),
+      0 18px 38px rgba(0,0,0,.20)
+    `,
 
               position: "absolute",
               inset: 0,
@@ -1060,41 +1063,35 @@ overflow: "hidden",
     overflowX: "hidden",
   },
 
-  outerBackground: {
-    position: "fixed",
-    inset: "-25px",
+ outerBackground: {
+  position: "absolute",
+  inset: "-35px",
+  backgroundPosition: "center",
+  backgroundSize: "cover",
+  filter: "blur(28px)",
+  transform: "scale(1.08)",
+  opacity: 0.92,
+},
+  
+outerOverlay: {
+  position: "absolute",
+  inset: 0,
+  background: "rgba(17,24,39,.15)",
+  pointerEvents: "none",
+},
 
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-
-    filter: "blur(14px)",
-    transform: "scale(1.10)",
-    opacity: 0.78,
-  },
-
-  outerOverlay: {
-    position: "fixed",
-    inset: 0,
-
-    background:
-      "rgba(255,255,255,0.08)",
-  },
-
-  centerSection: {
-    position: "relative",
-    zIndex: 1,
-
-    width: "100%",
-    maxWidth: "430px",
-    minHeight: "100vh",
-
-    overflow: "hidden",
-
-    boxShadow:
-      "0 0 45px rgba(0,0,0,0.22)",
-
-    background: "#eef3f7",
-  },
+ centerSection: {
+  position: "relative",
+  zIndex: 2,
+  width: "100%",
+  maxWidth: "430px",
+  height: "100dvh",
+  margin: "0 auto",
+  overflow: "hidden",
+  backgroundPosition: "center",
+  backgroundSize: "cover",
+  boxShadow: "0 0 70px rgba(0,0,0,.20)",
+},
 
   centerBackground: {
     position: "absolute",
@@ -1279,6 +1276,16 @@ content: {
   alignItems: "center",
   justifyContent: "center",
 },
+  singleEmpty: {
+  margin: "28px auto",
+  padding: "12px 18px",
+  border: "1px solid rgba(17,24,39,.08)",
+  borderRadius: "15px",
+  background: "rgba(255,255,255,.32)",
+  color: "#667085",
+  fontSize: "14px",
+  cursor: "pointer",
+},
 
 glassPanel: {
   position: "relative",
@@ -1305,30 +1312,22 @@ glassPanel: {
   overflow: "visible",
 },
 
-  avatarOuter: {
-    position: "absolute",
-
-   top: "-51px",
-    left: "50%",
-
-    transform:
-      "translateX(-50%)",
-
+avatarOuter: {
+  position: "absolute",
+  zIndex: 5,
+  top: "-51px",
+  left: "50%",
+  transform: "translateX(-50%)",
   width: "102px",
-height: "102px",
-
-    borderRadius: "50%",
-
+  height: "102px",
   padding: "4px",
-
-    background:
-      "rgba(255,255,255,0.95)",
-
-    boxShadow:
-      "0 8px 25px rgba(0,0,0,0.18)",
-
-    boxSizing: "border-box",
-  },
+  boxSizing: "border-box",
+  borderRadius: "50%",
+  background: "rgba(255,255,255,.68)",
+  border: "1px solid rgba(255,255,255,.72)",
+  backdropFilter: "blur(16px)",
+  boxShadow: "0 12px 35px rgba(0,0,0,.18)",
+},
 
   avatarImage: {
     width: "100%",
@@ -1363,7 +1362,7 @@ height: "102px",
   name: {
     margin: "0 0 6px",
 
-    fontSize: "32px",
+fontSize: "clamp(22px,7vw,28px)",
 
     lineHeight: 1.15,
 

@@ -2761,10 +2761,8 @@ return (
   <button
     type="button"
     aria-label="Premium sotib olish"
-    onClick={() => {
-      // Telegram Stars to'lovi keyin ulanadi.
-      // To'lov tasdiqlanmaguncha muvaffaqiyat xabari ko'rsatilmaydi.
-    }}
+  onClick={() => setModal("premiumPlans")}
+
     style={{
       ...styles.menuButton,
       width: "44px",
@@ -4331,6 +4329,122 @@ onClick={() => {
             </div>
           </ModalShell>
         )}
+
+{/* PREMIUM PLANS */}
+
+{modal === "premiumPlans" && (
+  <ModalShell
+    title="Premium"
+    icon={<span>⭐</span>}
+    onClose={() => setModal(null)}
+  >
+    <div style={{ display: "grid", gap: "14px" }}>
+      <p style={{ textAlign: "center", fontWeight: 700 }}>
+        Barcha Premium imkoniyatlardan foydalaning
+      </p>
+
+      {[
+        { days: 30, title: "30 kunlik Premium" },
+        { days: 365, title: "Yillik Premium" },
+      ].map((plan) => (
+        <button
+          key={plan.days}
+          type="button"
+          onClick={() => setModal(`premium${plan.days}`)}
+          style={{
+            padding: "18px",
+            borderRadius: "16px",
+            border: "1px solid #d1d5db",
+            background: "rgba(255,255,255,.8)",
+            color: "#111827",
+            cursor: "pointer",
+            textAlign: "left",
+          }}
+        >
+          <strong>{plan.title}</strong>
+          <div style={{ marginTop: "8px", fontSize: "20px" }}>
+            ⭐ 1 Star
+          </div>
+        </button>
+      ))}
+    </div>
+  </ModalShell>
+)}
+
+
+{/* PREMIUM DETAILS */}
+
+{(modal === "premium30" || modal === "premium365") && (
+  <ModalShell
+    title="Premium"
+    icon={<span>⭐</span>}
+    onBack={() => setModal("premiumPlans")}
+    onClose={() => setModal(null)}
+  >
+    <div style={{ display: "grid", gap: "15px" }}>
+      <h2 style={{ textAlign: "center", margin: 0 }}>
+        {modal === "premium30"
+          ? "30 kunlik Premium"
+          : "Yillik Premium"}
+      </h2>
+
+      <div
+        style={{
+          textAlign: "center",
+          fontSize: "26px",
+          fontWeight: 800,
+          color: "#111827",
+        }}
+      >
+        ⭐ 1 Star
+      </div>
+
+      <p style={{ textAlign: "center", margin: 0 }}>
+        {modal === "premium30"
+          ? "30 kun davomida barcha Premium imkoniyatlar"
+          : "365 kun davomida barcha Premium imkoniyatlar"}
+      </p>
+
+      {[
+        "Cheksiz havolalar qo‘shish",
+        "Premium yozuv uslublari",
+        "Premium fon shablonlari",
+        "Shaxsiy fon rasmini yuklash",
+        "Karta cheti LED yoritishi",
+        "Ekran cheti LED yoritishi",
+        "LED ranglarini sozlash",
+      ].map((feature) => (
+        <div
+          key={feature}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            color: "#111827",
+            fontSize: "14px",
+          }}
+        >
+          <span style={{ color: "#16a34a", fontSize: "20px" }}>
+            ✓
+          </span>
+          <span>{feature}</span>
+        </div>
+      ))}
+
+      <button
+        type="button"
+        style={styles.primaryButton}
+        onClick={() => {
+          showNotice("To‘lov oynasi keyingi bosqichda ulanadi.");
+        }}
+      >
+        ⭐ 1 Star — Sotib olish
+      </button>
+    </div>
+  </ModalShell>
+)}
+
+                    
 
         {/* QR */}
 

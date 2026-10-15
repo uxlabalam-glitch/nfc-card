@@ -1073,44 +1073,29 @@ function toggleCardLock(
 }
 
 function handleCardPointerDown(event) {
+  if (event.button !== undefined && event.button !== 0) return;
+  if (event.isPrimary === false) return;
 
-    const interactive =
-    event.target?.closest?.(
-      "button, a, input, textarea, select, [role='button']"
-    );
+  if (event.target?.closest?.(
+    "button, a, input, textarea, select, [role='button']"
+  )) return;
 
-  if (interactive) {
-    return;
-  }
-  
+  event.preventDefault();
+
   draggingRef.current = true;
-
-  dragStartXRef.current =
-    event.clientX;
-
-  dragStartRotationRef.current =
-    cardRotationRef.current;
-
-  lastPointerXRef.current =
-    event.clientX;
-
-  lastPointerTimeRef.current =
-    performance.now();
-
+  dragStartXRef.current = event.clientX;
+  dragStartRotationRef.current = cardRotationRef.current;
+  lastPointerXRef.current = event.clientX;
+  lastPointerTimeRef.current = performance.now();
   velocityRef.current = 0;
 
-  if (animationRef.current) {
-    cancelAnimationFrame(
-      animationRef.current
-    );
-
+  if (animationRef.current !== null) {
+    cancelAnimationFrame(animationRef.current);
     animationRef.current = null;
   }
 
   try {
-    event.currentTarget.setPointerCapture(
-      event.pointerId
-    );
+    event.currentTarget.setPointerCapture(event.pointerId);
   } catch {}
 }
 
@@ -2867,15 +2852,17 @@ letterSpacing:
     transform:
       `perspective(1200px) rotateY(${cardRotation}deg)`,
 
-    transformStyle: "preserve-3d",
-    touchAction: "pan-y",
-    cursor: "grab",
-    userSelect: "none",
+transformStyle: "preserve-3d",
+touchAction: "none",
+cursor: "grab",
+userSelect: "none",
+WebkitUserSelect: "none",
   }}
   onPointerDown={handleCardPointerDown}
   onPointerMove={handleCardPointerMove}
   onPointerUp={handleCardPointerUp}
   onPointerCancel={handleCardPointerUp}
+    onDragStart={(event) => event.preventDefault()}
 >
   {/* FRONT FACE */}
 

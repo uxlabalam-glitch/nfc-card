@@ -116,12 +116,21 @@ export async function POST(request) {
       );
     }
 
-    const payload = [
-      "premium30",
-      String(user.id),
-      String(profile.id),
-      crypto.randomBytes(12).toString("hex"),
-    ].join(":");
+    const days = Number(body?.days);
+
+if (![30, 365].includes(days)) {
+  return Response.json(
+    { ok: false, error: "Invalid Premium plan." },
+    { status: 400 }
+  );
+}
+
+  const payload = [
+  "premium30",
+  String(user.id),
+  String(profile.id),
+  crypto.randomBytes(12).toString("hex"),
+].join(":");
 
     const telegramResponse = await fetch(
       `https://api.telegram.org/bot${botToken}/createInvoiceLink`,
@@ -131,18 +140,18 @@ export async function POST(request) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          title: "NFC/QR Info Premium",
-          description:
-            "Barcha Premium imkoniyatlardan 30 kun foydalanish.",
-          payload,
-          provider_token: "",
-          currency: "XTR",
-          prices: [
-            {
-              label: "30 kunlik Premium",
-              amount: 1,
-            },
-          ],
+        title: "NFC/QR Info Premium",
+description:
+  `Barcha Premium imkoniyatlardan ${days} kun foydalanish.`,
+payload,
+provider_token: "",
+currency: "XTR",
+prices: [
+  {
+    label: `${days} kunlik Premium`,
+    amount: 1,
+  },
+],
         }),
         cache: "no-store",
       }

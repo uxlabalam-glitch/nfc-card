@@ -1073,9 +1073,7 @@ function toggleCardLock(
 }
 
 function handleCardPointerDown(event) {
-  if (!cardUnlocked) {
-  return;
-}
+
     const interactive =
     event.target?.closest?.(
       "button, a, input, textarea, select, [role='button']"
@@ -3177,112 +3175,7 @@ right: "0",
 
         {/* CARD TUTORIAL / LOCK */}
 
-{cardTutorialPlaying && (
-  <div
-    aria-hidden="true"
-    style={{
-      position: "absolute",
-      right: "-6px",
-bottom: "54px",
-      zIndex: 29,
-      pointerEvents: "none",
-    }}
-  >
-    <style>
-      {`
-        @keyframes nfcqrCardTutorialArrow {
-         0% {
-  transform: translateX(0);
-  opacity: 0;
-}
 
-20% {
-  opacity: 1;
-}
-
-70% {
-  opacity: 1;
-}
-
-100% {
-  transform: translateX(-82px);
-  opacity: 0;
-          }
-        }
-      `}
-    </style>
-
-   <svg
-  width="62"
-  height="62"
-  viewBox="0 0 62 62"
-  style={{
-    animation:
-      "nfcqrCardTutorialArrow .7s ease-in-out 2",
-
-    filter:
-      "drop-shadow(0 3px 3px rgba(0,0,0,.35))",
-  }}
->
-  <defs>
-    <linearGradient
-      id="tutorialArrowMetal"
-      x1="0"
-      y1="0"
-      x2="1"
-      y2="1"
-    >
-      <stop
-        offset="0%"
-        stopColor="#dcfce7" 
-          />
-
-      <stop
-        offset="28%"
-        stopColor="#22c55e" 
-          />
-
-      <stop
-        offset="52%"
-        stopColor="#86efac"
-      />
-
-      <stop
-        offset="75%"
-         stopColor="#15803d"
-      />
-
-      <stop
-        offset="100%"
-        stopColor="#4ade80"
-      />
-    </linearGradient>
-  </defs>
-
-  <path
-    d="M51 45 C47 23 26 16 11 30"
-    fill="none"
-    stroke="url(#tutorialArrowMetal)"
-    strokeWidth="5"
-    strokeLinecap="round"
-  />
-
-  <path
-    d="M11 30 L20 21"
-    fill="none"
-    stroke="url(#tutorialArrowMetal)"
-    strokeWidth="5"
-    strokeLinecap="round"
-  />
-
-  <path
-    d="M11 30 L21 36"
-    fill="none"
-    stroke="url(#tutorialArrowMetal)"
-    strokeWidth="5"
-    strokeLinecap="round"
-  />
-</svg>
   </div>
 )}
   

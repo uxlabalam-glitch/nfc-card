@@ -580,6 +580,16 @@ function handlePointerUp() {
           ASOSIY MARKAZIY QISM
       =================================================== */}
 
+<section
+  style={{
+    ...styles.centerSection,
+    ...screenLedStyle,
+    backgroundImage: profile.background_url
+      ? `url("${profile.background_url}")`
+      : "linear-gradient(145deg,#dfe7ef,#cbd5e1)",
+  }}
+>
+
         {/* =================================================
             MARKAZDAGI TINIQ FON
         ================================================= */}
@@ -751,8 +761,7 @@ boxShadow: profile.card_led_enabled
             ============================================= */}
 
             <div style={styles.linksGrid}>
-             {links.length > 0 && (
-                links.map((link) => (
+             {links.length > 0 && links.map((link) => (
                   <button
                     key={link.id}
                     type="button"

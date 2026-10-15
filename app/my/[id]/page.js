@@ -4434,9 +4434,55 @@ onClick={() => {
       <button
         type="button"
         style={styles.primaryButton}
-        onClick={() => {
-          showNotice("To‘lov oynasi keyingi bosqichda ulanadi.");
-        }}
+       onClick={async () => {
+  try {
+    const days = modal === "premium30" ? 30 : 365;
+
+    const tg = window.Telegram?.WebApp;
+
+    if (!tg?.initData) {
+      alert("Premium xaridi uchun Telegram Mini App orqali kiring.");
+      return;
+    }
+
+    const response = await fetch(
+      "/api/telegram/premium/invoice",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          initData: tg.initData,
+          cardId,
+          days,
+        }),
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok || !result.ok || !result.invoiceUrl) {
+      throw new Error(
+        result.error || "To‘lov havolasi yaratilmadi."
+      );
+    }
+
+    if (typeof tg.openInvoice !== "function") {
+      throw new Error("Telegram to‘lov oynasi mavjud emas.");
+    }
+
+    tg.openInvoice(result.invoiceUrl, (status) => {
+      if (status === "paid") {
+        setModal(null);
+        alert("To‘lov qabul qilindi. Premium faollashishi tekshirilmoqda.");
+        window.location.reload();
+      }
+    });
+  } catch (error) {
+    alert(error.message || "To‘lovda xatolik yuz berdi.");
+  }
+}}
       >
         ⭐ 1 Star — Sotib olish
       </button>

@@ -922,6 +922,24 @@ export default function MyCardPage() {
   new Date(profile.premium_until).getTime() >
     Date.now();
 
+const effectiveProfile = profile
+  ? {
+      ...profile,
+      background_url: isPremiumActive
+        ? profile.background_url
+        : null,
+      text_style: isPremiumActive
+        ? profile.text_style
+        : "standard",
+      screen_led_enabled: isPremiumActive
+        ? profile.screen_led_enabled
+        : false,
+      card_led_enabled: isPremiumActive
+        ? profile.card_led_enabled
+        : false,
+    }
+  : null;
+  
   const [links, setLinks] =
     useState([]);
 
@@ -1341,11 +1359,13 @@ const [
     TEXTS.en;
 
   const selectedTextStyle =
-    TEXT_STYLES.find(
-      (item) =>
-        item.id ===
-        previewTextStyle
-    ) || TEXT_STYLES[0];
+  TEXT_STYLES.find(
+    (item) =>
+      item.id ===
+      (isPremiumActive
+        ? previewTextStyle
+        : "standard")
+  ) || TEXT_STYLES[0];
 
   const filteredTextStyles =
     useMemo(() => {
@@ -2697,12 +2717,12 @@ return (
         style={{
           ...styles.backgroundBlur,
 
-       backgroundImage:
-  pendingBackgroundUrl ||
-  profile.background_url
+backgroundImage:
+  isPremiumActive &&
+  (pendingBackgroundUrl || effectiveProfile?.background_url)
     ? `url("${
         pendingBackgroundUrl ||
-        profile.background_url
+        effectiveProfile.background_url
       }")`
     : "none",
         }}
@@ -2714,10 +2734,10 @@ return (
         }
       />
 
-      {/* SCREEN LED */}
+    {/* SCREEN LED */}
 
-      {screenLedEnabled && (
-        <div
+{isPremiumActive && screenLedEnabled && (
+  <div
           style={{
             ...styles.screenLed,
 
@@ -2736,12 +2756,12 @@ return (
         style={{
           ...styles.centerStrip,
 
-        backgroundImage:
-  pendingBackgroundUrl ||
-  profile.background_url
+    backgroundImage:
+  isPremiumActive &&
+  (pendingBackgroundUrl || effectiveProfile?.background_url)
     ? `url("${
         pendingBackgroundUrl ||
-        profile.background_url
+        effectiveProfile.background_url
       }")`
     : "linear-gradient(145deg,#dfe7ef,#cbd5e1)",
         }}
@@ -2884,7 +2904,7 @@ WebkitUserSelect: "none",
 
       border: "1px solid rgba(255,255,255,.55)",
       
-  boxShadow: cardLedEnabled
+  boxShadow: isPremiumActive && cardLedEnabled
   ? `
       inset 0 1px 0 rgba(255,255,255,.7),
       inset 0 -2px 4px rgba(0,0,0,.08),
@@ -3008,15 +3028,14 @@ WebkitUserSelect: "none",
               </button>
             )}
 
-            {/* LINKS */}
+         {/* LINKS */}
 
-            {links.length >
-              0 && (
-              <div
-                style={
-                  styles.linksGrid
-                }
-              >
+{isPremiumActive && links.length > 0 && (
+  <div
+    style={{
+      ...styles.linksGrid
+    }}
+  >
                 {links.map(
                   (link) => (
                     <button
@@ -3073,7 +3092,7 @@ WebkitUserSelect: "none",
 
               border: "1px solid rgba(255,255,255,.55)",
               
-  boxShadow: cardLedEnabled
+boxShadow: isPremiumActive && cardLedEnabled
   ? `
       inset 0 1px 0 rgba(255,255,255,.7),
       inset 0 -2px 4px rgba(0,0,0,.08),

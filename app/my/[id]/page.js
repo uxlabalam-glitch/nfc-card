@@ -4381,7 +4381,6 @@ onClick={() => {
       </p>
 
       {[
-       {[
   { days: 30, title: "30 kunlik Premium" },
   { days: 365, title: "Yillik Premium" },
 ].map((plan) => {

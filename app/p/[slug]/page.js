@@ -193,6 +193,11 @@ const publicSlug = params?.slug;
   const [profile, setProfile] = useState(null);
   const [links, setLinks] = useState([]);
 
+  const isPremiumActive =
+  Boolean(profile?.premium_until) &&
+  new Date(profile.premium_until).getTime() >
+    Date.now();
+
   const [cardRotation, setCardRotation] = useState(0);
 
 const dragStartX = useRef(0);
@@ -298,13 +303,15 @@ function handlePointerUp() {
   TEXT_STYLES.find(
     (item) =>
       item.id ===
-      (profile?.text_style || "standard")
+      (isPremiumActive
+        ? profile?.text_style || "standard"
+        : "standard")
   ) || TEXT_STYLES[0];
   
-  const profileEmpty =
+ const profileEmpty =
   !String(profile?.full_name || "").trim() &&
   !String(profile?.bio || "").trim() &&
-  links.length === 0;
+  (!isPremiumActive || links.length === 0);
   
   /* =======================================================
      BO'SH XABAR
@@ -524,9 +531,9 @@ function handlePointerUp() {
      SCREEN LED
   ======================================================= */
 
-  const screenLedStyle =
-    profile.screen_led_enabled
-      ? {
+ const screenLedStyle =
+  isPremiumActive && profile.screen_led_enabled
+    ? {
           boxShadow: `
             0 0 45px rgba(0,0,0,0.22),
             0 0 7px ${profile.screen_led_color || "#3B82F6"},
@@ -540,9 +547,9 @@ function handlePointerUp() {
      CARD LED
   ======================================================= */
 
-  const cardLedStyle =
-    profile.card_led_enabled
-      ? {
+ const cardLedStyle =
+  isPremiumActive && profile.card_led_enabled
+    ? {
           boxShadow: `
             0 0 5px ${profile.card_led_color || "#3B82F6"},
             0 0 14px ${profile.card_led_color || "#3B82F6"},
@@ -561,7 +568,7 @@ function handlePointerUp() {
           TASHQI BLUR FON
       =================================================== */}
 
-      {profile.background_url && (
+     {isPremiumActive && profile.background_url && (
         <div
           style={{
             ...styles.outerBackground,
@@ -584,9 +591,9 @@ function handlePointerUp() {
   style={{
     ...styles.centerSection,
     ...screenLedStyle,
-    backgroundImage: profile.background_url
-      ? `url("${profile.background_url}")`
-      : "linear-gradient(145deg,#dfe7ef,#cbd5e1)",
+   backgroundImage: isPremiumActive && profile.background_url
+  ? `url("${profile.background_url}")`
+  : "linear-gradient(145deg,#dfe7ef,#cbd5e1)",
   }}
 >
 
@@ -594,7 +601,7 @@ function handlePointerUp() {
             MARKAZDAGI TINIQ FON
         ================================================= */}
 
-        {profile.background_url && (
+        {isPremiumActive && profile.background_url && (
           <div
             style={{
               ...styles.centerBackground,
@@ -664,7 +671,7 @@ height: "330px",
       style={{
        ...styles.glassPanel,
 
-boxShadow: profile.card_led_enabled
+boxShadow: isPremiumActive && profile.card_led_enabled
   ? `
       inset 0 1px 0 rgba(255,255,255,.7),
       inset 0 -2px 4px rgba(0,0,0,.08),
@@ -761,7 +768,7 @@ boxShadow: profile.card_led_enabled
             ============================================= */}
 
             <div style={styles.linksGrid}>
-             {links.length > 0 && links.map((link) => (
+            {isPremiumActive && links.length > 0 && links.map((link) => (
                   <button
                     key={link.id}
                     type="button"
@@ -802,7 +809,7 @@ boxShadow: profile.card_led_enabled
             style={{
             ...styles.glassPanel,
 
-boxShadow: profile.card_led_enabled
+boxShadow: isPremiumActive && profile.card_led_enabled
   ? `
       inset 0 1px 0 rgba(255,255,255,.7),
       inset 0 -2px 4px rgba(0,0,0,.08),

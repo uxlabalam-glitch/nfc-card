@@ -915,7 +915,12 @@ export default function MyCardPage() {
     useRef(null);
 
   const [profile, setProfile] =
-    useState(null);
+  useState(null);
+
+ const isPremiumActive =
+  Boolean(profile?.premium_until) &&
+  new Date(profile.premium_until).getTime() >
+    Date.now();
 
   const [links, setLinks] =
     useState([]);
@@ -1582,9 +1587,13 @@ const [
       const linksData =
         data.links || [];
 
-      setProfile(
-        profileData
-      );
+    setProfile({
+  ...profileData,
+  is_premium:
+    Boolean(profileData?.premium_until) &&
+    new Date(profileData.premium_until).getTime() >
+      Date.now(),
+});
 
       setLinks(
         linksData
@@ -1753,10 +1762,11 @@ setAboutText(
   ========================================================= */
 
  function addLink() {
-  if (
-    editLinks.length >= 1 &&
-    profile?.is_premium !== true
-  ) {
+  
+   if (
+  editLinks.length >= 1 &&
+  !isPremiumActive
+) {
     showNotice(
       PREMIUM_REQUIRED_TEXT[
         languageCode
@@ -2063,9 +2073,9 @@ setAboutText(
     return;
   }
 
-  if (
-    profile?.is_premium !== true
-  ) {
+ if (
+  !isPremiumActive
+) {
     showNotice(
       PREMIUM_REQUIRED_TEXT[
         languageCode
@@ -2233,9 +2243,9 @@ async function saveDesign() {
     );
 
   if (
-    profile?.is_premium !== true &&
-    premiumDesignSelected
-  ) {
+  !isPremiumActive &&
+  premiumDesignSelected
+) {
     showNotice(
       PREMIUM_REQUIRED_TEXT[
         languageCode
@@ -2384,9 +2394,13 @@ if (
           }
         );
 
-      setProfile(
-        data.profile
-      );
+     setProfile({
+  ...data.profile,
+  is_premium:
+    Boolean(data.profile?.premium_until) &&
+    new Date(data.profile.premium_until).getTime() >
+      Date.now(),
+});
 
       setLanguageSearch(
         ""
@@ -3758,8 +3772,8 @@ onClose={
                   }}
                   onClick={() => {
   if (
-    profile?.is_premium !== true
-  ) {
+  !isPremiumActive
+) {
     showNotice(
       PREMIUM_REQUIRED_TEXT[
         languageCode
@@ -3804,9 +3818,9 @@ onClose={
     type="button"
 onClick={() => {
   if (
-    number > 1 &&
-    profile?.is_premium !== true
-  ) {
+  number > 1 &&
+  !isPremiumActive
+) {
     showNotice(
       PREMIUM_REQUIRED_TEXT[
         languageCode
@@ -3979,16 +3993,20 @@ onClick={() => {
                                 ? styles.textStyleButtonActive
                                 : {}),
                             }}
-                          onClick={() => {
-  setPreviewTextStyle(
-    item.id
-  );
+                         onClick={() => {
+  if (item.premium && !isPremiumActive) {
+    showNotice(
+      PREMIUM_REQUIRED_TEXT[languageCode] ||
+      PREMIUM_REQUIRED_TEXT.en
+    );
+    return;
+  }
+
+  setPreviewTextStyle(item.id);
 
   showNotice(
-    UPLOADED_TEXT[
-      languageCode
-    ] ||
-      UPLOADED_TEXT.en
+    UPLOADED_TEXT[languageCode] ||
+    UPLOADED_TEXT.en
   );
 }}
                           >
@@ -4010,10 +4028,10 @@ onClick={() => {
                               Aa
                             </span>
 
-                     <small>
+                 <small>
   {
     item.premium &&
-    profile?.is_premium !== true
+    !isPremiumActive
       ? `🔒 ${item.name}`
       : item.name
   }
@@ -4472,13 +4490,34 @@ onClick={() => {
       throw new Error("Telegram to‘lov oynasi mavjud emas.");
     }
 
-    tg.openInvoice(result.invoiceUrl, (status) => {
-      if (status === "paid") {
-        setModal(null);
-        alert("To‘lov qabul qilindi. Premium faollashishi tekshirilmoqda.");
-        window.location.reload();
+   tg.openInvoice(result.invoiceUrl, async (status) => {
+  if (status !== "paid") return;
+
+  setModal(null);
+
+  for (let attempt = 0; attempt < 12; attempt++) {
+    try {
+      const data = await apiJson("get");
+
+      if (data.profile?.is_premium === true) {
+        setProfile(data.profile);
+        setLinks(data.links || []);
+        showNotice("Premium ulandi!");
+        return;
       }
-    });
+    } catch (error) {
+      console.error("Premium tekshiruvi:", error);
+    }
+
+    await new Promise((resolve) =>
+      window.setTimeout(resolve, 1000)
+    );
+  }
+
+  showNotice(
+    "To‘lov qabul qilindi. Premium holatini tekshirish uchun ilovani qayta oching."
+  );
+});
   } catch (error) {
     alert(error.message || "To‘lovda xatolik yuz berdi.");
   }

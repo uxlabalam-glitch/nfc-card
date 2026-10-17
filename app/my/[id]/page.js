@@ -4381,29 +4381,71 @@ onClick={() => {
       </p>
 
       {[
-        { days: 30, title: "30 kunlik Premium" },
-        { days: 365, title: "Yillik Premium" },
-      ].map((plan) => (
+       {[
+  { days: 30, title: "30 kunlik Premium" },
+  { days: 365, title: "Yillik Premium" },
+].map((plan) => {
+  const planDisabled =
+    isPremiumActive &&
+    (
+      Number(profile?.premium_plan_days) === 365 ||
+      Number(profile?.premium_plan_days) === plan.days
+    );
+
+  return (
         <button
-          key={plan.days}
-          type="button"
-          onClick={() => setModal(`premium${plan.days}`)}
+  key={plan.days}
+  type="button"
+  disabled={planDisabled}
+  onClick={() => {
+    if (planDisabled) return;
+    setModal(`premium${plan.days}`);
+  }}
           style={{
             padding: "18px",
             borderRadius: "16px",
             border: "1px solid #d1d5db",
-            background: "rgba(255,255,255,.8)",
-            color: "#111827",
-            cursor: "pointer",
+            background: planDisabled
+  ? "#374151"
+  : "rgba(255,255,255,.8)",
+color: planDisabled
+  ? "#9ca3af"
+  : "#111827",
+cursor: planDisabled
+  ? "not-allowed"
+  : "pointer",
             textAlign: "left",
           }}
         >
-          <strong>{plan.title}</strong>
           <div style={{ marginTop: "8px", fontSize: "20px" }}>
-            ⭐ 1 Star
-          </div>
+  ⭐ 1 Star
+</div>
+
+{planDisabled && profile?.premium_until && (
+  <div
+    style={{
+      marginTop: "10px",
+      fontSize: "13px",
+      fontWeight: 600,
+    }}
+  >
+    Ulangan · Amal qilish muddati:{" "}
+    {new Date(profile.premium_until).toLocaleString(
+      "uz-UZ",
+      {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone: "Asia/Tashkent",
+      }
+    )}
+  </div>
+)}
         </button>
-      ))}
+     );
+})}
     </div>
   </ModalShell>
 )}
@@ -4469,11 +4511,59 @@ onClick={() => {
       ))}
 
       <button
-        type="button"
-        style={styles.primaryButton}
-       onClick={async () => {
+  type="button"
+  disabled={
+    isPremiumActive &&
+    (
+      Number(profile?.premium_plan_days) === 365 ||
+      Number(profile?.premium_plan_days) ===
+        (modal === "premium30" ? 30 : 365)
+    )
+  }
+ style={{
+  ...styles.primaryButton,
+  background:
+    isPremiumActive &&
+    (
+      Number(profile?.premium_plan_days) === 365 ||
+      Number(profile?.premium_plan_days) ===
+        (modal === "premium30" ? 30 : 365)
+    )
+      ? "#374151"
+      : styles.primaryButton.background,
+  opacity:
+    isPremiumActive &&
+    (
+      Number(profile?.premium_plan_days) === 365 ||
+      Number(profile?.premium_plan_days) ===
+        (modal === "premium30" ? 30 : 365)
+    )
+      ? 0.65
+      : 1,
+  cursor:
+    isPremiumActive &&
+    (
+      Number(profile?.premium_plan_days) === 365 ||
+      Number(profile?.premium_plan_days) ===
+        (modal === "premium30" ? 30 : 365)
+    )
+      ? "not-allowed"
+      : "pointer",
+}}
+  onClick={async () => {
   try {
     const days = modal === "premium30" ? 30 : 365;
+
+    if (
+      isPremiumActive &&
+      (
+        Number(profile?.premium_plan_days) === 365 ||
+        Number(profile?.premium_plan_days) === days
+      )
+    ) {
+      showNotice("Bu tarif allaqachon ulangan.");
+      return;
+    }
 
     const tg = window.Telegram?.WebApp;
 
@@ -4542,7 +4632,14 @@ onClick={() => {
   }
 }}
       >
-        ⭐ 1 Star — Sotib olish
+       {isPremiumActive &&
+(
+  Number(profile?.premium_plan_days) === 365 ||
+  Number(profile?.premium_plan_days) ===
+    (modal === "premium30" ? 30 : 365)
+)
+  ? "✓ Premium ulangan"
+  : "⭐ 1 Star — Sotib olish"}
       </button>
     </div>
   </ModalShell>

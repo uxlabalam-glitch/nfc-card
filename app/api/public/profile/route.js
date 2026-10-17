@@ -70,10 +70,12 @@ export async function GET(request) {
           photo_url,
           background_url,
           language,
-          screen_led_enabled,
-          screen_led_color,
-          card_led_enabled,
-          card_led_color
+premium_until,
+text_style,
+screen_led_enabled,
+screen_led_color,
+card_led_enabled,
+card_led_color
         `
       )
       .eq("public_slug", slug)
@@ -118,24 +120,40 @@ export async function GET(request) {
       throw linksError;
     }
 
+const isPremiumActive =
+  Boolean(profile.premium_until) &&
+  new Date(profile.premium_until).getTime() >
+    Date.now();
+
+const visibleLinks = isPremiumActive
+  ? links || []
+  : [];
+    
     // Ichki database ID public browserga
     // qaytarilmaydi.
-    const {
-      id,
-      ...publicProfile
-    } = profile;
+  const {
+  id,
+  ...publicProfile
+} = profile;
+
+if (!isPremiumActive) {
+  publicProfile.background_url = null;
+  publicProfile.text_style = "standard";
+  publicProfile.screen_led_enabled = false;
+  publicProfile.card_led_enabled = false;
+}
 
     return Response.json(
       {
         ok: true,
         profile: publicProfile,
-        links: links || [],
+        links: visibleLinks,
       },
       {
         status: 200,
         headers: {
-          "Cache-Control":
-            "public, max-age=30, s-maxage=60, stale-while-revalidate=300",
+        "Cache-Control":
+  "private, no-store, max-age=0", 
         },
       }
     );

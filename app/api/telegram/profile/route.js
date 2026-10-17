@@ -306,6 +306,23 @@ function getVerifiedTelegramUser(
    OWNER VERIFY
 ========================================================= */
 
+/* =========================================================
+   PREMIUM STATUS
+========================================================= */
+
+function hasActivePremium(profile) {
+  if (!profile?.premium_until) {
+    return false;
+  }
+
+  const expiresAt = new Date(profile.premium_until).getTime();
+
+  return (
+    Number.isFinite(expiresAt) &&
+    expiresAt > Date.now()
+  );
+}
+
 async function getVerifiedOwner(
   initData,
   cardId
@@ -385,14 +402,17 @@ async function getVerifiedOwner(
     };
   }
 
-  return {
-    ok: true,
-    supabase,
-    profile,
+ return {
+  ok: true,
+  supabase,
+  profile: {
+    ...profile,
+    is_premium: hasActivePremium(profile),
+  },
 
-    telegramUser:
-      verification.user,
-  };
+  telegramUser:
+    verification.user,
+};
 }
 
 /* =========================================================
@@ -613,15 +633,17 @@ async function bootstrapAction(
       profile.id
     );
 
-  return Response.json({
-    ok: true,
-    exists: true,
-    profile,
-    links,
-    telegramUser,
-  });
+ return Response.json({
+  ok: true,
+  exists: true,
+  profile: {
+    ...profile,
+    is_premium: hasActivePremium(profile),
+  },
+  links,
+  telegramUser,
+});
 }
-
 /* =========================================================
    CREATE PROFILE
 
@@ -729,16 +751,17 @@ async function createProfileAction(
         supabase,
         profile.id
       );
-
-    return Response.json({
-      ok: true,
-      created: false,
-      profile,
-      links,
-      telegramUser,
-    });
-  }
-
+return Response.json({
+  ok: true,
+  created: false,
+  profile: {
+    ...profile,
+    is_premium: hasActivePremium(profile),
+  },
+  links,
+  telegramUser,
+});
+}
   const fullName = [
     telegramUser.first_name,
     telegramUser.last_name,
@@ -868,16 +891,18 @@ async function getProfileAction(
     );
 
   return Response.json({
-    ok: true,
+  ok: true,
 
-    profile:
-      owner.profile,
+  profile: {
+    ...owner.profile,
+    is_premium: hasActivePremium(owner.profile),
+  },
 
-    links,
+  links,
 
-    telegramUser:
-      owner.telegramUser,
-  });
+  telegramUser:
+    owner.telegramUser,
+});
 }
 
 /* =========================================================
@@ -934,9 +959,9 @@ async function saveEditAction(
       ? body.links
       : [];
 
-  if (
+ if (
   links.length > 1 &&
-  owner.profile.is_premium !== true
+  !hasActivePremium(owner.profile)
 ) {
   return Response.json(
     {
@@ -975,7 +1000,23 @@ async function saveEditAction(
   if (updateError) {
     throw updateError;
   }
-
+  
+if (
+  !hasActivePremium(owner.profile)
+) {
+  return Response.json({
+    ok: true,
+    profile: {
+      ...updatedProfile,
+      is_premium: false,
+    },
+    links: await getLinks(
+      owner.supabase,
+      owner.profile.id
+    ),
+  });
+}
+  
   const {
     error:
       deleteLinksError,
@@ -1063,15 +1104,16 @@ async function saveEditAction(
       owner.profile.id
     );
 
-  return Response.json({
-    ok: true,
+ return Response.json({
+  ok: true,
 
-    profile:
-      updatedProfile,
+  profile: {
+    ...updatedProfile,
+    is_premium: hasActivePremium(updatedProfile),
+  },
 
-    links:
-      savedLinks,
-  });
+  links: savedLinks,
+});
 }
 
 /* =========================================================
@@ -1144,7 +1186,7 @@ if (
     cardLedEnabled ||
     premiumTextStyle
   ) &&
-  owner.profile.is_premium !== true
+  !hasActivePremium(owner.profile)
 ) {
   return Response.json(
     {
@@ -1213,10 +1255,13 @@ if (
   }
 
   return Response.json({
-    ok: true,
-    profile,
-  });
-}
+  ok: true,
+  profile: {
+    ...profile,
+    is_premium: hasActivePremium(profile),
+  },
+});
+} 
 
 /* =========================================================
    SAVE BACKGROUND TEMPLATE
@@ -1258,10 +1303,10 @@ async function saveBackgroundTemplateAction(
     return owner.response;
   }
 
-  if (
-    templateNumber > 1 &&
-    owner.profile.is_premium !== true
-  ) {
+ if (
+  templateNumber > 1 &&
+  !hasActivePremium(owner.profile)
+) {
     return Response.json(
       {
   ok: false,
@@ -1302,10 +1347,13 @@ async function saveBackgroundTemplateAction(
     throw error;
   }
 
-  return Response.json({
-    ok: true,
-    profile,
-  });
+ return Response.json({
+  ok: true,
+  profile: {
+    ...profile,
+    is_premium: hasActivePremium(profile),
+  },
+});
 }
 
 /* =========================================================
@@ -1445,10 +1493,11 @@ async function uploadImageAction(
   }
 
   const isAvatar =
-    type === "avatar";
+  type === "avatar";
+
 if (
   !isAvatar &&
-  owner.profile.is_premium !== true
+  !hasActivePremium(owner.profile)
 ) {
   return Response.json(
     {
@@ -1611,12 +1660,14 @@ if (
     }
   }
 
-  return Response.json({
-    ok: true,
-    profile,
-    url:
-      publicUrl,
-  });
+return Response.json({
+  ok: true,
+  profile: {
+    ...profile,
+    is_premium: hasActivePremium(profile),
+  },
+  url: publicUrl,
+});
 }
 
 /* =========================================================

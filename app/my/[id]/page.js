@@ -4618,7 +4618,7 @@ const previousPremiumUntil =
 
   setModal(null);
 
-  for (let attempt = 0; attempt < 12; attempt++) {
+ for (let attempt = 0; attempt < 30; attempt++) {
     try {
       const data = await apiJson("get");
 

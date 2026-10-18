@@ -4430,7 +4430,9 @@ cursor: planDisabled
   ⭐ 1 Star
 </div>
 
-{planDisabled && profile?.premium_until && (
+{isPremiumActive &&
+  Number(profile?.premium_plan_days) === plan.days &&
+  profile?.premium_until && (
   <div
     style={{
       marginTop: "10px",

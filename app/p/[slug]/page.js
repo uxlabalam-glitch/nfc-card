@@ -531,17 +531,19 @@ function handlePointerUp() {
      SCREEN LED
   ======================================================= */
 
- const screenLedStyle =
+const screenLedStyle =
   isPremiumActive && profile.screen_led_enabled
-    ? {
-          boxShadow: `
-            0 0 45px rgba(0,0,0,0.22),
-            0 0 7px ${profile.screen_led_color || "#3B82F6"},
-            0 0 16px ${profile.screen_led_color || "#3B82F6"},
-            0 0 28px ${profile.screen_led_color || "#3B82F6"}
-          `,
-        }
-      : {};
+  ? {
+      outline: `3px solid ${profile.screen_led_color || "#3B82F6"}`,
+      outlineOffset: "-3px",
+      boxShadow: `
+          inset 0 0 3px 2px ${profile.screen_led_color || "#3B82F6"},
+          inset 0 0 18px ${profile.screen_led_color || "#3B82F6"},
+          0 0 12px ${profile.screen_led_color || "#3B82F6"},
+          0 0 28px ${profile.screen_led_color || "#3B82F6"}
+        `,
+      }
+    : {};
 
   /* =======================================================
      CARD LED

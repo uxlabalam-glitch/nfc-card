@@ -1,5 +1,3 @@
-
-
 import crypto from "crypto";
 import { createClient } from "@supabase/supabase-js";
 
@@ -100,7 +98,9 @@ export async function POST(request) {
     const { data: profile, error: profileError } =
       await supabase
         .from("profiles")
-        .select("id, telegram_id, card_id")
+        .select(
+  "id, telegram_id, card_id, premium_until, premium_plan_days"
+)
         .eq("card_id", cardId)
         .maybeSingle();
 
@@ -125,8 +125,27 @@ if (![30, 365].includes(days)) {
   );
 }
 
-  const payload = [
-  "premium30",
+const premiumActive =
+  Boolean(profile.premium_until) &&
+  new Date(profile.premium_until).getTime() > Date.now();
+
+const activePlan = Number(profile.premium_plan_days);
+
+if (
+  premiumActive &&
+  (activePlan === 365 || activePlan === days)
+) {
+  return Response.json(
+    {
+      ok: false,
+      error: "Bu Premium tarif allaqachon ulangan.",
+    },
+    { status: 409 }
+  );
+}
+
+ const payload = [
+  `premium${days}`,
   String(user.id),
   String(profile.id),
   crypto.randomBytes(12).toString("hex"),

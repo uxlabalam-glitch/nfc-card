@@ -4610,6 +4610,9 @@ cursor: planDisabled
       throw new Error("Telegram to‘lov oynasi mavjud emas.");
     }
 
+const previousPremiumUntil =
+  new Date(profile?.premium_until || 0).getTime();
+    
    tg.openInvoice(result.invoiceUrl, async (status) => {
   if (status !== "paid") return;
 
@@ -4619,7 +4622,12 @@ cursor: planDisabled
     try {
       const data = await apiJson("get");
 
-      if (data.profile?.is_premium === true) {
+if (
+  data.profile?.is_premium === true &&
+  Number(data.profile?.premium_plan_days) === days &&
+  new Date(data.profile?.premium_until).getTime() >
+    Math.max(Date.now(), previousPremiumUntil)
+) {
         setProfile(data.profile);
         setLinks(data.links || []);
         showNotice("Premium ulandi!");

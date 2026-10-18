@@ -975,31 +975,6 @@ async function saveEditAction(
   );
 }
   
-  const {
-    data:
-      updatedProfile,
-    error:
-      updateError,
-  } = await owner.supabase
-    .from("profiles")
-    .update({
-      full_name:
-        fullName,
-
-      bio,
-        about_text:
-    aboutText,
-    })
-    .eq(
-      "id",
-      owner.profile.id
-    )
-    .select("*")
-    .single();
-
-  if (updateError) {
-    throw updateError;
-  }
   
 if (
   !hasActivePremium(owner.profile)
@@ -1017,87 +992,46 @@ if (
   });
 }
   
-  const {
-    error:
-      deleteLinksError,
-  } = await owner.supabase
-    .from("links")
-    .delete()
-    .eq(
-      "profile_id",
-      owner.profile.id
-    );
+const cleanLinks = links
+  .map((link, index) => ({
+    label: String(link?.label || "").trim(),
+    url: String(link?.url || "").trim(),
+    icon: String(link?.icon || "").trim(),
+    sort_order: Number.isFinite(Number(link?.sort_order))
+      ? Number(link.sort_order)
+      : index,
+  }))
+  .filter((link) => link.label || link.url || link.icon);
 
-  if (deleteLinksError) {
-    throw deleteLinksError;
-  }
-
-  const cleanLinks =
-    links
-      .map(
-        (
-          link,
-          index
-        ) => ({
-          profile_id:
-            owner.profile.id,
-
-          label:
-            String(
-              link?.label ||
-                ""
-            ).trim(),
-
-          url:
-            String(
-              link?.url ||
-                ""
-            ).trim(),
-
-          icon:
-            String(
-              link?.icon ||
-                ""
-            ).trim(),
-
-          sort_order:
-            Number.isFinite(
-              Number(
-                link?.sort_order
-              )
-            )
-              ? Number(
-                  link.sort_order
-                )
-              : index,
-        })
-      )
-      .filter(
-        (link) =>
-          link.label ||
-          link.url ||
-          link.icon
-      );
-
-  if (
-    cleanLinks.length > 0
-  ) {
-    const {
-      error:
-        insertLinksError,
-    } = await owner.supabase
-      .from("links")
-      .insert(
-        cleanLinks
-      );
-
-    if (
-      insertLinksError
-    ) {
-      throw insertLinksError;
+const { error: saveAtomicError } =
+  await owner.supabase.rpc(
+    "save_profile_edit_atomic",
+    {
+      p_profile_id: owner.profile.id,
+      p_full_name: fullName,
+      p_bio: bio,
+      p_about_text: aboutText,
+      p_links: cleanLinks,
     }
-  }
+  );
 
+if (saveAtomicError) {
+  throw saveAtomicError;
+}
+  
+const {
+  data: updatedProfile,
+  error: profileFetchError,
+} = await owner.supabase
+  .from("profiles")
+  .select("*")
+  .eq("id", owner.profile.id)
+  .single();
+
+if (profileFetchError) {
+  throw profileFetchError;
+}
+  
   const savedLinks =
     await getLinks(
       owner.supabase,

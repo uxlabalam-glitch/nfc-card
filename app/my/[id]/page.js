@@ -914,10 +914,20 @@ export default function MyCardPage() {
   const backgroundInputRef =
     useRef(null);
 
-  const [profile, setProfile] =
+const [profile, setProfile] =
   useState(null);
 
- const isPremiumActive =
+const [, setPremiumClock] = useState(0);
+
+useEffect(() => {
+  const timer = window.setInterval(() => {
+    setPremiumClock(Date.now());
+  }, 1000);
+
+  return () => window.clearInterval(timer);
+}, []);
+
+const isPremiumActive =
   Boolean(profile?.premium_until) &&
   new Date(profile.premium_until).getTime() >
     Date.now();

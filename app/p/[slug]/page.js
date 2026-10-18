@@ -616,7 +616,30 @@ const screenLedStyle =
             FON USTIDAGI QATLAM
         ================================================= */}
 
-        <div style={styles.centerOverlay} />
+      <div style={styles.centerOverlay} />
+
+{isPremiumActive && profile.screen_led_enabled && (
+  <div
+    style={{
+      position: "absolute",
+      inset: 0,
+      zIndex: 100,
+      pointerEvents: "none",
+      border: `3px solid ${
+        profile.screen_led_color || "#3B82F6"
+      }`,
+      boxSizing: "border-box",
+      boxShadow: `
+        inset 0 0 12px ${
+          profile.screen_led_color || "#3B82F6"
+        },
+        inset 0 0 28px ${
+          profile.screen_led_color || "#3B82F6"
+        }
+      `,
+    }}
+  />
+)}
 
         
 

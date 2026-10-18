@@ -65,10 +65,10 @@ async function verifyProfile(supabase, payload, userId) {
   }
 
   const { data, error } = await supabase
-    .from("profiles")
-    .select("id, telegram_id")
-    .eq("id", parsed.profileId)
-    .maybeSingle();
+  .from("profiles")
+  .select("id, telegram_id, premium_until, premium_plan_days")
+  .eq("id", parsed.profileId)
+  .maybeSingle();
 
   if (error) throw error;
 
@@ -119,13 +119,34 @@ export async function POST(request) {
         try {
           const supabase = getSupabase();
 
-          approved = Boolean(
-            await verifyProfile(
-              supabase,
-              query.invoice_payload,
-              query.from?.id
-            )
-          );
+         const profile = await verifyProfile(
+  supabase,
+  query.invoice_payload,
+  query.from?.id
+);
+
+const parsed = parsePremiumPayload(
+  query.invoice_payload
+);
+
+const premiumActive =
+  Boolean(profile?.premium_until) &&
+  new Date(profile.premium_until).getTime() >
+    Date.now();
+
+const activePlan = Number(
+  profile?.premium_plan_days
+);
+
+approved =
+  Boolean(profile && parsed) &&
+  !(
+    premiumActive &&
+    (
+      activePlan === 365 ||
+      activePlan === parsed.days
+    )
+  );
         } catch (error) {
           console.error("Pre-checkout verification:", error);
         }

@@ -190,8 +190,18 @@ export default function MyCardPage() {
   const params = useParams();
 const publicSlug = params?.slug;
 
-  const [profile, setProfile] = useState(null);
-  const [links, setLinks] = useState([]);
+ const [profile, setProfile] = useState(null);
+const [links, setLinks] = useState([]);
+
+const [, setPremiumClock] = useState(0);
+
+useEffect(() => {
+  const timer = window.setInterval(() => {
+    setPremiumClock(Date.now());
+  }, 1000);
+
+  return () => window.clearInterval(timer);
+}, []);
 
   const isPremiumActive =
   Boolean(profile?.premium_until) &&

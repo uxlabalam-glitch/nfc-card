@@ -18,6 +18,10 @@ const UI_TEXTS = {
   ledColor: "LED color",
   premiumRequired: "Premium subscription required",
   saveContact: "Save contact",
+
+  premiumDescription: "Enjoy all Premium features",
+  premiumMonthly: "30-day Premium",
+  premiumYearly: "Yearly Premium",
 };
 
 function database() {
@@ -206,7 +210,10 @@ if (!telegramUserId) {
 
 const key = body?.key;
 const keys = body?.keys;
-const language = body?.language?.trim();
+const language =
+  typeof body?.language === "string"
+    ? body.language.trim().toLowerCase()
+    : "";
 
 const requestedKeys = Array.isArray(keys)
   ? keys

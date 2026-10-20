@@ -3906,7 +3906,7 @@ onClick={() => {
           }}
         />
 
-        {number > 1 && (
+        {number >{number > 1 && !isPremiumActive && (
           <div
             style={{
               position: "absolute",

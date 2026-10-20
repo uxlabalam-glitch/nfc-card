@@ -2020,11 +2020,9 @@ setAboutText(
         )
       );
 
-      setModal(null);
-
-      showNotice(
-        t.saved
-      );
+     showNotice(
+  t.saved
+);
     } catch (err) {
       showNotice(
         err?.message ||

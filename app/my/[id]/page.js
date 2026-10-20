@@ -1678,10 +1678,29 @@ setAboutText(
       );
 
       setCardLedColor(
-        profileData
-          ?.card_led_color ||
-          "#3B82F6"
-      );
+  profileData?.card_led_color ||
+    "#3B82F6"
+);
+
+setScreenLedThickness(
+  Math.max(
+    0,
+    Math.min(
+      100,
+      Number(profileData?.screen_led_thickness ?? 100)
+    )
+  )
+);
+
+setCardLedThickness(
+  Math.max(
+    0,
+    Math.min(
+      100,
+      Number(profileData?.card_led_thickness ?? 100)
+    )
+  )
+);
 
       setEditLinks(
         linksData.map(
@@ -2205,10 +2224,30 @@ setAboutText(
     )
   );
 
-  setCardLedColor(
-    profile?.card_led_color ||
-      "#3B82F6"
-  );
+setCardLedColor(
+  profile?.card_led_color ||
+    "#3B82F6"
+);
+
+setScreenLedThickness(
+  Math.max(
+    0,
+    Math.min(
+      100,
+      Number(profile?.screen_led_thickness ?? 100)
+    )
+  )
+);
+
+setCardLedThickness(
+  Math.max(
+    0,
+    Math.min(
+      100,
+      Number(profile?.card_led_thickness ?? 100)
+    )
+  )
+);
 
   setPreviewTextStyle(
     profile?.text_style ||
@@ -2349,18 +2388,20 @@ if (
 }
 
     // FONT + LED
-    const data =
-      await apiJson(
-        "saveDesign",
-        {
-          screenLedEnabled,
-          screenLedColor,
-          cardLedEnabled,
-          cardLedColor,
-          textStyle:
-            previewTextStyle,
-        }
-      );
+   const data =
+  await apiJson(
+    "saveDesign",
+    {
+      screenLedEnabled,
+      screenLedColor,
+      screenLedThickness,
+      cardLedEnabled,
+      cardLedColor,
+      cardLedThickness,
+      textStyle:
+        previewTextStyle,
+    }
+  );
 
     latestProfile =
       data.profile ||

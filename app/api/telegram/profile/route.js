@@ -1081,12 +1081,28 @@ async function saveDesignAction(
 
   
   const screenLedEnabled =
-    body?.screenLedEnabled ===
-    true;
+  body?.screenLedEnabled ===
+  true;
 
-  const cardLedEnabled =
-    body?.cardLedEnabled ===
-    true;
+const cardLedEnabled =
+  body?.cardLedEnabled ===
+  true;
+
+const screenLedThickness =
+  Number.isFinite(Number(body?.screenLedThickness))
+    ? Math.max(
+        0,
+        Math.min(100, Number(body.screenLedThickness))
+      )
+    : 100;
+
+const cardLedThickness =
+  Number.isFinite(Number(body?.cardLedThickness))
+    ? Math.max(
+        0,
+        Math.min(100, Number(body.cardLedThickness))
+      )
+    : 100;
 
   const textStyle =
   typeof body?.textStyle === "string"
@@ -1169,12 +1185,19 @@ if (
         cardLedEnabled,
 
       card_led_color:
-        hexColor.test(
-          cardLedColor
-        )
-          ? cardLedColor
-          : "#3B82F6",
-      text_style:
+  hexColor.test(
+    cardLedColor
+  )
+    ? cardLedColor
+    : "#3B82F6",
+
+screen_led_thickness:
+  Math.round(screenLedThickness),
+
+card_led_thickness:
+  Math.round(cardLedThickness),
+
+text_style:
   safeTextStyle,
     })
     .eq(

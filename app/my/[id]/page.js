@@ -1371,12 +1371,107 @@ const [
   setPendingBackgroundTemplate,
 ] = useState(null);
   
-  const languageCode =
-    profile?.language || "en";
+const [aiTranslations, setAiTranslations] =
+  useState({});
 
-  const t =
-    TEXTS[languageCode] ||
-    TEXTS.en;
+const languageCode =
+  profile?.language || "en";
+
+const t = {
+  ...TEXTS.en,
+  ...(TEXTS[languageCode] || {}),
+  ...aiTranslations,
+
+  design:
+    aiTranslations.mainBackground ||
+    TEXTS[languageCode]?.design ||
+    TEXTS.en.design,
+
+  screenLed:
+    aiTranslations.screenLed ||
+    TEXTS[languageCode]?.screenLed ||
+    TEXTS.en.screenLed,
+
+  cardLed:
+    aiTranslations.cardLed ||
+    TEXTS[languageCode]?.cardLed ||
+    TEXTS.en.cardLed,
+};
+
+  useEffect(() => {
+  let cancelled = false;
+
+  async function loadAiTranslations() {
+    setAiTranslations({});
+
+    const initData =
+      window.Telegram?.WebApp?.initData;
+
+    if (!initData) return;
+
+    const keys = [
+      "ledThickness",
+      "save",
+      "saved",
+      "settings",
+      "mainBackground",
+      "screenLed",
+      "cardLed",
+      "ledColor",
+      "premiumRequired",
+      "saveContact",
+    ];
+
+    const results = await Promise.allSettled(
+      keys.map(async (key) => {
+        const response = await fetch(
+          "/api/translate",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              initData,
+              key,
+              language: languageCode,
+            }),
+          }
+        );
+
+        if (!response.ok) return null;
+
+        const data = await response.json();
+
+        return data.ok
+          ? [key, data.text]
+          : null;
+      })
+    );
+
+    if (cancelled) return;
+
+    const translations = {};
+
+    for (const result of results) {
+      if (
+        result.status === "fulfilled" &&
+        result.value
+      ) {
+        const [key, text] = result.value;
+        translations[key] = text;
+      }
+    }
+
+    setAiTranslations(translations);
+  }
+
+  loadAiTranslations();
+
+  return () => {
+    cancelled = true;
+  };
+}, [languageCode]);
 
   const selectedTextStyle =
   TEXT_STYLES.find(
@@ -4170,6 +4265,9 @@ thickness={
 setThickness={
   setScreenLedThickness
 }
+thicknessTitle={
+  t.ledThickness || "LED thickness"
+}
               />
 
               <LedEditor
@@ -4199,6 +4297,9 @@ thickness={
 }
 setThickness={
   setCardLedThickness
+}
+thicknessTitle={
+  t.ledThickness || "LED thickness"
 }
               />
 
@@ -4987,6 +5088,7 @@ function LedEditor({
   setColor,
   thickness,
   setThickness,
+  thicknessTitle,
 }) {
   return (
     <div
@@ -5052,7 +5154,7 @@ function LedEditor({
           fontWeight: 600,
         }}
       >
-        <span>LED qalinligi</span>
+       <span>{thicknessTitle}</span>
         <span>{thickness}%</span>
       </label>
 

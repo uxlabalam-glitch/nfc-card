@@ -1418,26 +1418,30 @@ const t = {
       "screenLed",
       "cardLed",
       "ledColor",
-      "premiumRequired",
-      "saveContact",
+     "premiumRequired",
+"saveContact",
+"premiumDescription",
+"premiumMonthly",
+"premiumYearly",
     ];
 
-    const results = await Promise.allSettled(
-      keys.map(async (key) => {
-        const response = await fetch(
-          "/api/translate",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              initData,
-              key,
-              language: languageCode,
-            }),
-          }
-        );
+   const response = await fetch("/api/translate", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    initData,
+    keys,
+    language: languageCode,
+  }),
+});
+
+if (!response.ok) return;
+
+const data = await response.json();
+
+if (!data.ok || !data.translations) return;
 
         if (!response.ok) return null;
 
@@ -1449,21 +1453,9 @@ const t = {
       })
     );
 
-    if (cancelled) return;
+  if (cancelled) return;
 
-    const translations = {};
-
-    for (const result of results) {
-      if (
-        result.status === "fulfilled" &&
-        result.value
-      ) {
-        const [key, text] = result.value;
-        translations[key] = text;
-      }
-    }
-
-    setAiTranslations(translations);
+setAiTranslations(data.translations);
   }
 
   loadAiTranslations();
@@ -4549,13 +4541,20 @@ thicknessTitle={
     onClose={() => setModal(null)}
   >
     <div style={{ display: "grid", gap: "14px" }}>
-      <p style={{ textAlign: "center", fontWeight: 700 }}>
-        Barcha Premium imkoniyatlardan foydalaning
-      </p>
+     <p style={{ textAlign: "center", fontWeight: 700 }}>
+  {t.premiumDescription ||
+    "Barcha Premium imkoniyatlardan foydalaning"}
+</p>
 
       {[
-  { days: 30, title: "30 kunlik Premium" },
-  { days: 365, title: "Yillik Premium" },
+  {
+    days: 30,
+    title: t.premiumMonthly || "30 kunlik Premium",
+  },
+  {
+    days: 365,
+    title: t.premiumYearly || "Yillik Premium",
+  },
 ].map((plan) => {
   const planDisabled =
     isPremiumActive &&

@@ -1288,10 +1288,20 @@ function handleCardPointerUp() {
     setCardLedEnabled,
   ] = useState(false);
 
-  const [
-    cardLedColor,
-    setCardLedColor,
-  ] = useState("#3B82F6");
+ const [
+  cardLedColor,
+  setCardLedColor,
+] = useState("#3B82F6");
+
+const [
+  screenLedThickness,
+  setScreenLedThickness,
+] = useState(100);
+
+const [
+  cardLedThickness,
+  setCardLedThickness,
+] = useState(100);
 
   const [saving, setSaving] =
     useState(false);
@@ -2388,8 +2398,6 @@ if (
       null
     );
 
-    setModal(null);
-
     showNotice(
       t.saved
     );
@@ -2749,11 +2757,14 @@ backgroundImage:
           style={{
             ...styles.screenLed,
 
-            boxShadow: `
-              inset 0 0 18px ${screenLedColor},
-              inset 0 0 35px ${screenLedColor},
-              inset 0 0 58px ${screenLedColor}
-            `,
+            boxShadow:
+  screenLedThickness === 0
+    ? "none"
+    : `
+        inset 0 0 ${18 * screenLedThickness / 100}px ${screenLedColor},
+        inset 0 0 ${35 * screenLedThickness / 100}px ${screenLedColor},
+        inset 0 0 ${58 * screenLedThickness / 100}px ${screenLedColor}
+      `,
           }}
         />
       )}
@@ -2917,9 +2928,9 @@ WebkitUserSelect: "none",
       inset 0 1px 0 rgba(255,255,255,.7),
       inset 0 -2px 4px rgba(0,0,0,.08),
       0 18px 38px rgba(0,0,0,.20),
-      0 0 10px ${cardLedColor},
-      0 0 24px ${cardLedColor},
-      0 0 45px ${cardLedColor}
+     0 0 ${10 * cardLedThickness / 100}px ${cardLedThickness === 0 ? "transparent" : cardLedColor},
+0 0 ${24 * cardLedThickness / 100}px ${cardLedThickness === 0 ? "transparent" : cardLedColor},
+0 0 ${45 * cardLedThickness / 100}px ${cardLedThickness === 0 ? "transparent" : cardLedColor}
     `
   : `
       inset 0 1px 0 rgba(255,255,255,.7),
@@ -4110,8 +4121,14 @@ onClick={() => {
                   screenLedColor
                 }
                 setColor={
-                  setScreenLedColor
-                }
+  setScreenLedColor
+}
+thickness={
+  screenLedThickness
+}
+setThickness={
+  setScreenLedThickness
+}
               />
 
               <LedEditor
@@ -4133,9 +4150,15 @@ onClick={() => {
                 color={
                   cardLedColor
                 }
-                setColor={
-                  setCardLedColor
-                }
+             setColor={
+  setCardLedColor
+}
+thickness={
+  cardLedThickness
+}
+setThickness={
+  setCardLedThickness
+}
               />
 
               <button
@@ -4921,6 +4944,8 @@ function LedEditor({
   setEnabled,
   color,
   setColor,
+  thickness,
+  setThickness,
 }) {
   return (
     <div
@@ -4975,15 +5000,45 @@ function LedEditor({
         </button>
       </div>
 
-      {enabled && (
-        <>
-          <div
-            style={
-              styles.colorLabel
-            }
-          >
-            {colorTitle}
-          </div>
+     {enabled && (
+  <>
+    <div style={{ marginTop: "16px", marginBottom: "16px" }}>
+      <label
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: "10px",
+          fontWeight: 600,
+        }}
+      >
+        <span>LED qalinligi</span>
+        <span>{thickness}%</span>
+      </label>
+
+      <input
+        type="range"
+        min="0"
+        max="100"
+        step="1"
+        value={thickness}
+        onChange={(event) =>
+          setThickness(Number(event.target.value))
+        }
+        style={{
+          width: "100%",
+          accentColor: color,
+          cursor: "pointer",
+        }}
+      />
+    </div>
+
+    <div
+      style={
+        styles.colorLabel
+      }
+    >
+      {colorTitle}
+    </div>
 
           <div
             style={

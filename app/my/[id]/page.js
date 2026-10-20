@@ -1443,16 +1443,6 @@ const data = await response.json();
 
 if (!data.ok || !data.translations) return;
 
-        if (!response.ok) return null;
-
-        const data = await response.json();
-
-        return data.ok
-          ? [key, data.text]
-          : null;
-      })
-    );
-
   if (cancelled) return;
 
 setAiTranslations(data.translations);

@@ -338,16 +338,45 @@ store: false,
   );
 }
 
-      const aiResult = await response.json();
+    const aiResult = await response.json();
 
-      const output = (aiResult.output || [])
+if (aiResult.status !== "completed") {
+  throw new Error(
+    `AI response incomplete: ${aiResult.status}`
+  );
+}
+
+const output = (aiResult.output || [])
         .flatMap((item) => item.content || [])
         .filter((item) => item.type === "output_text")
         .map((item) => item.text || "")
         .join("")
         .trim();
 
-      const translations = JSON.parse(output);
+     if (!output) {
+  throw new Error("AI returned empty translation");
+}
+
+let translations;
+
+try {
+  translations = JSON.parse(output);
+} catch {
+  throw new Error("AI returned invalid translation JSON");
+}
+
+const missingTranslations = missingKeys.filter(
+  (item) =>
+    typeof translations?.[item] !== "string" ||
+    !translations[item].trim()
+);
+
+if (missingTranslations.length > 0) {
+  console.error(
+    "MISSING AI TRANSLATIONS:",
+    missingTranslations
+  );
+}
 
       if (
         !translations ||

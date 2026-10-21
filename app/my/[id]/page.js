@@ -1377,25 +1377,30 @@ const [aiTranslations, setAiTranslations] =
 const languageCode =
   profile?.language || "en";
 
+const activeAiTranslations =
+  aiTranslations.language === languageCode
+    ? aiTranslations.texts
+    : {};
+
 const t = {
   ...TEXTS.en,
+  ...activeAiTranslations,
   ...(TEXTS[languageCode] || {}),
-  ...aiTranslations,
 
-  design:
-    aiTranslations.mainBackground ||
-    TEXTS[languageCode]?.design ||
-    TEXTS.en.design,
+design:
+  TEXTS[languageCode]?.design ||
+  activeAiTranslations.mainBackground ||
+  TEXTS.en.design,
 
-  screenLed:
-    aiTranslations.screenLed ||
-    TEXTS[languageCode]?.screenLed ||
-    TEXTS.en.screenLed,
+screenLed:
+  TEXTS[languageCode]?.screenLed ||
+  activeAiTranslations.screenLed ||
+  TEXTS.en.screenLed,
 
-  cardLed:
-    aiTranslations.cardLed ||
-    TEXTS[languageCode]?.cardLed ||
-    TEXTS.en.cardLed,
+cardLed:
+  TEXTS[languageCode]?.cardLed ||
+  activeAiTranslations.cardLed ||
+  TEXTS.en.cardLed,
 };
 
   useEffect(() => {
@@ -1410,20 +1415,60 @@ const t = {
     if (!initData) return;
 
     const keys = [
-      "ledThickness",
-      "save",
-      "saved",
-      "settings",
-      "mainBackground",
-      "screenLed",
-      "cardLed",
-      "ledColor",
-     "premiumRequired",
-"saveContact",
-"premiumDescription",
-"premiumMonthly",
-"premiumYearly",
-    ];
+const keys = [
+  "ledThickness",
+  "save",
+  "saved",
+  "settings",
+  "mainBackground",
+  "screenLed",
+  "cardLed",
+  "ledColor",
+  "premiumRequired",
+  "saveContact",
+  "premiumDescription",
+  "premiumMonthly",
+  "premiumYearly",
+
+  "edit",
+  "design",
+  "language",
+  "deleteProfile",
+  "qr",
+  "qrEdit",
+  "name",
+  "bio",
+  "links",
+  "addLink",
+  "service",
+  "linkName",
+  "linkUrl",
+  "avatar",
+  "background",
+  "changeAvatar",
+  "changeBackground",
+  "customColor",
+  "textStyle",
+  "textStyleInfo",
+  "standard",
+  "elegant",
+  "modern",
+  "strong",
+  "chooseLanguage",
+  "searchLanguage",
+  "searchTextStyle",
+  "noTextStyle",
+  "deleteTitle",
+  "deleteWarning",
+  "no",
+  "yes",
+  "empty",
+  "enterName",
+  "onlyImage",
+  "photoTooBig",
+  "backgroundTooBig",
+  "noLanguage",
+];
 
    const response = await fetch("/api/translate", {
   method: "POST",
@@ -1445,7 +1490,10 @@ if (!data.ok || !data.translations) return;
 
   if (cancelled) return;
 
-setAiTranslations(data.translations);
+setAiTranslations({
+  language: languageCode,
+  texts: data.translations,
+});
   }
 
   loadAiTranslations();

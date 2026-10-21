@@ -1414,8 +1414,7 @@ cardLed:
 
     if (!initData) return;
 
-    const keys = [
-const keys = [
+  const keys = [
   "ledThickness",
   "save",
   "saved",

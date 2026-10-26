@@ -127,7 +127,7 @@ const isPremiumActive =
 
 const visibleLinks = isPremiumActive
   ? links || []
-  : [];
+  : (links || []).slice(0, 1);
     
     // Ichki database ID public browserga
     // qaytarilmaydi.

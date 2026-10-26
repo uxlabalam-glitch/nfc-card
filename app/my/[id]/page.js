@@ -5506,18 +5506,59 @@ cursor: planDisabled
       fontWeight: 600,
     }}
   >
-    Ulangan · Amal qilish muddati:{" "}
-    {new Date(profile.premium_until).toLocaleString(
-      "uz-UZ",
-      {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        timeZone: "Asia/Tashkent",
-      }
-    )}
+    {({
+  ar: "مفعّل · صالح حتى:",
+  az: "Aktivləşdirilib · Etibarlılıq müddəti:",
+  bn: "সক্রিয় করা হয়েছে · মেয়াদ:",
+  bg: "Активиран · Срок на валидност:",
+  zh: "已激活 · 有效期至：",
+  cs: "Aktivováno · Platnost do:",
+  da: "Aktiveret · Gyldig indtil:",
+  nl: "Geactiveerd · Geldig tot:",
+  en: "Activated · Valid until:",
+  fi: "Aktivoitu · Voimassa asti:",
+  fr: "Activé · Valable jusqu’au :",
+  de: "Aktiviert · Gültig bis:",
+  el: "Ενεργοποιημένο · Ισχύει έως:",
+  he: "הופעל · בתוקף עד:",
+  hi: "सक्रिय किया गया · वैधता अवधि:",
+  hu: "Aktiválva · Érvényes eddig:",
+  id: "Diaktifkan · Berlaku hingga:",
+  it: "Attivato · Valido fino al:",
+  ja: "有効化済み · 有効期限：",
+  kk: "Белсендірілген · Жарамдылық мерзімі:",
+  ko: "활성화됨 · 유효 기간:",
+  ky: "Иштетилди · Жарактуулук мөөнөтү:",
+  ms: "Diaktifkan · Sah sehingga:",
+  no: "Aktivert · Gyldig til:",
+  fa: "فعال شده · معتبر تا:",
+  pl: "Aktywowano · Ważny do:",
+  pt: "Ativado · Válido até:",
+  ro: "Activat · Valabil până la:",
+  ru: "Активировано · Срок действия до:",
+  sr: "Активирано · Важи до:",
+  sk: "Aktivované · Platné do:",
+  es: "Activado · Válido hasta:",
+  sv: "Aktiverad · Giltig till:",
+  tg: "Фаъол карда шуд · Муҳлати амал:",
+  th: "เปิดใช้งานแล้ว · ใช้ได้ถึง:",
+  tr: "Etkinleştirildi · Geçerlilik süresi:",
+  tk: "Işjeňleşdirildi · Möhleti:",
+  uk: "Активовано · Термін дії до:",
+  ur: "فعال کر دیا گیا · میعاد:",
+  uz: "Faollashtirilgan · Amal qilish muddati:",
+  vi: "Đã kích hoạt · Có hiệu lực đến:",
+})[languageCode] || "Activated · Valid until:"}{" "}
+   {new Intl.DateTimeFormat(
+  undefined,
+  {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }
+).format(new Date(profile.premium_until))}
   </div>
 )}
         </button>

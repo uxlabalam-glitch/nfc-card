@@ -4198,8 +4198,8 @@ touchAction:
                   color: "#111827",
                 }}
               >
-                About me
-              </div>
+  {t.bio}
+</div>
                   <button
   type="button"
   onPointerDown={(event) =>
@@ -4324,9 +4324,9 @@ right: "0",
 {/* ABOUT */}
 {modal ===
   "about" && (
-  <ModalShell
-    title="About me"
-    icon={<FaPen />}
+ <ModalShell
+  title={t.bio}
+  icon={<FaPen />}
     onClose={() =>
       setModal(null)
     }
@@ -4350,7 +4350,7 @@ right: "0",
           ...styles.textarea,
           minHeight: "180px",
         }}
-        placeholder="About me"
+       placeholder={t.bio}
       />
 
       <button

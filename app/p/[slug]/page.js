@@ -803,7 +803,7 @@ boxShadow: isPremiumActive && profile.card_led_enabled
             ============================================= */}
 
             <div style={styles.linksGrid}>
-            {isPremiumActive && links.length > 0 && links.map((link) => (
+            {links.length > 0 && links.map((link) => (
                   <button
                     key={link.id}
                     type="button"

@@ -975,23 +975,6 @@ async function saveEditAction(
   );
 }
   
-  
-if (
-  !hasActivePremium(owner.profile)
-) {
-  return Response.json({
-    ok: true,
-    profile: {
-      ...updatedProfile,
-      is_premium: false,
-    },
-    links: await getLinks(
-      owner.supabase,
-      owner.profile.id
-    ),
-  });
-}
-  
 const cleanLinks = links
   .map((link, index) => ({
     label: String(link?.label || "").trim(),

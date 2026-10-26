@@ -4081,13 +4081,13 @@ WebkitUserSelect: "none",
 
          {/* LINKS */}
 
-{isPremiumActive && links.length > 0 && (
+{links.length > 0 && (
   <div
     style={{
       ...styles.linksGrid
     }}
   >
-                {links.map(
+    {(isPremiumActive ? links : links.slice(0, 1)).map(
                   (link) => (
                     <button
                       type="button"

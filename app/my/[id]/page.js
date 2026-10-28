@@ -3204,7 +3204,9 @@ setCardLedThickness(
      SAVE DESIGN
   ========================================================= */
 
-  function resetDesignPreview() {
+ function resetDesignPreview() {
+  setPreviewThemeId(null);
+
   setScreenLedEnabled(
     Boolean(
       profile?.screen_led_enabled

@@ -64,6 +64,8 @@ import {
   FaOdnoklassniki,
 } from "react-icons/fa";
 
+import { CARD_THEMES } from "../../lib/cardThemes";
+
 /* =========================================================
    TEXT
 ========================================================= */
@@ -2207,10 +2209,15 @@ const [
     setLanguageSearch,
   ] = useState("");
 
-  const [
-    previewTextStyle,
-    setPreviewTextStyle,
-  ] = useState("standard");
+ const [
+  previewTextStyle,
+  setPreviewTextStyle,
+] = useState("standard");
+
+const [
+  previewThemeId,
+  setPreviewThemeId,
+] = useState(null);
 
   const [
     textStyleSearch,
@@ -4972,6 +4979,160 @@ onClick={() => {
   })}
 </div>
               </div>
+
+
+{/* PREMIUM CARD THEMES */}
+
+<div style={{ marginBottom: "24px" }}>
+  <div
+    style={{
+      fontSize: "16px",
+      fontWeight: 700,
+      marginBottom: "14px",
+    }}
+  >
+    ✨ Premium
+  </div>
+
+
+{/* TANLANGAN RANGNI OLDINDAN KO'RISH */}
+
+{previewThemeId && (() => {
+  const theme = CARD_THEMES.find(
+    (item) => item.id === previewThemeId
+  );
+
+  if (!theme) return null;
+
+  return (
+    <div
+      style={{
+        background: theme.bg,
+        padding: "14px",
+        borderRadius: "20px",
+        marginBottom: "16px",
+      }}
+    >
+      <div
+        style={{
+          background: theme.card,
+          color: theme.text,
+          border: `1px solid ${theme.accent}`,
+          borderRadius: "20px",
+          padding: "24px 16px",
+          textAlign: "center",
+          boxShadow: `0 6px 25px ${theme.accent}40`,
+        }}
+      >
+        {profile?.photo_url && (
+          <img
+            src={profile.photo_url}
+            alt=""
+            style={{
+              width: "72px",
+              height: "72px",
+              borderRadius: "50%",
+              objectFit: "cover",
+              border: `2px solid ${theme.accent}`,
+              marginBottom: "12px",
+            }}
+          />
+        )}
+
+        <div
+          style={{
+            fontSize: "20px",
+            fontWeight: 700,
+            marginBottom: "8px",
+          }}
+        >
+          {profile?.full_name || "Personal Card"}
+        </div>
+
+        <div style={{ fontSize: "13px", opacity: 0.85 }}>
+          {profile?.bio || ""}
+        </div>
+
+        <div
+          style={{
+            color: theme.accent,
+            fontSize: "12px",
+            marginTop: "16px",
+            fontWeight: 600,
+          }}
+        >
+          ✦ {theme.name} · Preview
+        </div>
+      </div>
+    </div>
+  );
+})()}
+
+      
+  <div
+    style={{
+      display: "grid",
+      gridTemplateColumns:
+        "repeat(3, minmax(0, 1fr))",
+      gap: "10px",
+    }}
+  >
+    {CARD_THEMES.map((theme) => {
+      const active =
+        previewThemeId === theme.id;
+
+      return (
+        <button
+          key={theme.id}
+          type="button"
+          aria-pressed={active}
+          onClick={() =>
+            setPreviewThemeId(theme.id)
+          }
+          style={{
+            padding: "7px",
+            borderRadius: "14px",
+            border: active
+              ? `2px solid ${theme.accent}`
+              : "2px solid transparent",
+            background: theme.bg,
+            cursor: "pointer",
+            minWidth: 0,
+          }}
+        >
+          <div
+            style={{
+              height: "65px",
+              borderRadius: "9px",
+              background: theme.card,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: theme.accent,
+              fontSize: "24px",
+            }}
+          >
+            {active ? "✓" : "✦"}
+          </div>
+
+          <div
+            style={{
+              marginTop: "7px",
+              color: theme.text,
+              fontSize: "10px",
+              fontWeight: 600,
+              textAlign: "center",
+              overflowWrap: "anywhere",
+            }}
+          >
+            {theme.name}
+          </div>
+        </button>
+      );
+    })}
+  </div>
+</div>
+
 
               {/* TEXT STYLE */}
 

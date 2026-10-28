@@ -2369,11 +2369,11 @@ setAiTranslations({
   };
 }, [languageCode]);
 
-  const selectedTextStyle =
+ const selectedTextStyle =
   TEXT_STYLES.find(
     (item) =>
       item.id ===
-      (isPremiumActive
+      (isPremiumActive || modal === "design"
         ? previewTextStyle
         : "standard")
   ) || TEXT_STYLES[0];
@@ -5063,21 +5063,8 @@ onClick={() => {
                                 ? styles.textStyleButtonActive
                                 : {}),
                             }}
-                         onClick={() => {
-  if (item.premium && !isPremiumActive) {
-    showNotice(
-      PREMIUM_REQUIRED_TEXT[languageCode] ||
-      PREMIUM_REQUIRED_TEXT.en
-    );
-    return;
-  }
-
+  onClick={() => {
   setPreviewTextStyle(item.id);
-
-  showNotice(
-    UPLOADED_TEXT[languageCode] ||
-    UPLOADED_TEXT.en
-  );
 }}
                           >
                             <span

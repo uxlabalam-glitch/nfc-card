@@ -1,5 +1,6 @@
 import crypto from "crypto";
 import { createClient } from "@supabase/supabase-js";
+import { CARD_THEMES } from "../../../lib/cardThemes";
 
 export const runtime = "nodejs";
 
@@ -1112,12 +1113,27 @@ const safeTextStyle =
 
 const premiumTextStyle =
   safeTextStyle !== "standard";
-  
+
+const requestedCardTheme =
+  typeof body?.cardTheme === "string"
+    ? body.cardTheme.trim()
+    : null;
+
+if (
+  requestedCardTheme &&
+  !CARD_THEMES.some(
+    (theme) => theme.id === requestedCardTheme
+  )
+) {
+  return badRequest("Invalid card theme.");
+}
+
 if (
   (
     screenLedEnabled ||
     cardLedEnabled ||
-    premiumTextStyle
+    premiumTextStyle ||
+    requestedCardTheme
   ) &&
   !hasActivePremium(owner.profile)
 ) {
@@ -1182,6 +1198,10 @@ card_led_thickness:
 
 text_style:
   safeTextStyle,
+
+...(requestedCardTheme
+  ? { card_theme: requestedCardTheme }
+  : {}),
     })
     .eq(
       "id",

@@ -72,6 +72,7 @@ export async function GET(request) {
           language,
 premium_until,
 text_style,
+card_theme,
 screen_led_enabled,
 screen_led_color,
 card_led_enabled,
@@ -139,6 +140,7 @@ const visibleLinks = isPremiumActive
 if (!isPremiumActive) {
   publicProfile.background_url = null;
   publicProfile.text_style = "standard";
+  publicProfile.card_theme = null;
   publicProfile.screen_led_enabled = false;
   publicProfile.card_led_enabled = false;
 }

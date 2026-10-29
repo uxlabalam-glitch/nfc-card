@@ -328,10 +328,10 @@ const selectedTextStyle =
         : "standard")
   ) || TEXT_STYLES[0];
   
- const profileEmpty =
+const profileEmpty =
   !String(profile?.full_name || "").trim() &&
   !String(profile?.bio || "").trim() &&
-  (!isPremiumActive || links.length === 0);
+  links.length === 0;
   
   /* =======================================================
      BO'SH XABAR
@@ -863,7 +863,8 @@ height: "330px",
             ============================================= */}
 
             <div style={styles.linksGrid}>
-            {links.length > 0 && links.map((link) => (
+            {links.length > 0 &&
+  (isPremiumActive ? links : links.slice(0, 1)).map((link) => (
                  <button
   key={link.id}
   type="button"

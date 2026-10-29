@@ -2386,12 +2386,16 @@ setAiTranslations({
   ) || TEXT_STYLES[0];
 
  const savedCardTheme =
-  isPremiumActive
-    ? CARD_THEMES.find(
-        (theme) =>
-          theme.id === profile?.card_theme
-      ) || null
-    : null;
+  CARD_THEMES.find(
+    (theme) =>
+      theme.id === (
+        modal === "design"
+          ? previewThemeId
+          : isPremiumActive
+            ? profile?.card_theme
+            : null
+      )
+  ) || null;
 
 const filteredTextStyles =
   useMemo(() => {

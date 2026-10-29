@@ -3746,11 +3746,15 @@ cardTheme:
 
 return (
   <main
-    style={{
-      ...styles.page,
+  style={{
+    ...styles.page,
 
-      fontFamily:
-        selectedTextStyle.fontFamily,
+    ...(savedCardTheme
+      ? { background: savedCardTheme.bg }
+      : {}),
+
+    fontFamily:
+      selectedTextStyle.fontFamily,
 
       fontWeight:
         selectedTextStyle.fontWeight,
@@ -3802,11 +3806,19 @@ backgroundImage:
         }}
       />
 
-      <div
-        style={
-          styles.backgroundShade
-        }
-      />
+    <div
+  style={{
+    ...styles.backgroundShade,
+
+    ...(savedCardTheme &&
+    !(
+      isPremiumActive &&
+      (pendingBackgroundUrl || effectiveProfile?.background_url)
+    )
+      ? { background: "transparent" }
+      : {}),
+  }}
+/>
 
     {/* SCREEN LED */}
 
@@ -3841,6 +3853,14 @@ backgroundImage:
         effectiveProfile.background_url
       }")`
     : "linear-gradient(145deg,#dfe7ef,#cbd5e1)",
+
+...(savedCardTheme &&
+  !(
+    isPremiumActive &&
+    (pendingBackgroundUrl || effectiveProfile?.background_url)
+  )
+    ? { background: savedCardTheme.bg }
+    : {}),
         }}
       >
         <div

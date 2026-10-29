@@ -39,6 +39,8 @@ import {
   FaOdnoklassniki,
 } from "react-icons/fa";
 
+import { CARD_THEMES } from "../../lib/cardThemes";
+
 const fontHandwriting = Caveat({
   subsets: ["latin"],
   weight: ["600", "700"],
@@ -309,7 +311,15 @@ function handlePointerUp() {
   const t =
     TEXTS[languageCode] || TEXTS.en;
 
-  const selectedTextStyle =
+  const savedCardTheme =
+  isPremiumActive
+    ? CARD_THEMES.find(
+        (theme) =>
+          theme.id === profile?.card_theme
+      ) || null
+    : null;
+
+const selectedTextStyle =
   TEXT_STYLES.find(
     (item) =>
       item.id ===
@@ -702,11 +712,19 @@ height: "330px",
   >
     {/* OLD TOMON */}
 
-    <div
-      style={{
-       ...styles.glassPanel,
+   <div
+  style={{
+    ...styles.glassPanel,
 
-boxShadow: isPremiumActive && profile.card_led_enabled
+    background: savedCardTheme
+      ? savedCardTheme.card
+      : "rgba(255,255,255,.48)",
+
+    border: savedCardTheme
+      ? `1px solid ${savedCardTheme.accent}`
+      : "1px solid rgba(255,255,255,.55)",
+
+    boxShadow: isPremiumActive && profile.card_led_enabled
   ? `
       inset 0 1px 0 rgba(255,255,255,.7),
       inset 0 -2px 4px rgba(0,0,0,.08),
@@ -759,13 +777,18 @@ boxShadow: isPremiumActive && profile.card_led_enabled
 
            {profile.full_name?.trim() && (
   <h1
-    style={{
-      ...styles.name,
-      fontFamily: selectedTextStyle.fontFamily,
-      fontWeight: selectedTextStyle.fontWeight,
-      letterSpacing: selectedTextStyle.letterSpacing,
-    }}
-  >
+  style={{
+    ...styles.name,
+
+    ...(savedCardTheme
+      ? { color: savedCardTheme.text }
+      : {}),
+
+    fontFamily: selectedTextStyle.fontFamily,
+    fontWeight: selectedTextStyle.fontWeight,
+    letterSpacing: selectedTextStyle.letterSpacing,
+  }}
+>
     {profile.full_name}
   </h1>
 )}
@@ -775,14 +798,19 @@ boxShadow: isPremiumActive && profile.card_led_enabled
             ============================================= */}
 
            {profile.bio?.trim() && (
-  <p
-    style={{
-      ...styles.bio,
-      fontFamily: selectedTextStyle.fontFamily,
-      fontWeight: selectedTextStyle.fontWeight,
-      letterSpacing: selectedTextStyle.letterSpacing,
-    }}
-  >
+ <p
+  style={{
+    ...styles.bio,
+
+    ...(savedCardTheme
+      ? { color: savedCardTheme.text }
+      : {}),
+
+    fontFamily: selectedTextStyle.fontFamily,
+    fontWeight: selectedTextStyle.fontWeight,
+    letterSpacing: selectedTextStyle.letterSpacing,
+  }}
+>
     {profile.bio}
   </p>
 )}
@@ -804,14 +832,20 @@ boxShadow: isPremiumActive && profile.card_led_enabled
 
             <div style={styles.linksGrid}>
             {links.length > 0 && links.map((link) => (
-                  <button
-                    key={link.id}
-                    type="button"
-                    style={styles.linkButton}
-                    onClick={() =>
-                      openLink(link)
-                    }
-                  >
+                 <button
+  key={link.id}
+  type="button"
+  style={{
+    ...styles.linkButton,
+
+    ...(savedCardTheme
+      ? { color: savedCardTheme.text }
+      : {}),
+  }}
+  onClick={() =>
+    openLink(link)
+  }
+>
                     <span
                       style={{
                         ...styles.iconBox,
@@ -840,11 +874,19 @@ boxShadow: isPremiumActive && profile.card_led_enabled
                    </div>
 
           {/* ORQA TOMON */}
-          <div
-            style={{
-            ...styles.glassPanel,
+         <div
+  style={{
+    ...styles.glassPanel,
 
-boxShadow: isPremiumActive && profile.card_led_enabled
+    background: savedCardTheme
+      ? savedCardTheme.card
+      : "rgba(255,255,255,.48)",
+
+    border: savedCardTheme
+      ? `1px solid ${savedCardTheme.accent}`
+      : "1px solid rgba(255,255,255,.55)",
+
+    boxShadow: profile.card_led_enabled
   ? `
       inset 0 1px 0 rgba(255,255,255,.7),
       inset 0 -2px 4px rgba(0,0,0,.08),
@@ -879,8 +921,10 @@ boxShadow: isPremiumActive && profile.card_led_enabled
             <div
               style={{
                 fontSize: "16px",
-                fontWeight: 800,
-                color: "#111827",
+fontWeight: 800,
+color: savedCardTheme
+  ? savedCardTheme.text
+  : "#111827",
               }}
             >
               About me

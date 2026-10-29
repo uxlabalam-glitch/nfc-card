@@ -2385,8 +2385,16 @@ setAiTranslations({
         : "standard")
   ) || TEXT_STYLES[0];
 
-  const filteredTextStyles =
-    useMemo(() => {
+ const savedCardTheme =
+  isPremiumActive
+    ? CARD_THEMES.find(
+        (theme) =>
+          theme.id === profile?.card_theme
+      ) || null
+    : null;
+
+const filteredTextStyles =
+  useMemo(() => {
       const query =
         textStyleSearch
           .trim()
@@ -3311,13 +3319,12 @@ async function saveDesign() {
     return;
   }
 
-  const premiumDesignSelected =
-    previewTextStyle !== "standard" ||
-    screenLedEnabled ||
-    cardLedEnabled ||
-    Boolean(
-      pendingBackgroundFile
-    );
+const premiumDesignSelected =
+  previewTextStyle !== "standard" ||
+  screenLedEnabled ||
+  cardLedEnabled ||
+  Boolean(pendingBackgroundFile) ||
+  Boolean(previewThemeId);
 
   if (
   !isPremiumActive &&
@@ -3397,9 +3404,11 @@ if (
       screenLedThickness,
       cardLedEnabled,
       cardLedColor,
-      cardLedThickness,
-      textStyle:
-        previewTextStyle,
+     cardLedThickness,
+textStyle:
+  previewTextStyle,
+cardTheme:
+  previewThemeId,
     }
   );
 
@@ -3960,9 +3969,15 @@ WebkitUserSelect: "none",
 
   <div
     style={{
-      ...styles.glassPanel,
+     ...styles.glassPanel,
 
-      border: "1px solid rgba(255,255,255,.55)",
+background: savedCardTheme
+  ? savedCardTheme.card
+  : "rgba(255,255,255,.48)",
+
+border: savedCardTheme
+  ? `1px solid ${savedCardTheme.accent}`
+  : "1px solid rgba(255,255,255,.55)",
       
   boxShadow: isPremiumActive && cardLedEnabled
   ? `
@@ -4028,12 +4043,16 @@ WebkitUserSelect: "none",
             {/* NAME */}
 
             {!!profile.full_name && (
-              <h1
-                style={{
-                  ...styles.name,
+             <h1
+  style={{
+    ...styles.name,
 
-                  fontFamily:
-                    selectedTextStyle.fontFamily,
+    color: savedCardTheme
+      ? savedCardTheme.text
+      : "#111827",
+
+    fontFamily:
+      selectedTextStyle.fontFamily,
 
                   fontWeight:
                     selectedTextStyle.fontWeight,
@@ -4051,12 +4070,16 @@ WebkitUserSelect: "none",
             {/* BIO */}
 
             {!!profile.bio && (
-              <p
-                style={{
-                  ...styles.bio,
+             <p
+  style={{
+    ...styles.bio,
 
-                  fontFamily:
-                    selectedTextStyle.fontFamily,
+    ...(savedCardTheme
+      ? { color: savedCardTheme.text }
+      : {}),
+
+    fontFamily:
+      selectedTextStyle.fontFamily,
 
                   fontWeight:
                     Math.min(
@@ -4103,9 +4126,13 @@ WebkitUserSelect: "none",
                       key={
                         link.id
                       }
-                      style={
-                        styles.linkButton
-                      }
+                    style={{
+  ...styles.linkButton,
+
+  color: savedCardTheme
+    ? savedCardTheme.text
+    : "#111827",
+}}
                       onClick={() =>
                         openLink(
                           link
@@ -4148,9 +4175,15 @@ WebkitUserSelect: "none",
 
           <div
             style={{
-              ...styles.glassPanel,
+             ...styles.glassPanel,
 
-              border: "1px solid rgba(255,255,255,.55)",
+background: savedCardTheme
+  ? savedCardTheme.card
+  : "rgba(255,255,255,.48)",
+
+border: savedCardTheme
+  ? `1px solid ${savedCardTheme.accent}`
+  : "1px solid rgba(255,255,255,.55)",
               
 boxShadow: isPremiumActive && cardLedEnabled
   ? `
@@ -4202,9 +4235,11 @@ touchAction:
             >
               <div
                 style={{
-                  fontSize: "16px",
-                  fontWeight: 800,
-                  color: "#111827",
+                 fontSize: "16px",
+fontWeight: 800,
+color: savedCardTheme
+  ? savedCardTheme.text
+  : "#111827",
                 }}
               >
   {t.bio}

@@ -848,11 +848,21 @@ height: "330px",
 )}
 {/* BITTA BO'SH XABAR */}
 {profileEmpty && (
-  <button
-    type="button"
-    style={styles.singleEmpty}
-    onClick={showEmptyMessage}
-  >
+ <button
+  type="button"
+  style={{
+    ...styles.singleEmpty,
+
+    ...(savedCardTheme
+      ? {
+          color: savedCardTheme.text,
+          border: `1px solid ${savedCardTheme.accent}`,
+          background: "transparent",
+        }
+      : {}),
+  }}
+  onClick={showEmptyMessage}
+>
     {t.empty}
   </button>
 )}

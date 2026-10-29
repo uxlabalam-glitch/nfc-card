@@ -585,7 +585,15 @@ const screenLedStyle =
   ======================================================= */
 
   return (
-    <main style={styles.page}>
+   <main
+  style={{
+    ...styles.page,
+
+    ...(savedCardTheme
+      ? { background: savedCardTheme.bg }
+      : {}),
+  }}
+>
       {/* ===================================================
           TASHQI BLUR FON
       =================================================== */}
@@ -603,8 +611,16 @@ const screenLedStyle =
           TASHQI YENGIL QATLAM
       =================================================== */}
 
-      <div style={styles.outerOverlay} />
+     <div
+  style={{
+    ...styles.outerOverlay,
 
+    ...(savedCardTheme &&
+    !(isPremiumActive && profile.background_url)
+      ? { background: "transparent" }
+      : {}),
+  }}
+/>
       {/* ===================================================
           ASOSIY MARKAZIY QISM
       =================================================== */}
@@ -615,7 +631,14 @@ const screenLedStyle =
     ...screenLedStyle,
    backgroundImage: isPremiumActive && profile.background_url
   ? `url("${profile.background_url}")`
-  : "linear-gradient(145deg,#dfe7ef,#cbd5e1)",
+  : savedCardTheme
+    ? "none"
+    : "linear-gradient(145deg,#dfe7ef,#cbd5e1)",
+
+...(savedCardTheme &&
+  !(isPremiumActive && profile.background_url)
+    ? { background: savedCardTheme.bg }
+    : {}),
   }}
 >
 
@@ -636,7 +659,16 @@ const screenLedStyle =
             FON USTIDAGI QATLAM
         ================================================= */}
 
-      <div style={styles.centerOverlay} />
+   <div
+  style={{
+    ...styles.centerOverlay,
+
+    ...(savedCardTheme &&
+    !(isPremiumActive && profile.background_url)
+      ? { background: "transparent" }
+      : {}),
+  }}
+/>
 
 {isPremiumActive && profile.screen_led_enabled && (
   <div

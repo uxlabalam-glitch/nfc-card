@@ -3213,7 +3213,11 @@ setCardLedThickness(
   ========================================================= */
 
  function resetDesignPreview() {
-  setPreviewThemeId(null);
+setPreviewThemeId(
+  isPremiumActive
+    ? profile?.card_theme || null
+    : null
+);
 
   setScreenLedEnabled(
     Boolean(

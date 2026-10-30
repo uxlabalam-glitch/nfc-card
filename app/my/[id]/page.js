@@ -3416,19 +3416,7 @@ const data = isPremiumActive
       cardTheme: previewThemeId,
     })
   : { profile: latestProfile };
-    {
-      screenLedEnabled,
-      screenLedColor,
-      screenLedThickness,
-      cardLedEnabled,
-      cardLedColor,
-     cardLedThickness,
-textStyle:
-  previewTextStyle,
-cardTheme:
-  previewThemeId,
-    }
-  );
+   
 
     latestProfile =
       data.profile ||

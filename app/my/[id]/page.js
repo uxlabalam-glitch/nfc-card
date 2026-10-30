@@ -3402,10 +3402,20 @@ if (
     latestProfile;
 }
 
-    // FONT + LED
-   const data =
-  await apiJson(
-    "saveDesign",
+   // FONT + LED
+// Free rejimida eski Premium dizaynni qayta yozmaymiz.
+const data = isPremiumActive
+  ? await apiJson("saveDesign", {
+      screenLedEnabled,
+      screenLedColor,
+      screenLedThickness,
+      cardLedEnabled,
+      cardLedColor,
+      cardLedThickness,
+      textStyle: previewTextStyle,
+      cardTheme: previewThemeId,
+    })
+  : { profile: latestProfile };
     {
       screenLedEnabled,
       screenLedColor,

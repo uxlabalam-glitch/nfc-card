@@ -1791,10 +1791,6 @@ export async function POST(
         body
       );
     }
-
-    if (
-  action ===
-    
     return badRequest(
       "Unknown action."
     );

@@ -2658,10 +2658,16 @@ const filteredTextStyles =
         profileData?.bio ||
           ""
       );
-      setPreviewTextStyle(
-  profileData?.text_style ||
-    "standard"
+     setPreviewTextStyle(
+  isPremiumActive
+    ? profile?.text_style || "standard"
+    : "standard"
 );
+
+if (!isPremiumActive) {
+  setScreenLedEnabled(false);
+  setCardLedEnabled(false);
+}
 setAboutText(
   profileData?.about_text ||
     ""
@@ -3331,8 +3337,8 @@ const premiumDesignSelected =
   previewTextStyle !== "standard" ||
   screenLedEnabled ||
   cardLedEnabled ||
-  Boolean(pendingBackgroundFile) ||
-  Boolean(previewThemeId);
+Boolean(pendingBackgroundFile) ||
+Boolean(previewThemeId);
 
   if (
   !isPremiumActive &&
@@ -4934,114 +4940,7 @@ onClose={
                   }
                 </button>
 
-                  <div
-  style={{
-    marginTop: "14px",
-    display: "flex",
-    gap: "10px",
-    overflowX: "auto",
-    paddingBottom: "8px",
-    WebkitOverflowScrolling: "touch",
-  }}
->
-  {Array.from({ length: 10 }, (_, index) => {
-    const number = index + 1;
-
-    const imageUrl =
-      `https://yzkeabplmbxkvyschlop.supabase.co/storage/v1/object/public/backgrounds/templates/nature-${String(
-        number
-      ).padStart(2, "0")}.webp`;
-
-    return (
-     <button
-        key={number}
-    type="button"
-onClick={() => {
-  if (
-  number > 1 &&
-  !isPremiumActive
-) {
-    showNotice(
-      PREMIUM_REQUIRED_TEXT[
-        languageCode
-      ] ||
-        PREMIUM_REQUIRED_TEXT.en
-    );
-
-    return;
-  }
-
-  if (
-    pendingBackgroundUrl &&
-    pendingBackgroundUrl.startsWith(
-      "blob:"
-    )
-  ) {
-    URL.revokeObjectURL(
-      pendingBackgroundUrl
-    );
-  }
-
-  setPendingBackgroundFile(null);
-
-  setPendingBackgroundUrl(
-    imageUrl
-  );
-
-  setPendingBackgroundTemplate(
-    number
-  );
-
-  showNotice(
-    UPLOADED_TEXT[
-      languageCode
-    ] ||
-      UPLOADED_TEXT.en
-  );
-}}
-        style={{
-          position: "relative",
-          flex: "0 0 90px",
-          height: "120px",
-          borderRadius: "14px",
-          overflow: "hidden",
-        }}
-      >
-        <img
-          src={imageUrl}
-          alt=""
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-          }}
-        />
-
-       {number > 1 && !isPremiumActive && (
-          <div
-            style={{
-              position: "absolute",
-              top: "6px",
-              right: "6px",
-              background: "rgba(0,0,0,.65)",
-              color: "#fff",
-              borderRadius: "50%",
-              width: "24px",
-              height: "24px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: "12px",
-            }}
-          >
-            🔒
-          </div>
-        )}
-      </button>
-    );
-  })}
-</div>
-              </div>
+                           </div>
 
 
 {/* PREMIUM CARD THEMES */}

@@ -2243,11 +2243,6 @@ const [
   pendingBackgroundUrl,
   setPendingBackgroundUrl,
 ] = useState("");
-
-const [
-  pendingBackgroundTemplate,
-  setPendingBackgroundTemplate,
-] = useState(null);
   
 const [aiTranslations, setAiTranslations] =
   useState({});
@@ -3304,7 +3299,7 @@ setCardLedThickness(
   setPendingBackgroundFile(null);
   setPendingBackgroundUrl("");
 
-  setPendingBackgroundTemplate(null);
+  
 }
 
 function openDesign() {
@@ -3389,24 +3384,6 @@ Boolean(previewThemeId);
         backgroundData.profile ||
         latestProfile;
     }
-    // BACKGROUND TEMPLATE:
-// faqat Save bosilganda saqlanadi
-if (
-  pendingBackgroundTemplate
-) {
-  const templateData =
-    await apiJson(
-      "saveBackgroundTemplate",
-      {
-        templateNumber:
-          pendingBackgroundTemplate,
-      }
-    );
-
-  latestProfile =
-    templateData.profile ||
-    latestProfile;
-}
 
    // FONT + LED
 // Free rejimida eski Premium dizaynni qayta yozmaymiz.

@@ -3944,155 +3944,180 @@ style={{
   top: "12px",
   left: "12px",
   zIndex: 5,
+  width: "44px",
+  height: "44px",
+  borderRadius: "14px",
+  color: "#E5E7EB",
+  background: "linear-gradient(145deg,rgba(255,255,255,.38),rgba(255,255,255,.08))",
+  border: "1px solid rgba(255,255,255,.55)",
+  backdropFilter: "blur(15px)",
+  boxShadow: "inset 0 2px 3px rgba(255,255,255,.4),0 7px 16px rgba(0,0,0,.25)",
 }}
 >
   <FaGear />
 </button>
 
-            {/* AVATAR */}
-
-            <div
-              style={
-                styles.avatarOuter
-              }
-            >
-            {(pendingAvatarUrl ||
-  profile.photo_url) ? (
-  <div
-    aria-label={
-      profile.full_name ||
-      "Profile"
-    }
-    style={{
-      ...styles.avatarImage,
-     backgroundImage: `url("${
-  pendingAvatarUrl ||
-  profile.photo_url
-}")`,
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-      backgroundRepeat: "no-repeat",
-    }}
-  />
-) : (
-  <div
-    style={
-      styles.avatarPlaceholder
-    }
-  >
-    👤
-  </div>
-)}
-            </div>
-
-<div style={{
-  display: "flex",
-  justifyContent: "center",
-  gap: "12px",
-  marginTop: "10px",
-  marginBottom: "8px",
-}}>
-  <button
-    type="button"
-    onClick={() => setModal("premiumPlans")}
-   style={{
-  ...styles.menuButton,
-  width: "44px",
-  height: "44px",
-  borderRadius: "50%",
-  background: "linear-gradient(145deg,#303948,#111827)",
-  boxShadow: "0 4px 12px rgba(0,0,0,.25)",
-  perspective: "140px",
-}}
-    aria-label="Premium"
-  >
-    <span
+          {/* AVATAR + PREMIUM + QR + NAME */}
+<div
   style={{
-    display: "inline-block",
-    fontSize: "26px",
-    color: "#FFD700",
-    textShadow: "1px 2px 0 #956400, 0 0 7px rgba(255,210,30,.55)",
-animation: isPremiumActive
-  ? "premiumStarSpin 4s linear infinite"
-  : "premiumStarPulse 2s ease-in-out infinite",
+    display: "flex",
+    alignItems: "flex-start",
+    gap: "18px",
+    paddingTop: "48px",
+    paddingBottom: "12px",
+    width: "100%",
   }}
 >
-  ★
-</span>
-  </button>
-
-  <button
-    type="button"
-    onClick={openQr}
-   style={{
-  ...styles.menuButton,
-  width: "44px",
-  height: "44px",
-  borderRadius: "50%",
-  background: "linear-gradient(145deg,#38BDF8,#1D4ED8)",
-  color: "#FFFFFF",
-  boxShadow: "0 4px 12px rgba(29,78,216,.35)",
-}}
-    aria-label={t.qr}
+  {/* CHAP: AVATAR, PREMIUM, QR */}
+  <div
+    style={{
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      gap: "10px",
+      flexShrink: 0,
+      width: "86px",
+    }}
   >
-    <FaQrcode />
-  </button>
+    <div
+      style={{
+        ...styles.avatarOuter,
+        position: "relative",
+        top: "auto",
+        left: "auto",
+        width: "82px",
+        height: "82px",
+      }}
+    >
+      {(pendingAvatarUrl || profile.photo_url) ? (
+        <div
+          aria-label={profile.full_name || "Profile"}
+          style={{
+            ...styles.avatarImage,
+            backgroundImage: `url("${pendingAvatarUrl || profile.photo_url}")`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        />
+      ) : (
+        <div style={styles.avatarPlaceholder}>👤</div>
+      )}
+    </div>
+
+    {/* PREMIUM — OYNALI 3D */}
+    <button
+      type="button"
+      aria-label="Premium"
+      onClick={() => setModal("premiumPlans")}
+      style={{
+        ...styles.menuButton,
+        width: "52px",
+        height: "52px",
+        borderRadius: "17px",
+        background:
+          "linear-gradient(145deg,rgba(255,255,255,.35),rgba(255,255,255,.08))",
+        border: "1px solid rgba(255,255,255,.5)",
+        backdropFilter: "blur(15px)",
+        boxShadow:
+          "inset 0 2px 3px rgba(255,255,255,.35),0 8px 18px rgba(0,0,0,.25)",
+      }}
+    >
+      <img
+  src="/icons/nfc-premium-3d.png"
+  alt="Premium"
+  draggable={false}
+  style={{
+    width: "100%",
+    height: "100%",
+    objectFit: "contain",
+    animation: isPremiumActive
+      ? "premiumStarSpin 4s linear infinite"
+      : "premiumStarPulse 2s ease-in-out infinite",
+  }}
+/>
+    </button>
+
+    {/* QR — OYNALI 3D */}
+    <button
+      type="button"
+      aria-label={t.qr}
+      onClick={openQr}
+      style={{
+        ...styles.menuButton,
+        width: "52px",
+        height: "52px",
+        borderRadius: "17px",
+        background:
+          "linear-gradient(145deg,rgba(56,189,248,.75),rgba(29,78,216,.8))",
+        border: "1px solid rgba(255,255,255,.65)",
+        backdropFilter: "blur(15px)",
+        boxShadow:
+          "inset 0 2px 4px rgba(255,255,255,.5),0 8px 18px rgba(29,78,216,.35)",
+        color: "#FFFFFF",
+        fontSize: "23px",
+      }}
+    >
+    <img
+  src="/icons/nfc-qr-3d.png"
+  alt="QR"
+  draggable={false}
+  style={{
+    width: "100%",
+    height: "100%",
+    objectFit: "contain",
+  }}
+/>
+    </button>
+  </div>
+
+  {/* O‘NG: ISM VA QISQA MA’LUMOT */}
+  <div
+    style={{
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      flex: 1,
+      minWidth: 0,
+      paddingTop: "12px",
+      textAlign: "left",
+    }}
+  >
+    {!!profile.full_name && (
+      <h1
+        style={{
+          ...styles.name,
+          position: "static",
+          transform: "none",
+          margin: "0 0 8px",
+          textAlign: "left",
+          color: savedCardTheme
+            ? savedCardTheme.text
+            : "#111827",
+          overflowWrap: "anywhere",
+        }}
+      >
+        {profile.full_name}
+      </h1>
+    )}
+
+    {!!profile.bio && (
+      <p
+        style={{
+          ...styles.bio,
+          position: "static",
+          transform: "none",
+          margin: 0,
+          textAlign: "left",
+          color: savedCardTheme
+            ? savedCardTheme.text
+            : "#374151",
+        }}
+      >
+        {profile.bio}
+      </p>
+    )}
+  </div>
 </div>
-
-            {/* NAME */}
-
-            {!!profile.full_name && (
-             <h1
-  style={{
-    ...styles.name,
-
-    color: savedCardTheme
-      ? savedCardTheme.text
-      : "#111827",
-
-    fontFamily:
-      selectedTextStyle.fontFamily,
-
-                  fontWeight:
-                    selectedTextStyle.fontWeight,
-
-                  letterSpacing:
-                    selectedTextStyle.letterSpacing,
-                }}
-              >
-                {
-                  profile.full_name
-                }
-              </h1>
-            )}
-
-            {/* BIO */}
-
-            {!!profile.bio && (
-             <p
-  style={{
-    ...styles.bio,
-
-    ...(savedCardTheme
-      ? { color: savedCardTheme.text }
-      : {}),
-
-    fontFamily:
-      selectedTextStyle.fontFamily,
-
-                  fontWeight:
-                    Math.min(
-                      selectedTextStyle.fontWeight,
-                      700
-                    ),
-
-                  letterSpacing:
-                    selectedTextStyle.letterSpacing,
-                }}
-              >
-                {profile.bio}
-              </p>
-            )}
 
             {/* ONE EMPTY MESSAGE ONLY */}
 
@@ -4306,7 +4331,16 @@ right: "0",
               t.settings
             }
             icon={
-              <FaGear />
+             <img
+  src="/icons/nfc-settings-3d.png"
+  alt="Settings"
+  draggable={false}
+  style={{
+    width: "100%",
+    height: "100%",
+    objectFit: "contain",
+  }}
+/>
             }
             onClose={() =>
               setModal(null)
@@ -6291,10 +6325,43 @@ function LedEditor({
    SOCIAL ICON
 ========================================================= */
 
+const CONTACT_3D_ICONS = {
+  telegram: "/icons/nfc-telegram-3d.png",
+  whatsapp: "/icons/nfc-whatsapp-3d.png",
+  instagram: "/icons/nfc-instagram-3d.png",
+  threads: "/icons/nfc-threads-3d.png",
+  youtube: "/icons/nfc-youtube-3d.png",
+  tiktok: "/icons/nfc-tiktok-3d.png",
+  facebook: "/icons/nfc-facebook-3d.png",
+  linkedin: "/icons/nfc-linkedin-3d.png",
+  x: "/icons/nfc-x-3d.png",
+  vk: "/icons/nfc-vk-3d.png",
+  ok: "/icons/nfc-ok-3d.png",
+  phone: "/icons/nfc-phone-3d.png",
+  email: "/icons/nfc-email-3d.png",
+  website: "/icons/nfc-website-3d.png",
+  location: "/icons/nfc-location-3d.png",
+};
+  
 function SocialIcon({
   icon,
   small = false,
 }) {
+  if (!small && CONTACT_3D_ICONS[icon]) {
+    return (
+      <img
+        src={CONTACT_3D_ICONS[icon]}
+        alt={icon}
+        draggable={false}
+        style={{
+          width: "100%",
+          height: "100%",
+          objectFit: "contain",
+        }}
+      />
+    );
+  }
+
   const size =
     small ? 17 : 25;
 
@@ -7047,8 +7114,8 @@ minWidth: "0",
   },
 
   iconBox: {
-   width: "36px",
-height: "36px",
+  width: "48px",
+height: "48px",
 
     display:
       "flex",

@@ -6763,11 +6763,11 @@ const styles = {
     right:
       "18px",
 
-    top:
-      "50%",
+   top:
+  "100px",
 
-    transform:
-      "translateY(-46%)",
+transform:
+  "none",
 
     borderRadius:
       "32px",
@@ -6783,11 +6783,14 @@ const styles = {
     width:
       "100%",
 
-    minHeight:
-      "330px",
+aspectRatio:
+  "1.586 / 1",
 
-    maxHeight:
-      "calc(100dvh - 115px)",
+minHeight:
+  "0",
+
+maxHeight:
+  "none",
 
     padding:
       "72px 22px 24px",
@@ -6826,20 +6829,17 @@ const styles = {
 
     zIndex: 5,
 
-    top:
-      "-51px",
+   top:
+  "14px",
 
-    left:
-      "50%",
+left:
+  "14px",
 
-    transform:
-      "translateX(-50%)",
+transform:
+  "none",
 
-    width:
-      "102px",
-
-    height:
-      "102px",
+   width: "64px",
+height: "64px",
 
     padding:
       "4px",

@@ -6757,11 +6757,9 @@ const styles = {
 
     zIndex: 10,
 
-    left:
-      "18px",
-
-    right:
-      "18px",
+ left: "12px",
+right: "12px",
+width: "auto",
 
    top:
   "100px",
@@ -6780,8 +6778,7 @@ transform:
     position:
       "relative",
 
-    width:
-      "100%",
+   width: "calc(100% - 24px)",
 
 aspectRatio:
   "1.586 / 1",
@@ -6792,8 +6789,8 @@ minHeight:
 maxHeight:
   "none",
 
-    padding:
-      "72px 22px 24px",
+padding:
+  "24px 16px 16px 92px",
 
     boxSizing:
       "border-box",
@@ -6816,8 +6813,8 @@ maxHeight:
     boxShadow:
       "0 25px 70px rgba(0,0,0,.18)",
 
-    textAlign:
-      "center",
+   textAlign:
+  "left",
 
     overflow:
       "visible",
@@ -6911,19 +6908,18 @@ height: "64px",
     background:
       "rgba(229,231,235,.78)",
 
-    fontSize:
-      "41px",
+  fontSize: "28px",
   },
 
   name: {
     margin:
-      "0 0 6px",
+      "0 0 4px",
 
     color:
       "#111827",
 
-    fontSize:
-      "clamp(22px,7vw,28px)",
+      fontSize:
+  "clamp(16px,4.5vw,20px)",
 
     lineHeight:
       1.15,
@@ -6940,16 +6936,16 @@ height: "64px",
 
   bio: {
     margin:
-      "0 auto 18px",
+  "4px 0 10px",
 
-    maxWidth:
-      "320px",
+maxWidth:
+  "100%",
 
     color:
       "#475467",
 
     fontSize:
-      "14px",
+      "12px",
 
     lineHeight:
       1.4,
@@ -6957,7 +6953,7 @@ height: "64px",
     display:
       "-webkit-box",
 
-    WebkitLineClamp: 3,
+    WebkitLineClamp: 2,
 
     WebkitBoxOrient:
       "vertical",
@@ -6999,17 +6995,16 @@ height: "64px",
     flexWrap:
       "wrap",
 
-    justifyContent:
-      "center",
+  justifyContent:
+  "flex-start",
+    
+gap: "8px",
 
-    gap:
-      "13px",
+  marginTop:
+  "6px",
 
-    marginTop:
-      "14px",
-
-    maxHeight:
-      "230px",
+   maxHeight:
+  "80px",
 
     overflowY:
       "auto",
@@ -7020,8 +7015,9 @@ height: "64px",
 
   linkButton: {
     width:
-      "66px",
-
+            "48px",
+maxWidth: "100%",
+minWidth: "0",
     display:
       "flex",
 
@@ -7032,9 +7028,9 @@ height: "64px",
       "center",
 
     gap:
-      "6px",
+      "3px",
 
-    padding: 0,
+   padding: "4px 2px",
 
     border: 0,
 
@@ -7049,11 +7045,8 @@ height: "64px",
   },
 
   iconBox: {
-    width:
-      "54px",
-
-    height:
-      "54px",
+   width: "36px",
+height: "36px",
 
     display:
       "flex",
@@ -7065,7 +7058,7 @@ height: "64px",
       "center",
 
     borderRadius:
-      "17px",
+      "12px",
 
     background:
       "rgba(255,255,255,.72)",
@@ -7094,7 +7087,7 @@ height: "64px",
       "nowrap",
 
     fontSize:
-      "11px",
+      "9px",
 
     fontWeight:
       700,

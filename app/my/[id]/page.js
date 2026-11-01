@@ -6757,9 +6757,12 @@ const styles = {
 
     zIndex: 10,
 
- left: "12px",
+left: "12px",
 right: "12px",
 width: "auto",
+marginLeft: "0",
+marginRight: "0",
+boxSizing: "border-box",
 
    top:
   "100px",

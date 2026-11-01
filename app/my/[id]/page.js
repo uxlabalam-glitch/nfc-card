@@ -1826,6 +1826,9 @@ const effectiveProfile = profile
   const [links, setLinks] =
     useState([]);
 
+  const [linksExpanded, setLinksExpanded] =
+  useState(false);
+  
   const [menuOpen, setMenuOpen] =
     useState(false);
 
@@ -1982,9 +1985,9 @@ function handleCardPointerDown(event) {
   if (event.button !== undefined && event.button !== 0) return;
   if (event.isPrimary === false) return;
 
-  if (event.target?.closest?.(
-    "button, a, input, textarea, select, [role='button']"
-  )) return;
+ if (event.target?.closest?.(
+  "button, a, input, textarea, select, [role='button'], [data-links-scroll]"
+)) return;
 
   event.preventDefault();
 
@@ -3199,9 +3202,7 @@ setCardLedThickness(
     previewUrl
   );
 
-  setPendingBackgroundTemplate(
-    null
-  );
+ 
 
   showNotice(
     UPLOADED_TEXT[
@@ -3433,9 +3434,7 @@ const data = isPremiumActive
     );
     setPendingBackgroundUrl("");
 
-    setPendingBackgroundTemplate(
-      null
-    );
+  
 
     showNotice(
       t.saved
@@ -3858,85 +3857,6 @@ backgroundImage:
   }
 `}</style>
 
-<div
-  style={{
-    ...styles.topRight,
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-end",
-    gap: "8px",
-    flexWrap: "nowrap",
-  }}
-  onClick={(event) => event.stopPropagation()}
->
-  <button
-    type="button"
-    aria-label="Premium sotib olish"
-  onClick={() => setModal("premiumPlans")}
-
-    style={{
-      ...styles.menuButton,
-      width: "44px",
-      minWidth: "44px",
-      height: "44px",
-      borderRadius: "50%",
-      flexShrink: 0,
-      padding: 0,
-      background: "linear-gradient(145deg,#303948,#111827)",
-      perspective: "140px",
-    }}
-  >
-    <span
-      aria-hidden="true"
-      style={{
-        display: "inline-block",
-        fontSize: "26px",
-        lineHeight: 1,
-        color: "#FFD700",
-        textShadow: "1px 2px 0 #956400, 0 0 7px rgba(255,210,30,.55)",
-        transformStyle: "preserve-3d",
-        animation: "premiumStarSpin 4s linear infinite",
-      }}
-    >
-      ★
-    </span>
-  </button>
-
-  <button
-    type="button"
-    aria-label="QR kod"
-    onClick={openQr}
-    style={{
-      ...styles.menuButton,
-      width: "44px",
-      minWidth: "44px",
-      height: "44px",
-      borderRadius: "50%",
-      flexShrink: 0,
-      padding: 0,
-    }}
-  >
-    <FaQrcode />
-  </button>
-
-  <button
-    type="button"
-    aria-label="Sozlamalar"
-    onClick={openSettings}
-    style={{
-      ...styles.menuButton,
-      width: "44px",
-      minWidth: "44px",
-      height: "44px",
-      borderRadius: "50%",
-      flexShrink: 0,
-      padding: 0,
-    }}
-  >
-    <FaGear />
-  </button>
-</div>
 
         {/* CARD */}
 
@@ -4013,6 +3933,22 @@ border: savedCardTheme
         "rotateY(0deg)",
     }}
   >
+
+<button
+  type="button"
+  aria-label={t.settings}
+  onClick={openSettings}
+style={{
+  ...styles.menuButton,
+  position: "absolute",
+  top: "12px",
+  left: "12px",
+  zIndex: 5,
+}}
+>
+  <FaGear />
+</button>
+
             {/* AVATAR */}
 
             <div
@@ -4048,6 +3984,60 @@ border: savedCardTheme
   </div>
 )}
             </div>
+
+<div style={{
+  display: "flex",
+  justifyContent: "center",
+  gap: "12px",
+  marginTop: "10px",
+  marginBottom: "8px",
+}}>
+  <button
+    type="button"
+    onClick={() => setModal("premiumPlans")}
+   style={{
+  ...styles.menuButton,
+  width: "44px",
+  height: "44px",
+  borderRadius: "50%",
+  background: "linear-gradient(145deg,#303948,#111827)",
+  boxShadow: "0 4px 12px rgba(0,0,0,.25)",
+  perspective: "140px",
+}}
+    aria-label="Premium"
+  >
+    <span
+  style={{
+    display: "inline-block",
+    fontSize: "26px",
+    color: "#FFD700",
+    textShadow: "1px 2px 0 #956400, 0 0 7px rgba(255,210,30,.55)",
+animation: isPremiumActive
+  ? "premiumStarSpin 4s linear infinite"
+  : "premiumStarPulse 2s ease-in-out infinite",
+  }}
+>
+  ★
+</span>
+  </button>
+
+  <button
+    type="button"
+    onClick={openQr}
+   style={{
+  ...styles.menuButton,
+  width: "44px",
+  height: "44px",
+  borderRadius: "50%",
+  background: "linear-gradient(145deg,#38BDF8,#1D4ED8)",
+  color: "#FFFFFF",
+  boxShadow: "0 4px 12px rgba(29,78,216,.35)",
+}}
+    aria-label={t.qr}
+  >
+    <FaQrcode />
+  </button>
+</div>
 
             {/* NAME */}
 
@@ -4125,8 +4115,10 @@ border: savedCardTheme
 {links.length > 0 && (
   <div
     style={{
-      ...styles.linksGrid
-    }}
+  ...styles.linksGrid,
+  maxHeight: linksExpanded ? "none" : "116px",
+  overflowY: linksExpanded ? "visible" : "auto",
+}}
   >
     {(isPremiumActive ? links : links.slice(0, 1)).map(
                   (link) => (
@@ -4177,9 +4169,17 @@ border: savedCardTheme
                   )
                 )}
               </div>
-            )}
-                  </div>
-
+                            )}
+          {(isPremiumActive ? links : links.slice(0, 1)).length > 8 && (
+  <button
+    type="button"
+    onPointerDown={(event) => event.stopPropagation()}
+    onClick={() => setLinksExpanded((value) => !value)}
+  >
+    {linksExpanded ? "Скрыть" : "Раскрыть"}
+  </button>
+)}
+</div>
           {/* BACK FACE */}
 
           <div
@@ -6765,7 +6765,7 @@ marginRight: "0",
 boxSizing: "border-box",
 
    top:
-  "100px",
+  "70px",
 
 transform:
   "none",
@@ -6781,8 +6781,7 @@ transform:
     position:
       "relative",
 
-   width: "calc(100% - 24px)",
-
+   width: "100%",
 aspectRatio:
   "1.586 / 1",
 
@@ -6992,33 +6991,33 @@ maxWidth:
   },
 
   linksGrid: {
-    display:
-      "flex",
+   display: "grid",
 
-    flexWrap:
-      "wrap",
+gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
 
-  justifyContent:
-  "flex-start",
+columnGap: "4px",
     
 gap: "8px",
 
   marginTop:
   "6px",
 
-   maxHeight:
-  "80px",
+ maxHeight:
+  "116px",
 
     overflowY:
       "auto",
+
+    touchAction: "pan-y",
+WebkitOverflowScrolling: "touch",
 
     overscrollBehavior:
       "contain",
   },
 
   linkButton: {
-    width:
-            "48px",
+   width:
+  "100%",
 maxWidth: "100%",
 minWidth: "0",
     display:

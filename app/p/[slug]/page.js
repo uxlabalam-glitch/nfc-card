@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -714,8 +715,8 @@ transform: "scale(1)",
   style={{
     position: "relative",
     width: "100%",
-height: "330px",
-    minHeight: "330px",
+aspectRatio: "1.586 / 1",
+    height: "auto",
 
     perspective: "1200px",
   }}
@@ -1405,16 +1406,17 @@ outerOverlay: {
 content: {
   position: "relative",
   zIndex: 2,
+  width: "100%",
   minHeight: "100dvh",
-  padding: "0 18px",
+  padding: "100px 12px 24px",
   boxSizing: "border-box",
   display: "flex",
-  alignItems: "center",
+  alignItems: "flex-start",
   justifyContent: "center",
 },
   singleEmpty: {
-  margin: "28px auto",
-  padding: "12px 18px",
+  margin: "12px 0",
+  padding: "8px 10px",
   border: "1px solid rgba(17,24,39,.08)",
   borderRadius: "15px",
   background: "rgba(255,255,255,.32)",
@@ -1426,14 +1428,12 @@ content: {
 glassPanel: {
   position: "relative",
   width: "100%",
-
-  minHeight: "330px",
-  maxHeight: "calc(100dvh - 115px)",
-
-  padding: "72px 22px 24px",
+  height: "100%",
+  minHeight: 0,
+  maxHeight: "none",
+  padding: "20px 14px 12px 92px",
   boxSizing: "border-box",
-
-  borderRadius: "32px",
+  borderRadius: "20px",
 
   background: "rgba(255,255,255,.48)",
 
@@ -1444,18 +1444,18 @@ glassPanel: {
 
   boxShadow: "0 25px 70px rgba(0,0,0,.18)",
 
-  textAlign: "center",
-  overflow: "visible",
+  textAlign: "left",
+  overflow: "hidden",
 },
 
 avatarOuter: {
   position: "absolute",
   zIndex: 5,
-  top: "-51px",
-  left: "50%",
-  transform: "translateX(-50%)",
-  width: "102px",
-  height: "102px",
+  top: "14px",
+  left: "14px",
+  transform: "none",
+  width: "64px",
+  height: "64px",
   padding: "4px",
   boxSizing: "border-box",
   borderRadius: "50%",
@@ -1492,13 +1492,13 @@ avatarOuter: {
 
     color: "#98a2b3",
 
-    fontSize: "44px",
+    fontSize: "28px",
   },
 
   name: {
     margin: "0 0 6px",
 
-fontSize: "clamp(22px,7vw,28px)",
+fontSize: "clamp(16px,4.5vw,20px)",
 
     lineHeight: 1.15,
 
@@ -1508,15 +1508,17 @@ fontSize: "clamp(22px,7vw,28px)",
   },
 
   bio: {
-    margin: 0,
-
+    margin: "4px 0 10px",
+    maxWidth: "100%",
     color: "#667085",
-
-    fontSize: "16px",
-
-    lineHeight: 1.5,
-
+    fontSize: "12px",
+    lineHeight: 1.3,
     whiteSpace: "pre-wrap",
+    display: "-webkit-box",
+    WebkitBoxOrient: "vertical",
+    WebkitLineClamp: 2,
+    overflow: "hidden",
+    overflowWrap: "anywhere",
   },
 
   emptyName: {
@@ -1564,50 +1566,38 @@ fontSize: "clamp(22px,7vw,28px)",
   ======================================================= */
 
   linksGrid: {
-    marginTop: "30px",
-
+    marginTop: "6px",
     display: "grid",
-
-    gridTemplateColumns:
-      "repeat(3, minmax(0, 1fr))",
-
-    gap: "22px 12px",
+    gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+    gap: "8px",
+    maxHeight: "80px",
+    overflowY: "auto",
+    overflowX: "hidden",
   },
 
   linkButton: {
     minWidth: 0,
-
-    padding: 0,
-
+    maxWidth: "100%",
+    width: "100%",
+    padding: "4px 2px",
     border: 0,
-
     background: "transparent",
-
     color: "#111827",
-
-    fontSize: "13px",
-
+    fontSize: "11px",
     fontWeight: "600",
-
     fontFamily: "inherit",
-
     display: "flex",
-
     flexDirection: "column",
-
     alignItems: "center",
-
-    gap: "8px",
-
+    gap: "3px",
     cursor: "pointer",
   },
 
   iconBox: {
-    width: "60px",
-
-    height: "60px",
-
-    borderRadius: "18px",
+    width: "36px",
+    height: "36px",
+    flexShrink: 0,
+    borderRadius: "12px",
 
     background:
       "rgba(255,255,255,0.88)",
@@ -1627,6 +1617,7 @@ fontSize: "clamp(22px,7vw,28px)",
 
   linkLabel: {
     maxWidth: "100%",
+    fontSize: "9px",
 
     overflow: "hidden",
 

@@ -535,6 +535,50 @@ const SERVICES = [
    LANGUAGES
 ========================================================= */
 
+const LINKS_EXPAND_TEXT = {
+  ar: ["عرض الكل", "إخفاء"],
+  az: ["Hamısını göstər", "Gizlət"],
+  bn: ["সব দেখুন", "লুকান"],
+  bg: ["Покажи всички", "Скрий"],
+  zh: ["显示全部", "收起"],
+  cs: ["Zobrazit vše", "Skrýt"],
+  da: ["Vis alle", "Skjul"],
+  nl: ["Alles tonen", "Verbergen"],
+  en: ["Show all", "Hide"],
+  fi: ["Näytä kaikki", "Piilota"],
+  fr: ["Tout afficher", "Masquer"],
+  de: ["Alle anzeigen", "Ausblenden"],
+  el: ["Εμφάνιση όλων", "Απόκρυψη"],
+  he: ["הצג הכל", "הסתר"],
+  hi: ["सभी दिखाएं", "छिपाएं"],
+  hu: ["Összes megjelenítése", "Elrejtés"],
+  id: ["Tampilkan semua", "Sembunyikan"],
+  it: ["Mostra tutto", "Nascondi"],
+  ja: ["すべて表示", "非表示"],
+  kk: ["Барлығын көрсету", "Жасыру"],
+  ko: ["모두 보기", "숨기기"],
+  ky: ["Баарын көрсөтүү", "Жашыруу"],
+  ms: ["Tunjukkan semua", "Sembunyikan"],
+  no: ["Vis alle", "Skjul"],
+  fa: ["نمایش همه", "پنهان کردن"],
+  pl: ["Pokaż wszystkie", "Ukryj"],
+  pt: ["Mostrar todos", "Ocultar"],
+  ro: ["Afișează toate", "Ascunde"],
+  ru: ["Показать все", "Скрыть"],
+  sr: ["Прикажи све", "Сакриј"],
+  sk: ["Zobraziť všetko", "Skryť"],
+  es: ["Mostrar todos", "Ocultar"],
+  sv: ["Visa alla", "Dölj"],
+  tg: ["Ҳамаро нишон додан", "Пинҳон кардан"],
+  th: ["แสดงทั้งหมด", "ซ่อน"],
+  tr: ["Tümünü göster", "Gizle"],
+  tk: ["Hemmesini görkez", "Gizle"],
+  uk: ["Показати всі", "Приховати"],
+  ur: ["سب دکھائیں", "چھپائیں"],
+  uz: ["Barchasini ko‘rish", "Yopish"],
+  vi: ["Hiển thị tất cả", "Ẩn"],
+};
+
 const LANGUAGES = [
   {
     code: "ar",
@@ -785,7 +829,16 @@ const LANGUAGES = [
 ].sort((a, b) =>
   a.english.localeCompare(b.english)
 );
-
+for (const language of LANGUAGES) {
+  if (
+    !Array.isArray(LINKS_EXPAND_TEXT[language.code]) ||
+    LINKS_EXPAND_TEXT[language.code].length !== 2
+  ) {
+    throw new Error(
+      `Links translation missing: ${language.code}`
+    );
+  }
+}
 
 
 /* =========================================================
@@ -2656,9 +2709,10 @@ const filteredTextStyles =
         profileData?.bio ||
           ""
       );
-     setPreviewTextStyle(
-  isPremiumActive
-    ? profile?.text_style || "standard"
+  setPreviewTextStyle(
+  profileData?.premium_until &&
+  new Date(profileData.premium_until).getTime() > Date.now()
+    ? profileData.text_style || "standard"
     : "standard"
 );
 
@@ -2671,12 +2725,11 @@ setAboutText(
     ""
 );
       
-      setScreenLedEnabled(
-        Boolean(
-          profileData
-            ?.screen_led_enabled
-        )
-      );
+    setScreenLedEnabled(
+  Boolean(profileData?.screen_led_enabled) &&
+  Boolean(profileData?.premium_until) &&
+  new Date(profileData.premium_until).getTime() > Date.now()
+);
 
       setScreenLedColor(
         profileData
@@ -2684,12 +2737,11 @@ setAboutText(
           "#3B82F6"
       );
 
-      setCardLedEnabled(
-        Boolean(
-          profileData
-            ?.card_led_enabled
-        )
-      );
+    setCardLedEnabled(
+  Boolean(profileData?.card_led_enabled) &&
+  Boolean(profileData?.premium_until) &&
+  new Date(profileData.premium_until).getTime() > Date.now()
+);
 
       setCardLedColor(
   profileData?.card_led_color ||
@@ -3225,22 +3277,20 @@ setPreviewThemeId(
     : null
 );
 
-  setScreenLedEnabled(
-    Boolean(
-      profile?.screen_led_enabled
-    )
-  );
+setScreenLedEnabled(
+  isPremiumActive &&
+  Boolean(profile?.screen_led_enabled)
+);
 
   setScreenLedColor(
     profile?.screen_led_color ||
       "#3B82F6"
   );
 
-  setCardLedEnabled(
-    Boolean(
-      profile?.card_led_enabled
-    )
-  );
+ setCardLedEnabled(
+  isPremiumActive &&
+  Boolean(profile?.card_led_enabled)
+);
 
 setCardLedColor(
   profile?.card_led_color ||
@@ -3267,9 +3317,10 @@ setCardLedThickness(
   )
 );
 
-  setPreviewTextStyle(
-    profile?.text_style ||
-      "standard"
+setPreviewTextStyle(
+  isPremiumActive
+    ? profile?.text_style || "standard"
+    : "standard"
   );
 
   if (
@@ -3855,6 +3906,18 @@ backgroundImage:
     from { transform: rotateY(0deg); }
     to { transform: rotateY(360deg); }
   }
+
+@keyframes premiumStarPulse {
+  0%, 100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.08);
+    filter: brightness(1.2);
+  }
+}
+  
 `}</style>
 
 
@@ -3940,12 +4003,12 @@ border: savedCardTheme
   onClick={openSettings}
 style={{
   ...styles.menuButton,
-  position: "absolute",
-  top: "12px",
-  left: "12px",
-  zIndex: 5,
-  width: "44px",
-  height: "44px",
+position: "absolute",
+top: "12px",
+right: "12px",
+zIndex: 20,
+ width: "clamp(26px, 8cqw, 40px)",
+height: "clamp(26px, 8cqw, 40px)",
   borderRadius: "14px",
   color: "#E5E7EB",
   background: "linear-gradient(145deg,rgba(255,255,255,.38),rgba(255,255,255,.08))",
@@ -3954,7 +4017,16 @@ style={{
   boxShadow: "inset 0 2px 3px rgba(255,255,255,.4),0 7px 16px rgba(0,0,0,.25)",
 }}
 >
-  <FaGear />
+ <img
+  src="/icons/nfc-settings-3d.png"
+  alt="Settings"
+  draggable={false}
+  style={{
+    width: "100%",
+    height: "100%",
+    objectFit: "contain",
+  }}
+/>
 </button>
 
           {/* AVATAR + PREMIUM + QR + NAME */}
@@ -3963,8 +4035,8 @@ style={{
     display: "flex",
     alignItems: "flex-start",
     gap: "18px",
-    paddingTop: "48px",
-    paddingBottom: "12px",
+    paddingTop: "12px",
+    paddingBottom: "4px",
     width: "100%",
   }}
 >
@@ -3974,9 +4046,9 @@ style={{
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
-      gap: "10px",
-      flexShrink: 0,
-      width: "86px",
+    gap: "clamp(3px, 1cqw, 6px)",
+flexShrink: 0,
+width: "clamp(52px, 18cqw, 76px)",
     }}
   >
     <div
@@ -3985,8 +4057,8 @@ style={{
         position: "relative",
         top: "auto",
         left: "auto",
-        width: "82px",
-        height: "82px",
+       width: "clamp(48px, 16cqw, 70px)",
+height: "clamp(48px, 16cqw, 70px)",
       }}
     >
       {(pendingAvatarUrl || profile.photo_url) ? (
@@ -4011,8 +4083,8 @@ style={{
       onClick={() => setModal("premiumPlans")}
       style={{
         ...styles.menuButton,
-        width: "52px",
-        height: "52px",
+       width: "clamp(26px, 8cqw, 40px)",
+height: "clamp(26px, 8cqw, 40px)",
         borderRadius: "17px",
         background:
           "linear-gradient(145deg,rgba(255,255,255,.35),rgba(255,255,255,.08))",
@@ -4044,8 +4116,8 @@ style={{
       onClick={openQr}
       style={{
         ...styles.menuButton,
-        width: "52px",
-        height: "52px",
+     width: "clamp(26px, 8cqw, 40px)",
+height: "clamp(26px, 8cqw, 40px)",
         borderRadius: "17px",
         background:
           "linear-gradient(145deg,rgba(56,189,248,.75),rgba(29,78,216,.8))",
@@ -4141,7 +4213,14 @@ style={{
   <div
     style={{
   ...styles.linksGrid,
-  maxHeight: linksExpanded ? "none" : "116px",
+style={{
+  ...styles.linksGrid,
+  position: "absolute",
+  left: "clamp(80px, 25cqw, 110px)",
+  right: "12px",
+  bottom: "12px",
+  width: "auto",
+  maxHeight: linksExpanded ? "none" : "84px",
   overflowY: linksExpanded ? "visible" : "auto",
 }}
   >
@@ -4201,7 +4280,9 @@ style={{
     onPointerDown={(event) => event.stopPropagation()}
     onClick={() => setLinksExpanded((value) => !value)}
   >
-    {linksExpanded ? "Скрыть" : "Раскрыть"}
+   {(LINKS_EXPAND_TEXT[languageCode] || LINKS_EXPAND_TEXT.en)[
+  linksExpanded ? 1 : 0
+]}
   </button>
 )}
 </div>
@@ -5059,9 +5140,17 @@ onClose={
           key={theme.id}
           type="button"
           aria-pressed={active}
-          onClick={() =>
-            setPreviewThemeId(theme.id)
-          }
+         onClick={() => {
+  if (!isPremiumActive) {
+    showNotice(
+      PREMIUM_REQUIRED_TEXT[languageCode] ||
+      PREMIUM_REQUIRED_TEXT.en
+    );
+    return;
+  }
+
+  setPreviewThemeId(theme.id);
+}}
           style={{
             padding: "7px",
             borderRadius: "14px",
@@ -5197,7 +5286,15 @@ onClose={
                                 ? styles.textStyleButtonActive
                                 : {}),
                             }}
-  onClick={() => {
+onClick={() => {
+  if (item.premium && !isPremiumActive) {
+    showNotice(
+      PREMIUM_REQUIRED_TEXT[languageCode] ||
+      PREMIUM_REQUIRED_TEXT.en
+    );
+    return;
+  }
+
   setPreviewTextStyle(item.id);
 }}
                           >
@@ -6819,6 +6916,7 @@ const styles = {
   },
 
   cardWrap: {
+    containerType: "inline-size",
     position:
       "absolute",
 
@@ -6832,7 +6930,7 @@ marginRight: "0",
 boxSizing: "border-box",
 
    top:
-  "70px",
+  "50px",
 
 transform:
   "none",
@@ -6849,17 +6947,14 @@ transform:
       "relative",
 
    width: "100%",
-aspectRatio:
-  "1.586 / 1",
-
+aspectRatio: "1.586 / 1",
 minHeight:
   "0",
 
 maxHeight:
   "none",
 
-padding:
-  "24px 16px 16px 92px",
+padding: "12px",
 
     boxSizing:
       "border-box",
@@ -7062,6 +7157,8 @@ maxWidth:
 
 gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
 
+    width: "100%",
+boxSizing: "border-box",
 columnGap: "4px",
     
 gap: "8px",
@@ -7114,8 +7211,8 @@ minWidth: "0",
   },
 
   iconBox: {
-  width: "48px",
-height: "48px",
+width: "clamp(28px, 9cqw, 40px)",
+height: "clamp(28px, 9cqw, 40px)",
 
     display:
       "flex",

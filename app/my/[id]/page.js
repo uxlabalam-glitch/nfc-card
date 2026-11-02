@@ -4213,8 +4213,6 @@ height: "clamp(26px, 8cqw, 40px)",
   <div
     style={{
   ...styles.linksGrid,
-style={{
-  ...styles.linksGrid,
   position: "absolute",
   left: "clamp(80px, 25cqw, 110px)",
   right: "12px",

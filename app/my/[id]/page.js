@@ -4003,14 +4003,18 @@ border: savedCardTheme
   onClick={openSettings}
 style={{
   ...styles.menuButton,
-position: "absolute",
-top: "12px",
-right: "12px",
-zIndex: 20,
- width: "clamp(26px, 8cqw, 40px)",
-height: "clamp(26px, 8cqw, 40px)",
-  borderRadius: "14px",
-  color: "#E5E7EB",
+  position: "absolute",
+  top: "12px",
+  right: "12px",
+  zIndex: 20,
+  width: "clamp(26px, 8cqw, 40px)",
+  height: "clamp(26px, 8cqw, 40px)",
+  padding: 0,
+  borderRadius: "50%",
+  overflow: "hidden",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
   background: "linear-gradient(145deg,rgba(255,255,255,.38),rgba(255,255,255,.08))",
   border: "1px solid rgba(255,255,255,.55)",
   backdropFilter: "blur(15px)",
@@ -4048,7 +4052,7 @@ height: "clamp(26px, 8cqw, 40px)",
       alignItems: "center",
     gap: "clamp(3px, 1cqw, 6px)",
 flexShrink: 0,
-width: "clamp(52px, 18cqw, 76px)",
+width: "clamp(64px, 21cqw, 82px)",
     }}
   >
     <div
@@ -4057,8 +4061,9 @@ width: "clamp(52px, 18cqw, 76px)",
         position: "relative",
         top: "auto",
         left: "auto",
-       width: "clamp(48px, 16cqw, 70px)",
-height: "clamp(48px, 16cqw, 70px)",
+     width: "100%",
+aspectRatio: "1 / 1",
+height: "auto",
       }}
     >
       {(pendingAvatarUrl || profile.photo_url) ? (
@@ -4085,7 +4090,9 @@ height: "clamp(48px, 16cqw, 70px)",
         ...styles.menuButton,
        width: "clamp(26px, 8cqw, 40px)",
 height: "clamp(26px, 8cqw, 40px)",
-        borderRadius: "17px",
+       borderRadius: "50%",
+overflow: "hidden",
+padding: 0,
         background:
           "linear-gradient(145deg,rgba(255,255,255,.35),rgba(255,255,255,.08))",
         border: "1px solid rgba(255,255,255,.5)",
@@ -4212,15 +4219,23 @@ height: "clamp(26px, 8cqw, 40px)",
 {links.length > 0 && (
   <div
     style={{
-  ...styles.linksGrid,
-  position: "absolute",
-  left: "clamp(80px, 25cqw, 110px)",
-  right: "12px",
-  bottom: "12px",
-  width: "auto",
-  maxHeight: linksExpanded ? "none" : "84px",
-  overflowY: linksExpanded ? "visible" : "auto",
-}}
+      ...styles.linksGrid,
+      position: "absolute",
+      left: "clamp(96px, 27cqw, 128px)",
+      right: "12px",
+      bottom: (isPremiumActive ? links : links.slice(0, 1)).length > 8
+  ? "42px"
+  : "12px",
+      width: "auto",
+      display: "grid",
+      gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+      columnGap: "4px",
+      rowGap: "4px",
+      marginTop: 0,
+      maxHeight: "none",
+      overflow: "visible",
+    }}
+  >
   >
     {(isPremiumActive ? links : links.slice(0, 1)).map(
                   (link) => (
@@ -4273,15 +4288,24 @@ height: "clamp(26px, 8cqw, 40px)",
               </div>
                             )}
           {(isPremiumActive ? links : links.slice(0, 1)).length > 8 && (
-  <button
-    type="button"
-    onPointerDown={(event) => event.stopPropagation()}
-    onClick={() => setLinksExpanded((value) => !value)}
-  >
-   {(LINKS_EXPAND_TEXT[languageCode] || LINKS_EXPAND_TEXT.en)[
-  linksExpanded ? 1 : 0
-]}
-  </button>
+<button
+  type="button"
+  onPointerDown={(event) => event.stopPropagation()}
+  onClick={() => setLinksExpanded((value) => !value)}
+  style={{
+    position: "absolute",
+    right: "12px",
+    bottom: "8px",
+    zIndex: 25,
+    padding: "5px 10px",
+    borderRadius: "12px",
+    border: "1px solid rgba(255,255,255,.4)",
+    background: "rgba(255,255,255,.15)",
+    color: "inherit",
+    fontSize: "11px",
+    cursor: "pointer",
+  }}
+>
 )}
 </div>
           {/* BACK FACE */}

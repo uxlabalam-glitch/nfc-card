@@ -4236,7 +4236,6 @@ height: "clamp(26px, 8cqw, 40px)",
       overflow: "visible",
     }}
   >
-  >
     {(isPremiumActive ? links : links.slice(0, 1)).map(
                   (link) => (
                     <button

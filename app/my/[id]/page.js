@@ -4303,8 +4303,12 @@ height: "clamp(26px, 8cqw, 40px)",
     color: "inherit",
     fontSize: "11px",
     cursor: "pointer",
-  }}
+}}
 >
+  {(LINKS_EXPAND_TEXT[languageCode] || LINKS_EXPAND_TEXT.en)[
+    linksExpanded ? 1 : 0
+  ]}
+</button>
 )}
 </div>
           {/* BACK FACE */}

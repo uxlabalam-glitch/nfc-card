@@ -536,47 +536,47 @@ const SERVICES = [
 ========================================================= */
 
 const LINKS_EXPAND_TEXT = {
-  ar: ["عرض الكل", "إخفاء"],
-  az: ["Hamısını göstər", "Gizlət"],
-  bn: ["সব দেখুন", "লুকান"],
-  bg: ["Покажи всички", "Скрий"],
-  zh: ["显示全部", "收起"],
-  cs: ["Zobrazit vše", "Skrýt"],
-  da: ["Vis alle", "Skjul"],
-  nl: ["Alles tonen", "Verbergen"],
-  en: ["Show all", "Hide"],
-  fi: ["Näytä kaikki", "Piilota"],
-  fr: ["Tout afficher", "Masquer"],
-  de: ["Alle anzeigen", "Ausblenden"],
-  el: ["Εμφάνιση όλων", "Απόκρυψη"],
-  he: ["הצג הכל", "הסתר"],
-  hi: ["सभी दिखाएं", "छिपाएं"],
-  hu: ["Összes megjelenítése", "Elrejtés"],
-  id: ["Tampilkan semua", "Sembunyikan"],
-  it: ["Mostra tutto", "Nascondi"],
-  ja: ["すべて表示", "非表示"],
-  kk: ["Барлығын көрсету", "Жасыру"],
-  ko: ["모두 보기", "숨기기"],
-  ky: ["Баарын көрсөтүү", "Жашыруу"],
-  ms: ["Tunjukkan semua", "Sembunyikan"],
-  no: ["Vis alle", "Skjul"],
-  fa: ["نمایش همه", "پنهان کردن"],
-  pl: ["Pokaż wszystkie", "Ukryj"],
-  pt: ["Mostrar todos", "Ocultar"],
-  ro: ["Afișează toate", "Ascunde"],
-  ru: ["Показать все", "Скрыть"],
-  sr: ["Прикажи све", "Сакриј"],
-  sk: ["Zobraziť všetko", "Skryť"],
-  es: ["Mostrar todos", "Ocultar"],
-  sv: ["Visa alla", "Dölj"],
-  tg: ["Ҳамаро нишон додан", "Пинҳон кардан"],
-  th: ["แสดงทั้งหมด", "ซ่อน"],
-  tr: ["Tümünü göster", "Gizle"],
-  tk: ["Hemmesini görkez", "Gizle"],
-  uk: ["Показати всі", "Приховати"],
-  ur: ["سب دکھائیں", "چھپائیں"],
-  uz: ["Barchasini ko‘rish", "Yopish"],
-  vi: ["Hiển thị tất cả", "Ẩn"],
+  ar: ["الكل", "إغلاق"],
+  az: ["Hamısı", "Bağla"],
+  bn: ["সব", "বন্ধ"],
+  bg: ["Всички", "Затвори"],
+  zh: ["全部", "关闭"],
+  cs: ["Vše", "Zavřít"],
+  da: ["Alle", "Luk"],
+  nl: ["Alles", "Sluiten"],
+  en: ["All", "Close"],
+  fi: ["Kaikki", "Sulje"],
+  fr: ["Tout", "Fermer"],
+  de: ["Alle", "Schließen"],
+  el: ["Όλα", "Κλείσιμο"],
+  he: ["הכל", "סגור"],
+  hi: ["सभी", "बंद करें"],
+  hu: ["Összes", "Bezárás"],
+  id: ["Semua", "Tutup"],
+  it: ["Tutti", "Chiudi"],
+  ja: ["すべて", "閉じる"],
+  kk: ["Барлығы", "Жабу"],
+  ko: ["전체", "닫기"],
+  ky: ["Баары", "Жабуу"],
+  ms: ["Semua", "Tutup"],
+  no: ["Alle", "Lukk"],
+  fa: ["همه", "بستن"],
+  pl: ["Wszystkie", "Zamknij"],
+  pt: ["Todos", "Fechar"],
+  ro: ["Toate", "Închide"],
+  ru: ["Все", "Закрыть"],
+  sr: ["Све", "Затвори"],
+  sk: ["Všetky", "Zavrieť"],
+  es: ["Todos", "Cerrar"],
+  sv: ["Alla", "Stäng"],
+  tg: ["Ҳама", "Пӯшидан"],
+  th: ["ทั้งหมด", "ปิด"],
+  tr: ["Tümü", "Kapat"],
+  tk: ["Hemmesi", "Ýap"],
+  uk: ["Усі", "Закрити"],
+  ur: ["سب", "بند کریں"],
+  uz: ["Barchasi", "Yopish"],
+  vi: ["Tất cả", "Đóng"],
 };
 
 const LANGUAGES = [
@@ -3963,13 +3963,10 @@ WebkitUserSelect: "none",
     style={{
      ...styles.glassPanel,
 
-background: savedCardTheme
-  ? savedCardTheme.card
-  : "rgba(255,255,255,.48)",
-
-border: savedCardTheme
-  ? `1px solid ${savedCardTheme.accent}`
-  : "1px solid rgba(255,255,255,.55)",
+background: "transparent",
+border: "1px solid transparent",
+backdropFilter: "none",
+WebkitBackdropFilter: "none",
       
   boxShadow: isPremiumActive && cardLedEnabled
   ? `
@@ -3997,6 +3994,61 @@ border: savedCardTheme
     }}
   >
 
+{/* CARD + BARCHASI — ONE CONTINUOUS SHAPE */}
+<div
+  aria-hidden="true"
+  style={{
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    aspectRatio: "1000 / 710",
+    zIndex: 0,
+    pointerEvents: "none",
+    background: savedCardTheme
+      ? savedCardTheme.card
+      : "rgba(255,255,255,.48)",
+    backdropFilter: "blur(25px) saturate(145%)",
+    WebkitBackdropFilter: "blur(25px) saturate(145%)",
+    WebkitMaskImage:
+      'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 1000 710\'%3E%3Cpath d=\'M45 2 H955 Q998 2 998 45 V635 Q998 708 926 708 H752 Q704 708 667 670 Q637 630 596 630 H45 Q2 630 2 587 V45 Q2 2 45 2 Z\' fill=\'white\'/%3E%3C/svg%3E")',
+    maskImage:
+      'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 1000 710\'%3E%3Cpath d=\'M45 2 H955 Q998 2 998 45 V635 Q998 708 926 708 H752 Q704 708 667 670 Q637 630 596 630 H45 Q2 630 2 587 V45 Q2 2 45 2 Z\' fill=\'white\'/%3E%3C/svg%3E")',
+    WebkitMaskSize: "100% 100%",
+    maskSize: "100% 100%",
+    WebkitMaskRepeat: "no-repeat",
+    maskRepeat: "no-repeat",
+  }}
+/>
+
+<svg
+  aria-hidden="true"
+  viewBox="0 0 1000 710"
+  preserveAspectRatio="none"
+  style={{
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    aspectRatio: "1000 / 710",
+    height: "auto",
+    overflow: "visible",
+    pointerEvents: "none",
+    zIndex: 1,
+  }}
+>
+  <path
+    d="M45 2 H955 Q998 2 998 45 V635 Q998 708 926 708 H752 Q704 708 667 670 Q637 630 596 630 H45 Q2 630 2 587 V45 Q2 2 45 2 Z"
+    fill="none"
+    stroke={
+      savedCardTheme
+        ? savedCardTheme.accent
+        : "rgba(255,255,255,.55)"
+    }
+    strokeWidth="2"
+  />
+</svg>
+    
 <button
   type="button"
   aria-label={t.settings}
@@ -4299,25 +4351,30 @@ padding: 0,
   type="button"
   onPointerDown={(event) => event.stopPropagation()}
 onClick={() => setLinksExpanded(true)}
-  style={{
-    position: "absolute",
-   right: "12px",
-bottom: "-12px",
-    zIndex: 25,
-    padding: "5px 10px",
-  borderRadius: "0 0 12px 12px",
-  border: savedCardTheme
-  ? `1px solid ${savedCardTheme.accent}`
-  : "1px solid rgba(255,255,255,.55)",
-borderTop: "none",
-background: savedCardTheme
-  ? savedCardTheme.card
-  : "rgba(255,255,255,.48)",
-   color: savedCardTheme
-  ? savedCardTheme.text
-  : "#111827",
-    fontSize: "11px",
-    cursor: "pointer",
+ style={{
+  position: "absolute",
+  right: "4px",
+  top: "100%",
+  bottom: "auto",
+  width: "28%",
+  height: "clamp(22px, 7cqw, 30px)",
+  zIndex: 25,
+  padding: "0 4px",
+  display: "flex",
+  alignItems: "flex-start",
+  justifyContent: "center",
+  border: "none",
+  outline: "none",
+  borderRadius: 0,
+  background: "transparent",
+  boxShadow: "none",
+  color: savedCardTheme
+    ? savedCardTheme.text
+    : "#111827",
+  fontSize: "11px",
+  fontWeight: 700,
+  lineHeight: 1.2,
+  cursor: "pointer",
 }}
 >
   {(LINKS_EXPAND_TEXT[languageCode] || LINKS_EXPAND_TEXT.en)[

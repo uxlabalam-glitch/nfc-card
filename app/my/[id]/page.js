@@ -4035,14 +4035,14 @@ style={{
 
           {/* AVATAR + PREMIUM + QR + NAME */}
 <div
-  style={{
-    display: "flex",
-    alignItems: "flex-start",
-    gap: "18px",
-    paddingTop: "12px",
-    paddingBottom: "4px",
-    width: "100%",
-  }}
+style={{
+  display: "flex",
+  alignItems: "flex-start",
+  gap: "12px",
+  paddingTop: "6px",
+  paddingBottom: "2px",
+  width: "100%",
+}}
 >
   {/* CHAP: AVATAR, PREMIUM, QR */}
   <div
@@ -4052,19 +4052,25 @@ style={{
       alignItems: "center",
     gap: "clamp(3px, 1cqw, 6px)",
 flexShrink: 0,
-width: "clamp(64px, 21cqw, 82px)",
+width: "clamp(62px, 19cqw, 78px)",
+marginLeft: "-6px",
     }}
   >
     <div
-      style={{
-        ...styles.avatarOuter,
-        position: "relative",
-        top: "auto",
-        left: "auto",
-     width: "100%",
-aspectRatio: "1 / 1",
-height: "auto",
-      }}
+     style={{
+  ...styles.avatarOuter,
+  position: "relative",
+  top: "auto",
+  left: "auto",
+  width: "clamp(62px, 19cqw, 78px)",
+  height: "clamp(62px, 19cqw, 78px)",
+  padding: 0,
+  border: "none",
+  background: "transparent",
+  boxShadow: "none",
+  backdropFilter: "none",
+  overflow: "hidden",
+}}
     >
       {(pendingAvatarUrl || profile.photo_url) ? (
         <div
@@ -4125,7 +4131,9 @@ padding: 0,
         ...styles.menuButton,
      width: "clamp(26px, 8cqw, 40px)",
 height: "clamp(26px, 8cqw, 40px)",
-        borderRadius: "17px",
+       borderRadius: "50%",
+overflow: "hidden",
+padding: 0,
         background:
           "linear-gradient(145deg,rgba(56,189,248,.75),rgba(29,78,216,.8))",
         border: "1px solid rgba(255,255,255,.65)",
@@ -4150,24 +4158,26 @@ height: "clamp(26px, 8cqw, 40px)",
   </div>
 
   {/* O‘NG: ISM VA QISQA MA’LUMOT */}
-  <div
-    style={{
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "center",
-      flex: 1,
-      minWidth: 0,
-      paddingTop: "12px",
-      textAlign: "left",
-    }}
-  >
+<div
+  style={{
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    flex: 1,
+    minWidth: 0,
+    minHeight: "clamp(62px, 19cqw, 78px)",
+    paddingTop: 0,
+    paddingRight: "32px",
+    textAlign: "left",
+  }}
+>
     {!!profile.full_name && (
       <h1
         style={{
           ...styles.name,
           position: "static",
           transform: "none",
-          margin: "0 0 8px",
+          margin: "0 0 4px",
           textAlign: "left",
           color: savedCardTheme
             ? savedCardTheme.text
@@ -4223,9 +4233,7 @@ height: "clamp(26px, 8cqw, 40px)",
       position: "absolute",
       left: "clamp(96px, 27cqw, 128px)",
       right: "12px",
-      bottom: (isPremiumActive ? links : links.slice(0, 1)).length > 8
-  ? "42px"
-  : "12px",
+     bottom: "8px",
       width: "auto",
       display: "grid",
       gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
@@ -4293,14 +4301,21 @@ height: "clamp(26px, 8cqw, 40px)",
 onClick={() => setLinksExpanded(true)}
   style={{
     position: "absolute",
-    right: "12px",
-    bottom: "8px",
+   right: "12px",
+bottom: "-12px",
     zIndex: 25,
     padding: "5px 10px",
-    borderRadius: "12px",
-    border: "1px solid rgba(255,255,255,.4)",
-    background: "rgba(255,255,255,.15)",
-    color: "inherit",
+  borderRadius: "0 0 12px 12px",
+  border: savedCardTheme
+  ? `1px solid ${savedCardTheme.accent}`
+  : "1px solid rgba(255,255,255,.55)",
+borderTop: "none",
+background: savedCardTheme
+  ? savedCardTheme.card
+  : "rgba(255,255,255,.48)",
+   color: savedCardTheme
+  ? savedCardTheme.text
+  : "#111827",
     fontSize: "11px",
     cursor: "pointer",
 }}

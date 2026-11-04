@@ -4093,7 +4093,8 @@ style={{
   display: "flex",
   alignItems: "flex-start",
   gap: "12px",
-  paddingTop: "6px",
+  marginTop: "-8px",
+  paddingTop: "0px",
   paddingBottom: "2px",
   width: "100%",
 }}

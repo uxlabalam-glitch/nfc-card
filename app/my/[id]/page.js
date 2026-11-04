@@ -4093,7 +4093,7 @@ style={{
   display: "flex",
   alignItems: "flex-start",
   gap: "12px",
-  marginTop: "-2px",
+  marginTop: "2px",
   paddingTop: "0px",
   paddingBottom: "2px",
   width: "100%",
@@ -4108,7 +4108,7 @@ style={{
     gap: "clamp(3px, 1cqw, 6px)",
 flexShrink: 0,
 width: "clamp(62px, 19cqw, 78px)",
-marginLeft: "-6px",
+marginLeft: "0px",
     }}
   >
     <div

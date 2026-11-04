@@ -4236,7 +4236,7 @@ height: "clamp(26px, 8cqw, 40px)",
       overflow: "visible",
     }}
   >
-    {(isPremiumActive ? links : links.slice(0, 1)).map(
+    {(isPremiumActive ? links : links.slice(0, 1)).slice(0, 8).map(
                   (link) => (
                     <button
                       type="button"
@@ -4290,7 +4290,7 @@ height: "clamp(26px, 8cqw, 40px)",
 <button
   type="button"
   onPointerDown={(event) => event.stopPropagation()}
-  onClick={() => setLinksExpanded((value) => !value)}
+onClick={() => setLinksExpanded(true)}
   style={{
     position: "absolute",
     right: "12px",
@@ -6077,6 +6077,60 @@ if (
             </div>
           </ModalShell>
         )}
+
+
+{linksExpanded && (
+  <ModalShell
+    title={
+      (LINKS_EXPAND_TEXT[languageCode] ||
+        LINKS_EXPAND_TEXT.en)[0]
+    }
+    onClose={() => setLinksExpanded(false)}
+    large
+  >
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+        gap: "14px 8px",
+        padding: "12px",
+        maxHeight: "65vh",
+        overflowY: "auto",
+      }}
+    >
+      {(isPremiumActive ? links : links.slice(0, 1)).map(
+        (link) => (
+          <button
+            key={link.id}
+            type="button"
+            style={{
+              ...styles.linkButton,
+              minWidth: 0,
+            }}
+            onPointerDown={(e) => e.stopPropagation()}
+            onClick={() => {
+              setLinksExpanded(false);
+              openLink(link);
+            }}
+          >
+            <span
+              style={{
+                ...styles.iconBox,
+                ...getIconColor(link.icon),
+              }}
+            >
+              <SocialIcon icon={link.icon} />
+            </span>
+
+            <span style={styles.linkLabel}>
+              {link.label}
+            </span>
+          </button>
+        )
+      )}
+    </div>
+  </ModalShell>
+)}
 
         {notice && (
           <div

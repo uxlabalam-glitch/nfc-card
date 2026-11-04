@@ -4011,9 +4011,9 @@ WebkitBackdropFilter: "none",
     backdropFilter: "blur(25px) saturate(145%)",
     WebkitBackdropFilter: "blur(25px) saturate(145%)",
     WebkitMaskImage:
-      'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 1000 710\'%3E%3Cpath d=\'M45 2 H955 Q998 2 998 45 V635 Q998 708 926 708 H752 Q704 708 667 670 Q637 630 596 630 H45 Q2 630 2 587 V45 Q2 2 45 2 Z\' fill=\'white\'/%3E%3C/svg%3E")',
+      'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 1000 710\'%3E%3Cpath d=\'M45 2 H955 Q998 2 998 45 V635 Q998 708 926 708 H835 Q805 708 780 670 Q760 630 720 630 H45 Q2 630 2 587 V45 Q2 2 45 2 Z\' fill=\'white\'/%3E%3C/svg%3E")',
     maskImage:
-      'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 1000 710\'%3E%3Cpath d=\'M45 2 H955 Q998 2 998 45 V635 Q998 708 926 708 H752 Q704 708 667 670 Q637 630 596 630 H45 Q2 630 2 587 V45 Q2 2 45 2 Z\' fill=\'white\'/%3E%3C/svg%3E")',
+      'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 1000 710\'%3E%3Cpath d=\'M45 2 H955 Q998 2 998 45 V635 Q998 708 926 708 H835 Q805 708 780 670 Q760 630 720 630 H45 Q2 630 2 587 V45 Q2 2 45 2 Z\' fill=\'white\'/%3E%3C/svg%3E")',
     WebkitMaskSize: "100% 100%",
     maskSize: "100% 100%",
     WebkitMaskRepeat: "no-repeat",
@@ -4088,6 +4088,8 @@ style={{
           {/* AVATAR + PREMIUM + QR + NAME */}
 <div
 style={{
+  position: "relative",
+  zIndex: 2,
   display: "flex",
   alignItems: "flex-start",
   gap: "12px",
@@ -4356,7 +4358,7 @@ onClick={() => setLinksExpanded(true)}
   right: "4px",
   top: "100%",
   bottom: "auto",
-  width: "28%",
+  width: "22%",
   height: "clamp(22px, 7cqw, 30px)",
   zIndex: 25,
   padding: "0 4px",

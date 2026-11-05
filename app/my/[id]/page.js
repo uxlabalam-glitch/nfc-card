@@ -4048,7 +4048,82 @@ WebkitBackdropFilter: "none",
     strokeWidth="2"
   />
 </svg>
-    
+
+  {/* QR — OYNALI 3D */}
+    <button
+      type="button"
+      aria-label={t.qr}
+      onClick={openQr}
+      style={{
+        ...styles.menuButton,
+        position: "absolute",
+left: "12px",
+bottom: "8px",
+top: "auto",
+transform: "none",
+zIndex: 20,
+    width: "clamp(46px, 13cqw, 62px)",
+height: "clamp(46px, 13cqw, 62px)",
+      borderRadius: 0,
+overflow: "visible",
+padding: 0,
+background: "transparent",
+border: "none",
+backdropFilter: "none",
+boxShadow: "none",
+        color: "#FFFFFF",
+        fontSize: "23px",
+      }}
+    >
+    <img
+  src="/icons/nfc-qr-3d.png"
+  alt="QR"
+  draggable={false}
+  style={{
+    width: "100%",
+    height: "100%",
+    objectFit: "contain",
+  }}
+/>
+    </button>
+
+  {/* PREMIUM — OYNALI 3D */}
+    <button
+      type="button"
+      aria-label="Premium"
+      onClick={() => setModal("premiumPlans")}
+      style={{
+        ...styles.menuButton,
+        position: "absolute",
+top: "12px",
+right: "calc(12px + clamp(26px, 8cqw, 40px) + 8px)",
+zIndex: 20,
+       width: "clamp(26px, 8cqw, 40px)",
+height: "clamp(26px, 8cqw, 40px)",
+       borderRadius: 0,
+overflow: "visible",
+padding: 0,
+background: "transparent",
+border: "none",
+backdropFilter: "none",
+boxShadow: "none",
+      }}
+    >
+      <img
+  src="/icons/nfc-premium-3d.png"
+  alt="Premium"
+  draggable={false}
+  style={{
+    width: "100%",
+    height: "100%",
+    objectFit: "contain",
+    animation: isPremiumActive
+      ? "premiumStarSpin 4s linear infinite"
+      : "premiumStarPulse 2s ease-in-out infinite",
+  }}
+/>
+    </button>
+      
 <button
   type="button"
   aria-label={t.settings}
@@ -4062,15 +4137,15 @@ style={{
   width: "clamp(26px, 8cqw, 40px)",
   height: "clamp(26px, 8cqw, 40px)",
   padding: 0,
-  borderRadius: "50%",
-  overflow: "hidden",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  background: "linear-gradient(145deg,rgba(255,255,255,.38),rgba(255,255,255,.08))",
-  border: "1px solid rgba(255,255,255,.55)",
-  backdropFilter: "blur(15px)",
-  boxShadow: "inset 0 2px 3px rgba(255,255,255,.4),0 7px 16px rgba(0,0,0,.25)",
+borderRadius: 0,
+overflow: "visible",
+display: "flex",
+alignItems: "center",
+justifyContent: "center",
+background: "transparent",
+border: "none",
+backdropFilter: "none",
+boxShadow: "none",
 }}
 >
  <img
@@ -4141,75 +4216,6 @@ marginLeft: "0px",
         <div style={styles.avatarPlaceholder}>👤</div>
       )}
     </div>
-
-    {/* PREMIUM — OYNALI 3D */}
-    <button
-      type="button"
-      aria-label="Premium"
-      onClick={() => setModal("premiumPlans")}
-      style={{
-        ...styles.menuButton,
-       width: "clamp(26px, 8cqw, 40px)",
-height: "clamp(26px, 8cqw, 40px)",
-       borderRadius: "50%",
-overflow: "hidden",
-padding: 0,
-        background:
-          "linear-gradient(145deg,rgba(255,255,255,.35),rgba(255,255,255,.08))",
-        border: "1px solid rgba(255,255,255,.5)",
-        backdropFilter: "blur(15px)",
-        boxShadow:
-          "inset 0 2px 3px rgba(255,255,255,.35),0 8px 18px rgba(0,0,0,.25)",
-      }}
-    >
-      <img
-  src="/icons/nfc-premium-3d.png"
-  alt="Premium"
-  draggable={false}
-  style={{
-    width: "100%",
-    height: "100%",
-    objectFit: "contain",
-    animation: isPremiumActive
-      ? "premiumStarSpin 4s linear infinite"
-      : "premiumStarPulse 2s ease-in-out infinite",
-  }}
-/>
-    </button>
-
-    {/* QR — OYNALI 3D */}
-    <button
-      type="button"
-      aria-label={t.qr}
-      onClick={openQr}
-      style={{
-        ...styles.menuButton,
-     width: "clamp(26px, 8cqw, 40px)",
-height: "clamp(26px, 8cqw, 40px)",
-       borderRadius: "50%",
-overflow: "hidden",
-padding: 0,
-        background:
-          "linear-gradient(145deg,rgba(56,189,248,.75),rgba(29,78,216,.8))",
-        border: "1px solid rgba(255,255,255,.65)",
-        backdropFilter: "blur(15px)",
-        boxShadow:
-          "inset 0 2px 4px rgba(255,255,255,.5),0 8px 18px rgba(29,78,216,.35)",
-        color: "#FFFFFF",
-        fontSize: "23px",
-      }}
-    >
-    <img
-  src="/icons/nfc-qr-3d.png"
-  alt="QR"
-  draggable={false}
-  style={{
-    width: "100%",
-    height: "100%",
-    objectFit: "contain",
-  }}
-/>
-    </button>
   </div>
 
   {/* O‘NG: ISM VA QISQA MA’LUMOT */}
@@ -4320,13 +4326,16 @@ padding: 0,
                       }
                     >
                       <span
-                        style={{
-                          ...styles.iconBox,
-
-                          ...getIconColor(
-                            link.icon
-                          ),
-                        }}
+                      style={{
+  ...styles.iconBox,
+  ...getIconColor(link.icon),
+  background: "transparent",
+  border: "none",
+  boxShadow: "none",
+  backdropFilter: "none",
+  WebkitBackdropFilter: "none",
+  padding: 0,
+}}
                       >
                         <SocialIcon
                           icon={

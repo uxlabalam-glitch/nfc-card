@@ -4057,7 +4057,7 @@ WebkitBackdropFilter: "none",
       style={{
         ...styles.menuButton,
         position: "absolute",
-left: "12px",
+left: "-6px",
 bottom: "22px",
 top: "auto",
 transform: "none",
@@ -4114,9 +4114,10 @@ boxShadow: "none",
   alt="Premium"
   draggable={false}
   style={{
-    width: "100%",
-    height: "100%",
+  width: "115%",
+height: "115%",
     objectFit: "contain",
+    objectPosition: "center",
     animation: isPremiumActive
       ? "premiumStarSpin 4s linear infinite"
       : "premiumStarPulse 2s ease-in-out infinite",

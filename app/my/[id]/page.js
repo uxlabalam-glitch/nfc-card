@@ -6170,12 +6170,22 @@ if (
           </ModalShell>
         )}
 
-
 {linksExpanded && (
   <ModalShell
     title={
       (LINKS_EXPAND_TEXT[languageCode] ||
         LINKS_EXPAND_TEXT.en)[0]
+    }
+    icon={
+      <img
+        src="/icons/nfc-link-3d.png"
+        alt=""
+        style={{
+          width: "100%",
+          height: "100%",
+          objectFit: "contain",
+        }}
+      />
     }
     onClose={() => setLinksExpanded(false)}
     large
@@ -6205,18 +6215,29 @@ if (
               openLink(link);
             }}
           >
-            <span
-              style={{
-                ...styles.iconBox,
-                ...getIconColor(link.icon),
-              }}
-            >
-              <SocialIcon icon={link.icon} />
-            </span>
+           <span
+  style={{
+    ...styles.iconBox,
+    ...getIconColor(link.icon),
+    width: "clamp(40px, 12cqw, 52px)",
+    height: "clamp(40px, 12cqw, 52px)",
+    background: "transparent",
+    border: "none",
+    boxShadow: "none",
+    padding: 0,
+  }}
+>
+  <SocialIcon icon={link.icon} />
+</span>
 
-            <span style={styles.linkLabel}>
-              {link.label}
-            </span>
+         <span
+  style={{
+    ...styles.linkLabel,
+    color: "#FFFFFF",
+  }}
+>
+  {link.label}
+</span>
           </button>
         )
       )}

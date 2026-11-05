@@ -2931,6 +2931,22 @@ setCardLedThickness(
   );
 }
 
+const SERVICE_URL_PREFIXES = {
+  telegram: "https://t.me/",
+  whatsapp: "https://wa.me/",
+  instagram: "https://www.instagram.com/",
+  threads: "https://www.threads.net/@",
+  youtube: "https://www.youtube.com/@",
+  tiktok: "https://www.tiktok.com/@",
+  facebook: "https://www.facebook.com/",
+  linkedin: "https://www.linkedin.com/in/",
+  x: "https://x.com/",
+  vk: "https://vk.com/",
+  ok: "https://ok.ru/profile/",
+  phone: "tel:",
+  email: "mailto:",
+};
+  
   function updateEditLink(
     index,
     field,
@@ -2982,9 +2998,14 @@ setCardLedThickness(
                   icon:
                     value,
 
-                  label:
-                    service?.label ||
-                    item.label,
+                label:
+  service?.label ||
+  item.label,
+
+url:
+  item.icon === value
+    ? item.url
+    : "",
                 }
               : item
         )
@@ -4847,9 +4868,12 @@ right: "0",
                                 event.target.value
                               )
                             }
-                            style={
-                              styles.input
-                            }
+                           style={{
+  ...styles.input,
+  color: "#FFFFFF",
+  backgroundColor: "#243944",
+  colorScheme: "dark",
+}}
                           >
                             {SERVICES.map(
                               (item) => (
@@ -4908,57 +4932,75 @@ right: "0",
                             }
                           </label>
 
+<div
+  style={{
+    display: "flex",
+    alignItems: "center",
+    width: "100%",
+    borderRadius: "12px",
+    overflow: "hidden",
+  }}
+>
+  {SERVICE_URL_PREFIXES[link.icon] && (
+    <span
+      style={{
+        padding: "12px",
+        background: "#243944",
+        color: "#FFFFFF",
+        whiteSpace: "nowrap",
+        fontSize: "13px",
+        flexShrink: 0,
+        userSelect: "none",
+      }}
+    >
+      {SERVICE_URL_PREFIXES[link.icon]}
+    </span>
+  )}
+                              
                           <input
-                            value={
-  link.url ||
-  ""
+                         value={
+  SERVICE_URL_PREFIXES[link.icon]
+    ? (link.url || "").startsWith(SERVICE_URL_PREFIXES[link.icon])
+      ? (link.url || "").slice(SERVICE_URL_PREFIXES[link.icon].length)
+      : link.url || ""
+    : link.url || ""
 }
 placeholder={
-  link.icon === "telegram"
-    ? "https://t.me/username"
-    : link.icon === "whatsapp"
-    ? "https://wa.me/998XXXXXXXXX"
-    : link.icon === "instagram"
-    ? "https://instagram.com/username"
-    : link.icon === "threads"
-    ? "https://www.threads.net/@username"
-    : link.icon === "youtube"
-    ? "https://youtube.com/@username"
-    : link.icon === "tiktok"
-    ? "https://tiktok.com/@username"
-    : link.icon === "facebook"
-    ? "https://facebook.com/username"
-    : link.icon === "linkedin"
-    ? "https://linkedin.com/in/username"
-    : link.icon === "x"
-    ? "https://x.com/username"
-    : link.icon === "vk"
-    ? "https://vk.com/username"
-    : link.icon === "ok"
-    ? "https://ok.ru/profile/..."
-    : link.icon === "phone"
+  link.icon === "phone"
     ? "+998901234567"
     : link.icon === "email"
     ? "name@example.com"
+    : link.icon === "whatsapp"
+    ? "998901234567"
+    : link.icon === "ok"
+    ? "123456789"
     : link.icon === "website"
     ? "https://example.com"
     : link.icon === "location"
-    ? "https://maps.google.com/..."
-    : "https://..."
+    ? "Google Maps yoki Yandex Maps havolasi"
+    : "username"
 }
-                            onChange={(
-                              event
-                            ) =>
-                              updateEditLink(
-                                index,
-                                "url",
-                                event.target.value
-                              )
-                            }
-                            style={
-                              styles.input
-                            }
-                          />
+                        onChange={(event) => {
+  const prefix = SERVICE_URL_PREFIXES[link.icon] || "";
+  const enteredValue = event.target.value;
+
+  updateEditLink(
+    index,
+    "url",
+    prefix + enteredValue
+  );
+}}
+                        style={{
+  ...styles.input,
+  flex: 1,
+  minWidth: 0,
+  width: "100%",
+  borderRadius: SERVICE_URL_PREFIXES[link.icon]
+    ? "0 12px 12px 0"
+    : "12px",
+}}
+/>
+</div>
 
                           <button
                             type="button"

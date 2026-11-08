@@ -1,5 +1,8 @@
 "use client";
-
+import {
+  SERVICE_URL_PREFIXES,
+  validateLink,
+} from "../../../lib/linkValidation";
 import {
   Caveat,
   Great_Vibes,
@@ -65,6 +68,8 @@ import {
 } from "react-icons/fa";
 
 import { CARD_THEMES } from "../../lib/cardThemes";
+
+import PhoneNumberField from "../../../components/PhoneNumberField";
 
 /* =========================================================
    TEXT
@@ -2930,22 +2935,6 @@ setCardLedThickness(
     editLinks.length
   );
 }
-
-const SERVICE_URL_PREFIXES = {
-  telegram: "https://t.me/",
-  whatsapp: "https://wa.me/",
-  instagram: "https://www.instagram.com/",
-  threads: "https://www.threads.net/@",
-  youtube: "https://www.youtube.com/@",
-  tiktok: "https://www.tiktok.com/@",
-  facebook: "https://www.facebook.com/",
-  linkedin: "https://www.linkedin.com/in/",
-  x: "https://x.com/",
-  vk: "https://vk.com/",
-  ok: "https://ok.ru/profile/",
-  phone: "tel:",
-  email: "mailto:",
-};
   
   function updateEditLink(
     index,
@@ -3098,6 +3087,18 @@ url:
               item.label ||
               item.url
           );
+
+
+for (const link of cleanedLinks) {
+  const validation = validateLink(link.icon, link.url);
+
+  if (!validation.ok) {
+    throw new Error(validation.error);
+  }
+
+  link.url = validation.url;
+}
+
 
       const data =
         await apiJson(
@@ -4932,75 +4933,86 @@ right: "0",
                             }
                           </label>
 
-<div
-  style={{
-    display: "flex",
-    alignItems: "center",
-    width: "100%",
-    borderRadius: "12px",
-    overflow: "hidden",
-  }}
->
-  {SERVICE_URL_PREFIXES[link.icon] && (
-    <span
-      style={{
-        padding: "12px",
-        background: "#243944",
-        color: "#FFFFFF",
-        whiteSpace: "nowrap",
-        fontSize: "13px",
-        flexShrink: 0,
-        userSelect: "none",
-      }}
-    >
-      {SERVICE_URL_PREFIXES[link.icon]}
-    </span>
-  )}
-                              
-                          <input
-                         value={
-  SERVICE_URL_PREFIXES[link.icon]
-    ? (link.url || "").startsWith(SERVICE_URL_PREFIXES[link.icon])
-      ? (link.url || "").slice(SERVICE_URL_PREFIXES[link.icon].length)
-      : link.url || ""
-    : link.url || ""
-}
-placeholder={
-  link.icon === "phone"
-    ? "+998901234567"
-    : link.icon === "email"
-    ? "name@example.com"
-    : link.icon === "whatsapp"
-    ? "998901234567"
-    : link.icon === "ok"
-    ? "123456789"
-    : link.icon === "website"
-    ? "https://example.com"
-    : link.icon === "location"
-    ? "Google Maps yoki Yandex Maps havolasi"
-    : "username"
-}
-                        onChange={(event) => {
-  const prefix = SERVICE_URL_PREFIXES[link.icon] || "";
-  const enteredValue = event.target.value;
 
-  updateEditLink(
-    index,
-    "url",
-    prefix + enteredValue
-  );
-}}
-                        style={{
-  ...styles.input,
-  flex: 1,
-  minWidth: 0,
-  width: "100%",
-  borderRadius: SERVICE_URL_PREFIXES[link.icon]
-    ? "0 12px 12px 0"
-    : "12px",
-}}
-/>
-</div>
+{link.icon === "phone" || link.icon === "whatsapp" ? (
+  <PhoneNumberField
+    key={`${index}-${link.icon}`}
+    service={link.icon}
+    value={link.url || ""}
+    onChange={(url) => updateEditLink(index, "url", url)}
+  />
+) : (
+  <div
+    style={{
+      display: "flex",
+      alignItems: "center",
+      width: "100%",
+      borderRadius: "12px",
+      overflow: "hidden",
+    }}
+  >
+    {SERVICE_URL_PREFIXES[link.icon] && (
+      <span
+        style={{
+          padding: "12px",
+          background: "#243944",
+          color: "#FFFFFF",
+          whiteSpace: "nowrap",
+          fontSize: "13px",
+          flexShrink: 0,
+          userSelect: "none",
+        }}
+      >
+        {SERVICE_URL_PREFIXES[link.icon]}
+      </span>
+    )}
+
+    <input
+      value={
+        SERVICE_URL_PREFIXES[link.icon]
+          ? (link.url || "").startsWith(SERVICE_URL_PREFIXES[link.icon])
+            ? (link.url || "").slice(SERVICE_URL_PREFIXES[link.icon].length)
+            : link.url || ""
+          : link.url || ""
+      }
+      placeholder={
+        link.icon === "email"
+          ? "name@example.com"
+          : link.icon === "ok"
+          ? "123456789"
+          : link.icon === "website"
+          ? "https://example.com"
+          : link.icon === "location"
+          ? "Google Maps yoki Yandex Maps havolasi"
+          : "username"
+      }
+      onChange={(event) => {
+        const prefix = SERVICE_URL_PREFIXES[link.icon] || "";
+        let enteredValue = event.target.value.trim();
+
+        if (prefix && enteredValue.startsWith(prefix)) {
+          enteredValue = enteredValue.slice(prefix.length);
+        }
+
+        updateEditLink(
+          index,
+          "url",
+          enteredValue ? prefix + enteredValue : ""
+        );
+      }}
+      style={{
+        ...styles.input,
+        flex: 1,
+        minWidth: 0,
+        width: "100%",
+        borderRadius: SERVICE_URL_PREFIXES[link.icon]
+          ? "0 12px 12px 0"
+          : "12px",
+      }}
+    />
+  </div>
+)}
+
 
                           <button
                             type="button"

@@ -1,7 +1,7 @@
 import crypto from "crypto";
 import { createClient } from "@supabase/supabase-js";
 import { CARD_THEMES } from "../../../lib/cardThemes";
-
+import { validateLink } from "../../../../lib/linkValidation";
 export const runtime = "nodejs";
 
 const supabaseUrl =
@@ -987,42 +987,58 @@ const cleanLinks = links
   }))
   .filter((link) => link.label || link.url || link.icon);
 
+
 for (const link of cleanLinks) {
-  const url = link.url;
+  const validation = validateLink(link.icon, link.url);
 
-  if (link.icon === "telegram") {
-    if (!/^https:\/\/t\.me\/[a-zA-Z][a-zA-Z0-9_]{4,31}$/.test(url)) {
-      return badRequest("Invalid Telegram username.");
-    }
+  if (!validation.ok) {
+    return badRequest(validation.error);
   }
 
-  if (link.icon === "whatsapp") {
-    if (!/^https:\/\/wa\.me\/[1-9][0-9]{6,14}$/.test(url)) {
-      return badRequest("Invalid WhatsApp phone number.");
-    }
-  }
+  link.url = validation.url;
 
-   if (link.icon === "instagram") {
-    if (!/^https:\/\/www\.instagram\.com\/[a-zA-Z0-9._]{1,30}$/.test(url)) {
-      return badRequest("Invalid Instagram username.");
-    }
-  }
+  if (link.icon === "website" || link.icon === "location") {
+    const apiKey = process.env.WEB_RISK_API_KEY;
 
-   if (link.icon === "email") {
-    if (
-      !/^mailto:[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?(?:\.[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?)+$/.test(url) ||
-      url.length > 261
-    ) {
-      return badRequest("Invalid email address.");
+    if (!apiKey) {
+      return badRequest("Link security service is not configured.");
     }
-  }
 
-  if (link.icon === "phone") {
-    if (!/^tel:\+[1-9][0-9]{7,14}$/.test(url)) {
-      return badRequest("Invalid international phone number.");
+    const endpoint = new URL(
+      "https://webrisk.googleapis.com/v1/uris:search"
+    );
+
+    endpoint.searchParams.set("uri", link.url);
+    endpoint.searchParams.set("key", apiKey);
+    endpoint.searchParams.append("threatTypes", "MALWARE");
+    endpoint.searchParams.append("threatTypes", "SOCIAL_ENGINEERING");
+    endpoint.searchParams.append("threatTypes", "UNWANTED_SOFTWARE");
+
+    try {
+      const response = await fetch(endpoint.toString(), {
+        cache: "no-store",
+        signal: AbortSignal.timeout(8000),
+      });
+
+      if (!response.ok) {
+        return badRequest("Link security check is unavailable.");
+      }
+
+      const result = await response.json();
+
+      if (
+        Array.isArray(result?.threat?.threatTypes) &&
+        result.threat.threatTypes.length > 0
+      ) {
+        return badRequest("Unsafe link detected.");
+      }
+    } catch {
+      return badRequest("Link security check is unavailable.");
     }
   }
 }
+
+
   
 const { error: saveAtomicError } =
   await owner.supabase.rpc(
